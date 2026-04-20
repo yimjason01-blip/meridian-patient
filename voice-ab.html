@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice A/B — Dr. Thompson Message</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+:root {
+  --bg: #08090a; --panel: #17181b; --surface: #24262a;
+  --border: #35383e; --border-sub: #24262a;
+  --text: #f7f8f8; --text-2: #d0d6e0; --text-mu: #a8adb7;
+  --accent: #7170ff; --accent-b: #828fff;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font-family: Inter, sans-serif; font-feature-settings: "cv01","ss03";
+  -webkit-font-smoothing: antialiased; padding: 40px 20px 60px; }
+.wrap { max-width: 760px; margin: 0 auto; }
+h1 { font-size: 24px; font-weight: 500; margin: 0 0 6px; letter-spacing: -0.02em; }
+.lede { color: var(--text-mu); margin-bottom: 24px; font-size: 14px; line-height: 1.55; }
+.script {
+  background: var(--panel); border: 1px solid var(--border-sub); border-radius: 10px;
+  padding: 14px 18px; font-size: 13px; color: var(--text-2); line-height: 1.6;
+  margin-bottom: 28px;
+}
+.script b { color: var(--text); font-weight: 500; }
+.group-head {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-mu); font-weight: 500; margin: 26px 0 10px;
+}
+.card {
+  background: var(--panel); border: 1px solid var(--border-sub);
+  border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;
+}
+.card-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+.card-name { font-weight: 500; font-size: 15px; }
+.card-name .tag {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-mu); background: var(--surface); padding: 2px 6px;
+  border-radius: 3px; margin-left: 8px; vertical-align: middle;
+  font-weight: 500;
+}
+.card-desc { font-size: 12px; color: var(--text-mu); }
+audio {
+  width: 100%; margin-top: 6px;
+  filter: invert(1) hue-rotate(180deg);
+  color-scheme: light;
+}
+.hint { margin-top: 24px; font-size: 12px; color: var(--text-mu); line-height: 1.6;
+  background: rgba(113,112,255,0.06); border: 1px solid rgba(113,112,255,0.2);
+  border-radius: 8px; padding: 14px 16px; }
+.hint b { color: var(--text); font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Voice A/B — Dr. Thompson message</h1>
+  <div class="lede">Same script, same stage-direction instructions, 8 voices across OpenAI + xAI. What you're hearing is the actual ceiling of our current stack (no ElevenLabs, no Realtime).</div>
+
+  <div class="script">
+    <b>Script (identical across all 8):</b><br>
+    "Hey Jason. I just finished going through your labs and your wearable data, and I wanted to talk to you myself rather than send over a report. Here's the honest version. Your numbers are telling a consistent story. Your ApoB and Lp(a) are higher than I want to see them, and your HRV has been quietly dropping for about six months. None of this is an emergency. But all of it is worth acting on now, not in five years. The good news is, the leverage here is real. There's one move, the statin, that shifts the biggest number by a meaningful amount. I want you to start the statin tonight. Just the one pill. Take care of yourself, Jason. I'm in your corner on this."
+  </div>
+
+  <div class="group-head">OpenAI · gpt-4o-mini-tts (with instructions field)</div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-name">Sage <span class="tag">thoughtful, older</span></div>
+      <div class="card-desc">Slight gravel, deliberate</div>
+    </div>
+    <audio controls src="voice_ab/openai-sage.mp3"></audio>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-name">Ash <span class="tag">dry, even-keeled</span></div>
+      <div class="card-desc">Reserved, minimal affect</div>
+    </div>
+    <audio controls src="voice_ab/openai-ash.mp3"></audio>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-name">Coral <span class="tag">warmer female</span></div>
+      <div class="card-desc">Natural cadence</div>
+    </div>
+    <audio controls src="voice_ab/openai-coral.mp3"></audio>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-name">Onyx <span class="tag">deeper male</span></div>
+      <div class="card-desc">Radio-ready resonance</div>
+    </div>
+    <audio controls src="voice_ab/openai-onyx.mp3"></audio>
+  </div>
+
+  <div class="group-head">xAI · grok-3-mini-tts (no instructions field — voice only)</div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-name">Leo <span class="tag">warm male</span></div>
+      <div class="card-desc">Grok voice mode — Leo</div>
+    </div>
+    <audio controls src="voice_ab/xai-leo.mp3"></audio>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-name">Rex <span class="tag">firmer male</span></div>
+      <div class="card-desc">Grok voice mode — Rex</div>
+    </div>
+    <audio controls src="voice_ab/xai-rex.mp3"></audio>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-name">Sal <span class="tag">older male</span></div>
+      <div class="card-desc">Grok voice mode — Sal</div>
+    </div>
+    <audio controls src="voice_ab/xai-sal.mp3"></audio>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-name">Eve <span class="tag">female</span></div>
+      <div class="card-desc">Grok voice mode — Eve</div>
+    </div>
+    <audio controls src="voice_ab/xai-eve.mp3"></audio>
+  </div>
+
+  <div class="hint">
+    <b>What you're probably noticing:</b> all 8 have the same underlying "AI voice" quality. That's the model class, not the voice selection. Each class has a ceiling and we're at it. The gap to ChatGPT Advanced Voice quality requires either (a) ElevenLabs v3 or (b) a speech-to-speech model like gpt-4o-realtime — neither of which we currently have wired.
+  </div>
+</div>
+</body>
+</html>
