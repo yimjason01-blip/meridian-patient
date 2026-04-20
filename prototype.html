@@ -203,6 +203,198 @@
   .card.clickable:hover { border-color: var(--border); }
 
   /* ============ PLAN › MESSAGE ============ */
+
+  /* Physician hero — main event. Portrait + audio + pull quote. */
+  .md-hero {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 6px 0 20px;
+  }
+  .md-hero-portrait {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: #0a0b0d;
+    overflow: hidden;
+  }
+  .md-hero-portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 28%;
+    display: block;
+  }
+  .md-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 40%,
+      rgba(8,9,10,0.35) 72%,
+      rgba(8,9,10,0.88) 100%
+    );
+    display: flex;
+    align-items: flex-end;
+    padding: 16px 18px;
+  }
+  .md-hero-label {
+    font-size: 11px;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+    opacity: 0.9;
+  }
+
+  .md-hero-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 18px 10px;
+  }
+  .md-hero-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .md-hero-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .md-hero-duration {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.02em;
+  }
+
+  .audio-player {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 18px 16px;
+  }
+  .ap-play {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--accent-hover);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.12s, transform 0.1s;
+  }
+  .ap-play:hover { background: var(--accent-bright); }
+  .ap-play:active { transform: scale(0.95); }
+  .ap-play svg { width: 20px; height: 20px; }
+  .ap-play.playing .ap-ic-play { display: none !important; }
+  .ap-play.playing .ap-ic-pause { display: block !important; }
+
+  .ap-track {
+    flex: 1;
+    height: 6px;
+    background: var(--bg-surface);
+    border-radius: 3px;
+    position: relative;
+    cursor: pointer;
+  }
+  .ap-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 0%;
+    background: var(--accent-hover);
+    border-radius: 3px;
+    transition: width 0.08s linear;
+  }
+  .ap-thumb {
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--accent-hover);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 3px var(--bg-panel);
+    transition: left 0.08s linear;
+    pointer-events: none;
+  }
+  .ap-time {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    min-width: 32px;
+    text-align: right;
+  }
+
+  .md-hero-pull {
+    padding: 8px 20px 18px;
+    font-size: 17px;
+    line-height: 1.45;
+    color: var(--text-secondary);
+    letter-spacing: -0.01em;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 18px;
+    margin-top: 4px;
+  }
+  .md-hero-pull em {
+    font-style: normal;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .md-hero-transcript-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    border-top: 1px solid var(--border-subtle);
+    padding: 14px 20px;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 12px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: color 0.12s;
+    letter-spacing: 0.03em;
+  }
+  .md-hero-transcript-toggle:hover { color: var(--text-secondary); }
+  .md-hero-transcript-toggle .lbl { text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; }
+  .md-hero-transcript-toggle .chev { transition: transform 0.2s; font-size: 14px; }
+  .md-hero-transcript-toggle.open .chev { transform: rotate(90deg); }
+
+  .md-hero-transcript {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease-out;
+    background: rgba(255,255,255,0.015);
+  }
+  .md-hero-transcript.open { max-height: 900px; }
+  .md-hero-transcript p {
+    padding: 0 20px;
+    margin: 0 0 12px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+  }
+  .md-hero-transcript p:first-child { padding-top: 16px; }
+  .md-hero-transcript p:last-child { padding-bottom: 18px; margin-bottom: 0; }
+  .md-hero-transcript em {
+    font-style: normal;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* Legacy doctor-note styling — kept in case of other references */
   .doctor-hero {
     background: linear-gradient(160deg, rgba(113,112,255,0.05), rgba(113,112,255,0.01));
     border: 1px solid rgba(113,112,255,0.18);
@@ -1037,23 +1229,61 @@
 
     <!-- ---- SUBSTATE: MESSAGE ---- -->
     <div class="substate active" id="plan-message">
-      <div class="screen-eyebrow">From your care team · April 18</div>
-      <h1 class="screen-title">Here's what we decided.</h1>
-      <p class="screen-subtitle">Dr. Thompson's note, then your four decisions. Tap any card for the full reasoning.</p>
 
-      <div class="doctor-hero">
-        <div class="doctor-row">
-          <div class="doc-avatar">MT</div>
-          <div>
-            <div class="doc-name">Dr. Marcus Thompson</div>
-            <div class="doc-meta">Primary Care · Meridian</div>
+      <!-- Physician hero — portrait + audio player, main event -->
+      <div class="md-hero">
+        <div class="md-hero-portrait">
+          <img src="assets/dr-thompson.png" alt="Dr. Marcus Thompson" loading="eager"/>
+          <div class="md-hero-overlay">
+            <div class="md-hero-label">A message from your doctor</div>
           </div>
         </div>
-        <div class="doctor-note">
-          "Jason — your latest labs and wearable data tell a consistent story. Your cardiovascular trajectory is drifting in the wrong direction, and the autonomic signals <em>(low HRV, elevated resting heart rate)</em> suggest stress load is fueling it. Everything in this plan is pointed at that one pattern. <em>The highest-leverage move is the statin — start there.</em> We'll recheck labs at 12 weeks."
+
+        <div class="md-hero-meta">
+          <div>
+            <div class="md-hero-name">Dr. Marcus Thompson</div>
+            <div class="md-hero-sub">Primary Care · 2 hours ago</div>
+          </div>
+          <div class="md-hero-duration" id="audioDuration">—</div>
         </div>
-        <div class="doctor-when">Released 2 hours ago · Full audio version in Messages</div>
+
+        <!-- Audio player -->
+        <div class="audio-player" id="audioPlayer">
+          <button class="ap-play" id="apPlay" onclick="togglePlay()" aria-label="Play">
+            <svg class="ap-ic-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="ap-ic-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+          </button>
+          <div class="ap-track" onclick="seekAudio(event)" id="apTrack">
+            <div class="ap-fill" id="apFill"></div>
+            <div class="ap-thumb" id="apThumb"></div>
+          </div>
+          <div class="ap-time" id="apTime">0:00</div>
+        </div>
+
+        <!-- Hero text — the one sentence that carries the emotional load -->
+        <div class="md-hero-pull">
+          "I wanted to talk to you myself rather than send over a report. <em>None of this is an emergency, but all of it is worth acting on now.</em>"
+        </div>
+
+        <!-- Expandable transcript -->
+        <button class="md-hero-transcript-toggle" onclick="toggleTranscript(this)">
+          <span class="lbl">Read transcript</span>
+          <span class="chev">›</span>
+        </button>
+        <div class="md-hero-transcript" id="mdTranscript">
+          <p>Hey Jason. I just finished going through your labs and your wearable data, and I wanted to talk to you myself rather than send over a report.</p>
+          <p>Here's the honest version. Your numbers are telling a consistent story. Your ApoB and Lp(a) are higher than I want to see them, and your HRV has been quietly dropping for about six months. <em>None of this is an emergency. But all of it is worth acting on now — not in five years.</em></p>
+          <p>The good news is, the leverage here is real. There's one move — the statin — that shifts the biggest number by a meaningful amount. Then we layer sleep and stress on top, because your autonomic system is the accelerator underneath everything else. Everything else in your plan is in service of that story.</p>
+          <p>I want you to start the statin tonight. Just the one pill. We'll check your labs again in twelve weeks, and I think you're going to be surprised by how much moves.</p>
+          <p>If anything feels off, or if a question comes up at 11 PM and you don't want to sit with it — message me here. I'll see it.</p>
+          <p><em>Take care of yourself, Jason. I'm in your corner on this.</em></p>
+        </div>
       </div>
+
+      <audio id="mdAudio" preload="metadata">
+        <source src="assets/dr-thompson-message.mp3" type="audio/mpeg">
+        <source src="assets/dr-thompson-message.ogg" type="audio/ogg">
+      </audio>
 
       <div class="section-label">Your decisions</div>
 
@@ -1865,6 +2095,64 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em> — not by do
   }
   function escapeHtml(s) {
     return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+
+  /* ===== Audio player (physician message) ===== */
+  const audio = document.getElementById('mdAudio');
+  const playBtn = document.getElementById('apPlay');
+  const fill = document.getElementById('apFill');
+  const thumb = document.getElementById('apThumb');
+  const timeEl = document.getElementById('apTime');
+  const durEl = document.getElementById('audioDuration');
+
+  function fmtTime(s) {
+    if (!isFinite(s)) return '0:00';
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60).toString().padStart(2, '0');
+    return `${m}:${sec}`;
+  }
+
+  if (audio) {
+    audio.addEventListener('loadedmetadata', () => {
+      if (durEl) durEl.textContent = fmtTime(audio.duration);
+    });
+    audio.addEventListener('timeupdate', () => {
+      const pct = (audio.currentTime / (audio.duration || 1)) * 100;
+      if (fill)  fill.style.width = pct + '%';
+      if (thumb) thumb.style.left = pct + '%';
+      if (timeEl) timeEl.textContent = fmtTime(audio.currentTime);
+    });
+    audio.addEventListener('ended', () => {
+      if (playBtn) playBtn.classList.remove('playing');
+    });
+    audio.addEventListener('play', () => {
+      if (playBtn) playBtn.classList.add('playing');
+    });
+    audio.addEventListener('pause', () => {
+      if (playBtn) playBtn.classList.remove('playing');
+    });
+  }
+
+  function togglePlay() {
+    if (!audio) return;
+    if (audio.paused) audio.play().catch(e => toast('Tap play to start'));
+    else audio.pause();
+  }
+
+  function seekAudio(event) {
+    if (!audio || !audio.duration) return;
+    const track = event.currentTarget;
+    const rect = track.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+    audio.currentTime = pct * audio.duration;
+  }
+
+  function toggleTranscript(btn) {
+    btn.classList.toggle('open');
+    const panel = document.getElementById('mdTranscript');
+    if (panel) panel.classList.toggle('open');
+    const lbl = btn.querySelector('.lbl');
+    if (lbl) lbl.textContent = panel && panel.classList.contains('open') ? 'Hide transcript' : 'Read transcript';
   }
 </script>
 </body>
