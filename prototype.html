@@ -38,8 +38,12 @@
     --status-warn: #e09b2d;
     --status-crit: #e8604c;
 
+    /* Risk-domain colors — data-viz only, never UI chrome. Matches DS tokens.domain.* */
     --dom-cardiac: #e8604c;
     --dom-cancer:  #d14a6a;
+    --dom-metab:   #6db1c9;
+    --dom-neuro:   #9d7ae3;
+    /* Legacy alias during migration: */
     --dom-indep:   #e09b2d;
     --dom-mobility: #6db1c9;
 
@@ -104,7 +108,7 @@
 
   .avatar {
     width: 32px; height: 32px; border-radius: 50%;
-    background: linear-gradient(135deg, #3a3f4a, #242730);
+    background: var(--bg-surface);
     display: flex; align-items: center; justify-content: center;
     font-size: 12px;
     font-weight: 500;
@@ -216,7 +220,7 @@
     position: relative;
     width: 100%;
     aspect-ratio: 4 / 3;
-    background: #0a0b0d;
+    background: var(--bg);
     overflow: hidden;
   }
   .md-hero-portrait img {
@@ -408,7 +412,7 @@
   }
   .doc-avatar {
     width: 44px; height: 44px; border-radius: 50%;
-    background: linear-gradient(135deg, #4a5573, #2f3547);
+    background: var(--bg-surface);
     display: flex; align-items: center; justify-content: center;
     color: var(--text); font-weight: 500; font-size: 14px;
     flex-shrink: 0;
@@ -785,6 +789,43 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* Collapsible methods / disclaimers — quiet, lives at bottom of Futures */
+  .methods-box {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 0;
+    margin-bottom: 14px;
+  }
+  .methods-box summary {
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .methods-box summary::-webkit-details-marker { display: none; }
+  .methods-box summary::after {
+    content: "›";
+    color: var(--text-muted);
+    font-size: 18px;
+    transition: transform 0.2s;
+  }
+  .methods-box[open] summary::after { transform: rotate(90deg); }
+  .methods-body {
+    padding: 0 16px 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+  .methods-body p { margin: 0 0 10px; }
+  .methods-body p:last-child { margin-bottom: 0; }
+  .methods-body b { color: var(--text); font-weight: 500; }
+
   .people-wrap {
     background: var(--bg-panel);
     border: 1px solid var(--border-subtle);
@@ -982,6 +1023,123 @@
     font-size: 12px; color: var(--text-secondary);
   }
   .dom-conn .arrow { color: var(--accent-hover); margin: 0 6px; }
+  /* Per-card AI affordance — neutral (DS: ai-accent-chrome banned inside content) */
+  .dom-ask {
+    margin-top: 12px;
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font: inherit;
+    font-size: 12px;
+    padding: 9px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: border-color .15s, color .15s;
+  }
+  .dom-ask:hover { border-color: var(--border-strong); color: var(--text-secondary); }
+  .dom-ask .arrow { color: var(--text-muted); font-size: 14px; }
+
+  /* ============ Risk bottom sheet ============ */
+  .risk-sheet-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(8,9,10,0.72);
+    z-index: 98;
+    opacity: 0; pointer-events: none;
+    transition: opacity .18s;
+  }
+  .risk-sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+  .risk-sheet {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    max-width: var(--maxw); margin: 0 auto;
+    background: var(--bg-panel);
+    border-top: 1px solid var(--border);
+    border-radius: 16px 16px 0 0;
+    z-index: 99;
+    transform: translateY(100%);
+    transition: transform .22s cubic-bezier(.2,.8,.2,1);
+    max-height: 86vh;
+    display: flex; flex-direction: column;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.6);
+  }
+  .risk-sheet.open { transform: translateY(0); }
+  .rs-handle {
+    width: 36px; height: 4px; border-radius: 2px;
+    background: var(--border-strong);
+    margin: 10px auto 2px;
+  }
+  .rs-head {
+    padding: 10px 16px 12px;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .rs-head h3 {
+    margin: 0; font-size: 15px; font-weight: 500; color: var(--text);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .rs-head .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .rs-close {
+    background: transparent; border: none; color: var(--text-muted);
+    font-size: 22px; line-height: 1; cursor: pointer; padding: 0 4px;
+  }
+  .rs-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 16px 8px;
+  }
+  .rs-seed {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    font-size: 13px; color: var(--text-secondary); line-height: 1.55;
+  }
+  .rs-seed .src { margin-top: 8px; font-size: 11px; color: var(--text-muted); }
+  .rs-seed b { color: var(--text); font-weight: 500; }
+  .rs-presets {
+    display: flex; flex-direction: column; gap: 8px;
+    margin-bottom: 12px;
+  }
+  .rs-presets button {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font: inherit; font-size: 13px;
+    text-align: left;
+    padding: 10px 12px;
+    cursor: pointer;
+  }
+  .rs-presets button:hover { border-color: var(--border-strong); color: var(--text); }
+  .rs-input {
+    display: flex; gap: 8px;
+    padding: 10px 12px 14px;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .rs-input input {
+    flex: 1;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    color: var(--text);
+    font: inherit; font-size: 14px;
+    padding: 9px 14px;
+    outline: none;
+  }
+  .rs-input input:focus { border-color: var(--accent); }
+  .rs-input button {
+    background: var(--accent-hover);
+    color: #fff;
+    border: none; border-radius: 50%;
+    width: 36px; height: 36px;
+    cursor: pointer;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
 
   /* ============ MESSAGES (AI + pinned MD strip) ============ */
   .md-strip {
@@ -999,7 +1157,7 @@
   .md-strip:hover { border-color: rgba(113,112,255,0.4); }
   .md-strip .av {
     width: 32px; height: 32px; border-radius: 50%;
-    background: linear-gradient(135deg, #4a5573, #2f3547);
+    background: var(--bg-surface);
     display: flex; align-items: center; justify-content: center;
     font-size: 11px; font-weight: 500; color: var(--text);
     flex-shrink: 0;
@@ -1038,7 +1196,7 @@
     font-size: 10px; font-weight: 500;
   }
   .msg.ai .av {
-    background: linear-gradient(135deg, #5e6ad2, #3f4994);
+    background: var(--accent);
     color: var(--text);
   }
   .msg.user {
@@ -1082,6 +1240,15 @@
     display: flex; flex-wrap: wrap; gap: 6px;
     padding: 0 12px 12px;
     margin-bottom: 4px;
+  }
+  .suggest-label {
+    width: 100%;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 4px 4px 6px;
   }
   .suggest button {
     background: var(--bg-panel);
@@ -1262,7 +1429,7 @@
 
         <!-- Hero text — the one sentence that carries the emotional load -->
         <div class="md-hero-pull">
-          "On paper you're in strong shape. But two numbers plus your genetic panel are telling me something. <em>Not loud, but directional. Worth acting on now, at 47, not at 57.</em>"
+          "Overall, you're in great shape. But a couple things are standing out. <em>Let me tell you how I practice — because I think it'll help this land.</em>"
         </div>
 
         <!-- Expandable transcript -->
@@ -1271,16 +1438,20 @@
           <span class="chev">›</span>
         </button>
         <div class="md-hero-transcript" id="mdTranscript">
-          <p>Hey Jason. I just finished going through your intake, your Apple Watch data, and your lab panel, and I wanted to talk to you myself rather than send over a report.</p>
-          <p>Here's the honest version. On paper you're in strong shape. Your wearable metrics are clean, your sleep is fine, your metabolic labs are normal, your liver and kidneys are fine.</p>
-          <p>But <em>two numbers in your cholesterol panel — ApoB and Lp(a) — are higher than I want them to be, and your genetic panel came back with a pathogenic ATM variant.</em> Taken together, these aren't loud. But they're directional. And they're worth acting on now, at 47, not at 57.</p>
-          <p>The plan has three moves.</p>
-          <p><em>One</em> — start a low-dose statin. It's the single biggest dial we can turn. Your ApoB of 98 needs to come down below 80, and the statin reliably gets you there. Lp(a) is genetic — it doesn't move with diet or exercise — but a statin lowers the other atherogenic particles around it, which matters more when Lp(a) is high, not less.</p>
-          <p><em>Two</em> — one-time cardiac workup: coronary calcium scan and stress echo. A baseline before the statin has time to remodel anything. The most durable data point we'll ever get on your arteries, and we want it at your age, not later.</p>
-          <p><em>Three</em> — annual pancreatic MRI, starting November. That's the ATM piece. For ATM-positive patients, surveillance is the whole game. Catching anything early is what makes this manageable.</p>
-          <p>I want you to start the statin tonight. We'll recheck labs in 12 weeks.</p>
-          <p>If anything feels off, or if a question comes up at 11 PM — message me here. I'll see it.</p>
-          <p><em>Take care of yourself, Jason. I'm in your corner on this.</em></p>
+          <p>Jason, Dr. Thompson here.</p>
+          <p>First, I want to acknowledge something. You're already on a great path. The intake, the wearable data, the fact that you're asking these questions at 47 — that's more than most people will ever do. Honestly, it's what makes this work. I love working with patients who are this dedicated to a great future.</p>
+          <p>Before I get to the results, let me tell you how I practice, because I think it'll help this land.</p>
+          <p><em>When there's a high-risk area we can do something about, I prioritize that.</em> Sometimes we shift the number with a medication or a lifestyle change. Sometimes we can't — the risk is what it is — and the move is to be proactive about monitoring. Other times, the data comes together in a way that leaves part of the picture blurry, and I want to take a couple steps to pull that into focus. And of course, if it ain't broke, we don't fix it.</p>
+          <p>With that in mind — here's what I'm seeing. Overall, you're in great shape. But a couple things are standing out.</p>
+          <p>First, your genetic panel came back with a variant called <em>ATM</em>. This raises your susceptibility to certain diseases down the road, including some cancers and some cardiovascular risk. Combined with a couple of numbers in your cholesterol panel — specifically ApoB and Lp(a) — your cardiovascular risk is a little higher than I want to see right now.</p>
+          <p>So the first thing I want to do is <em>start you on a statin</em>. It'll pull those cholesterol numbers into a range that meaningfully reduces your cardiovascular risk.</p>
+          <p>Now, I know there's a narrative about statins out there, and there are indeed a couple real challenges with some versions of them. But those affect a pretty small slice of the population, and the current generation really addresses most of what people have heard. I'm prescribing one I think is a good fit for you, and we'll see how you do. We'll recheck in 12 weeks and see how you're trending.</p>
+          <p>Related to this — this is the <em>pulling-the-picture-into-focus</em> piece — your resting heart rate is pretty low. From your notes you're really active on the bike, so this could just mean you're genuinely fit. But I want to make sure. So I'd like to do a stress echo to see how your heart responds to load, and a coronary calcium scan to see whether there are any deposits in your arteries already.</p>
+          <p>These are easy tests, and the value of the information is incredible. It helps both of us understand your heart, and gives us the tools we need to steer things in the right direction.</p>
+          <p>The third thing is <em>purely proactive</em> — I want to start an annual pancreatic MRI now. Normally we'd recommend this in your early fifties, but because of your ATM variant, which raises your pancreatic cancer risk, I want to start it now. We don't have a great tool to shift that risk itself, so the best thing we can do is catch anything early. MRI is the tool for that.</p>
+          <p>So — overall, you're doing great. I'm going to keep you doing great. Let's get this done and make sure you're working from a solid foundation.</p>
+          <p>If you want to schedule a visit and talk any of this through, tap below. And if you just want to send a question, message me any time. I'll get back to you.</p>
+          <p><em>Take care of yourself, Jason.</em></p>
         </div>
       </div>
 
@@ -1434,55 +1605,50 @@
       <h1 class="screen-title">Two futures.</h1>
       <p class="screen-subtitle">The difference is the plan. Not a prediction about you — what happens for people with your profile over 20 years.</p>
 
-      <div class="framing">
-        <b>Who you're comparing to:</b> people with your risk profile (47, male, ApoB 95–105, Lp(a) 55–70, ATM+, athletic BMI). Below shows when half of them hit each milestone, with and without a plan like this.
-        <span class="note">Cohort: matched on age ±3y, sex, ApoB ±10 mg/dL, Lp(a) ±15 mg/dL, ATM status. N ≈ 1,800.</span>
-      </div>
-
       <div class="chart-wrap">
         <div class="chart-legend">
           <span><i style="background: var(--dom-cardiac)"></i>Heart attack / stroke</span>
           <span><i style="background: var(--dom-cancer)"></i>Cancer diagnosis</span>
           <span><i style="background: var(--dom-indep)"></i>Loss of independence</span>
-          <span><i style="background: var(--dom-mobility)"></i>Noticeable mobility loss</span>
+          <span><i style="background: var(--dom-metab)"></i>Noticeable mobility loss</span>
         </div>
         <div class="chart">
-          <svg viewBox="0 0 360 250" xmlns="http://www.w3.org/2000/svg">
-            <line x1="24" y1="220" x2="340" y2="220" stroke="#35383e" stroke-width="1"/>
+          <svg viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg">
+            <line x1="24" y1="220" x2="456" y2="220" stroke="#35383e" stroke-width="1"/>
             <g font-family="Inter" font-size="10" fill="#a8adb7" text-anchor="middle">
               <text x="24"  y="236">50</text>
-              <text x="88"  y="236">60</text>
-              <text x="152" y="236">70</text>
-              <text x="216" y="236">80</text>
-              <text x="280" y="236">90</text>
-              <text x="340" y="236">100</text>
+              <text x="110" y="236">60</text>
+              <text x="197" y="236">70</text>
+              <text x="283" y="236">80</text>
+              <text x="370" y="236">90</text>
+              <text x="456" y="236">100</text>
             </g>
             <g font-family="Inter" font-size="10" fill="#a8adb7">
               <text x="24" y="20" font-weight="500">WITHOUT this plan</text>
               <text x="24" y="128" font-weight="500">WITH this plan</text>
             </g>
             <g id="track-without">
-              <rect class="band" data-dom="cardiac" x="241" y="34" width="51" height="11" rx="2"
+              <rect class="band" data-dom="cardiac" x="326" y="34" width="69" height="11" rx="2"
                     fill="#e8604c" fill-opacity="0.08" stroke="#e8604c" stroke-width="1"/>
-              <rect class="band" data-dom="cancer" x="288" y="56" width="64" height="11" rx="2"
+              <rect class="band" data-dom="cancer" x="389" y="56" width="86" height="11" rx="2"
                     fill="#d14a6a" fill-opacity="0.08" stroke="#d14a6a" stroke-width="1"/>
-              <rect class="band" data-dom="indep" x="317" y="78" width="51" height="11" rx="2"
+              <rect class="band" data-dom="indep" x="429" y="78" width="69" height="11" rx="2"
                     fill="#e09b2d" fill-opacity="0.08" stroke="#e09b2d" stroke-width="1"/>
-              <rect class="band" data-dom="mobility" x="304" y="100" width="64" height="11" rx="2"
+              <rect class="band" data-dom="metab" x="411" y="100" width="86" height="11" rx="2"
                     fill="#6db1c9" fill-opacity="0.08" stroke="#6db1c9" stroke-width="1"/>
             </g>
             <g id="track-with">
               <rect class="band" data-dom="cardiac" data-baseline-age="62" data-max-shift="10"
-                    x="282" y="140" width="51" height="11" rx="2"
+                    x="240" y="140" width="69" height="11" rx="2"
                     fill="#e8604c" fill-opacity="0.55"/>
               <rect class="band" data-dom="cancer" data-baseline-age="71" data-max-shift="6"
-                    x="320" y="162" width="64" height="11" rx="2"
+                    x="291" y="162" width="86" height="11" rx="2"
                     fill="#d14a6a" fill-opacity="0.55"/>
               <rect class="band" data-dom="indep" data-baseline-age="76" data-max-shift="9"
-                    x="362" y="184" width="51" height="11" rx="2"
+                    x="343" y="184" width="69" height="11" rx="2"
                     fill="#e09b2d" fill-opacity="0.55"/>
-              <rect class="band" data-dom="mobility" data-baseline-age="73" data-max-shift="7"
-                    x="349" y="206" width="64" height="11" rx="2"
+              <rect class="band" data-dom="metab" data-baseline-age="73" data-max-shift="7"
+                    x="309" y="206" width="86" height="11" rx="2"
                     fill="#6db1c9" fill-opacity="0.55"/>
             </g>
           </svg>
@@ -1511,20 +1677,15 @@
         </div>
       </div>
 
-      <div class="people-wrap">
-        <div class="people-head">
-          <h4>Out of 100 people like you</h4>
-          <span class="tag">by age 65</span>
+      <!-- Collapsible methods / disclaimers -->
+      <details class="methods-box">
+        <summary>How this works</summary>
+        <div class="methods-body">
+          <p><b>Who you're being compared to.</b> People with a similar risk profile: 47, male, ApoB 95–105 mg/dL, Lp(a) 55–70 mg/dL, ATM heterozygous pathogenic, athletic BMI. Matched on age ±3y, sex, ApoB ±10, Lp(a) ±15, ATM status. N ≈ 1,800.</p>
+          <p><b>What the bars show.</b> When half of the matched cohort hits each milestone, with and without a plan like this. The band width is the uncertainty range — not a single day, but a window.</p>
+          <p><b>What this is and isn't.</b> Estimates from cohort-level models (PREVENT, SEER, Framingham functional, Studenski). Not an individual prediction about you — what similar people experience on average. Effect sizes scale with how much of the plan you actually do; the slider is yours to move.</p>
         </div>
-        <div class="people-grid" id="peopleGrid"></div>
-        <div class="people-legend" id="peopleLegend">
-          Without the plan, <b style="color: var(--status-crit)">11</b> have a major cardiac event by 65. With the plan, <b style="color: var(--status-ok-bright)">7</b> do. <b>4 events out of 100 are avoided</b> — that's what this plan is buying.
-        </div>
-      </div>
-
-      <div class="disclosure-footer">
-        <b>What this is and isn't.</b> Estimates from cohort-level models (PREVENT, SEER, Framingham functional, Studenski). Not an individual prediction — what similar people experience. Effect sizes scale with how much of the plan you do; the slider is yours to move.
-      </div>
+      </details>
     </div>
   </section>
 
@@ -1534,7 +1695,7 @@
   <section class="screen" id="screen-you">
     <div class="segmented" role="tablist">
       <button class="seg-btn active" data-sub="data" onclick="gotoSub('you','data')">Data</button>
-      <button class="seg-btn" data-sub="reasoning" onclick="gotoSub('you','reasoning')">Reasoning</button>
+      <button class="seg-btn" data-sub="reasoning" onclick="gotoSub('you','reasoning')">Risk</button>
     </div>
 
     <!-- ---- DATA ---- -->
@@ -1701,11 +1862,11 @@
 
     </div>
 
-    <!-- ---- REASONING ---- -->
+    <!-- ---- RISK ---- -->
     <div class="substate" id="you-reasoning">
-      <div class="screen-eyebrow">How the plan got built</div>
-      <h1 class="screen-title">Your risk, broken down.</h1>
-      <p class="screen-subtitle">Three domain models fed by your data. Each contributed to your ranked actions.</p>
+      <div class="screen-eyebrow">Your risk, broken down</div>
+      <h1 class="screen-title">Four risk models.</h1>
+      <p class="screen-subtitle">Each model fed by your data. Tap "Ask about this" on any card to dig in.</p>
 
       <div class="dom-card">
         <div class="dom-hd">
@@ -1725,6 +1886,7 @@
         <div class="dom-conn">
           Baseline data gap → CAC <span class="arrow">→</span> <em style="color: var(--accent-hover); font-style: normal">Decision 02 (CAC + stress echo)</em>
         </div>
+        <button class="dom-ask" onclick="openRiskSheet('cardiovascular')">Ask about this <span class="arrow">→</span></button>
       </div>
 
       <div class="dom-card">
@@ -1741,11 +1903,12 @@
         <div class="dom-conn">
           Surveillance trigger → NCCN ATM+ <span class="arrow">→</span> <em style="color: var(--accent-hover); font-style: normal">Decision 03 (annual pancreatic MRI)</em>
         </div>
+        <button class="dom-ask" onclick="openRiskSheet('cancer')">Ask about this <span class="arrow">→</span></button>
       </div>
 
       <div class="dom-card">
         <div class="dom-hd">
-          <div class="dom-name"><span class="swatch" style="background: var(--dom-mobility)"></span>Metabolic &amp; autonomic</div>
+          <div class="dom-name"><span class="swatch" style="background: var(--dom-metab)"></span>Metabolic &amp; autonomic</div>
           <div class="dom-risk">Trajectory <b style="color: var(--status-ok-bright)">stable</b></div>
         </div>
         <div class="dom-bar">
@@ -1757,31 +1920,45 @@
         <div class="dom-conn">
           No action needed · wearable and metabolic markers are in range
         </div>
+        <button class="dom-ask" onclick="openRiskSheet('metabolic')">Ask about this <span class="arrow">→</span></button>
       </div>
 
-      <div class="section-label">How they combined</div>
-
-      <div class="framing" style="margin-bottom: 14px">
-        <b>Sensitivity-weighted ranking.</b> Actions are ranked by how much they move the most-sensitive variable across domains. The statin took rank 01 because lowering ApoB is the single highest-leverage intervention on your cardiovascular model. The CAC + stress echo took rank 02 because a baseline read on your arteries recalibrates every downstream decision. Pancreatic MRI is surveillance, not urgency — but it's the only action the ATM pathway has.
-        <span class="note">Framework v.2.4 · 2 converged sources · 0 conflicts</span>
+      <div class="dom-card">
+        <div class="dom-hd">
+          <div class="dom-name"><span class="swatch" style="background: var(--dom-neuro)"></span>Neuro &amp; cognitive</div>
+          <div class="dom-risk">Trajectory <b style="color: var(--status-ok-bright)">stable</b></div>
+        </div>
+        <div class="dom-bar">
+          <div class="dom-bar-fill" style="width: 22%; background: var(--status-ok-bright)"></div>
+        </div>
+        <div class="dom-inputs">
+          Driven by: <b>sleep 7h 10m</b> · <b>deep sleep 1h 20m</b> · active lifestyle · in-laws dementia (not genetic)
+        </div>
+        <div class="dom-conn">
+          No action needed today · annual re-run is the longest-horizon lever
+        </div>
+        <button class="dom-ask" onclick="openRiskSheet('neuro')">Ask about this <span class="arrow">→</span></button>
       </div>
-
-      <button class="btn wide ghost" onclick="gotoTab('messages'); setTimeout(()=>askPreset('Walk me through how my risk models combined.'), 100)">Ask the AI to walk through this</button>
     </div>
   </section>
 
   <!-- =================================================== -->
-  <!-- TAB 4 — MESSAGES (AI + pinned MD strip) -->
+  <!-- TAB 4 — MESSAGES (Team ↔ Meridian) -->
   <!-- =================================================== -->
   <section class="screen" id="screen-messages">
-    <div style="padding: 14px 0 0">
-      <div style="padding: 0 16px;">
-        <div class="screen-eyebrow">Ask anything</div>
-        <h1 class="screen-title" style="margin-bottom: 10px">Messages</h1>
-        <p class="screen-subtitle" style="margin-bottom: 14px">Grounded in your plan, your data, and Dr. Thompson's note. When I hit my limit, I route to your care team.</p>
+    <div class="segmented" role="tablist">
+      <button class="seg-btn active" data-sub="team" onclick="gotoSub('messages','team')">Your team</button>
+      <button class="seg-btn" data-sub="meridian" onclick="gotoSub('messages','meridian')">Meridian</button>
+    </div>
+
+    <!-- ---- TEAM (direct physician thread) ---- -->
+    <div class="substate active" id="messages-team">
+      <div style="padding: 4px 16px 0">
+        <div class="screen-eyebrow">Direct line</div>
+        <h1 class="screen-title" style="margin-bottom: 8px">Your care team.</h1>
+        <p class="screen-subtitle" style="margin-bottom: 14px">Message Dr. Thompson directly. He'll respond within one business day.</p>
       </div>
 
-      <!-- Pinned physician strip -->
       <div class="md-strip" onclick="toast('Opening Dr. Thompson\\'s note')">
         <div class="av">MT</div>
         <div class="body">
@@ -1791,28 +1968,55 @@
         </div>
       </div>
 
-      <!-- Chat thread -->
+      <div class="chat-wrap" id="teamChatWrap">
+        <div class="msg ai">
+          <div class="av">MT</div>
+          <div class="bubble">
+            Hey Jason — any questions about the plan? Happy to clarify anything. I'll also have my office reach out in the next day or two to schedule the CAC + stress echo.
+            <div class="src"><b>From:</b> Dr. Marcus Thompson · Primary Care</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="suggest">
+        <button onclick="askTeamPreset('About scheduling the cardiac workup')">Scheduling the cardiac workup</button>
+        <button onclick="askTeamPreset('Question about the statin')">Question about the statin</button>
+        <button onclick="askTeamPreset('Something doesn\\'t feel right')">Something doesn't feel right</button>
+      </div>
+    </div>
+
+    <!-- ---- MERIDIAN (AI) ---- -->
+    <div class="substate" id="messages-meridian">
+      <div style="padding: 4px 16px 0">
+        <div class="screen-eyebrow">Ask Meridian</div>
+        <h1 class="screen-title" style="margin-bottom: 8px">Anything on your mind.</h1>
+        <p class="screen-subtitle" style="margin-bottom: 14px">Grounded in your plan, your data, and Dr. Thompson's note. When I hit my limit, I route to your care team.</p>
+      </div>
+
       <div class="chat-wrap" id="chatWrap">
         <div class="msg ai">
           <div class="av">AI</div>
           <div class="bubble">
-            Good morning, Jason. Your plan was released two hours ago — <em>four decisions, two things to start tonight</em>. Want me to walk through what changed, or jump to a specific question?
+            Good morning, Jason. Your plan was released two hours ago — <em>three decisions, one thing to start tonight</em>. Want me to walk through how Dr. Thompson thought about this, or jump to a specific question?
             <div class="src"><b>Source:</b> Your plan (released Apr 18) · Dr. Thompson's note</div>
           </div>
         </div>
       </div>
 
-      <!-- Suggested prompts -->
+      <!-- Preloaded questions — shown until the user sends the first message -->
       <div class="suggest" id="suggest">
+        <div class="suggest-label">Good places to start</div>
         <button onclick="askPreset('Why the statin and not just lifestyle changes?')">Why a statin first?</button>
-        <button onclick="askPreset('What side effects should I actually watch for?')">Side effects?</button>
-        <button onclick="askPreset('How fast will my numbers change?')">How fast will I see results?</button>
-        <button onclick="askPreset('Message Dr. Thompson about scheduling.')">Message Dr. Thompson</button>
+        <button onclick="askPreset('What side effects should I actually watch for?')">Side effects I should actually watch for</button>
+        <button onclick="askPreset('How fast will my numbers change?')">How fast will my numbers change?</button>
+        <button onclick="askPreset('Explain ATM in plain language.')">What does ATM mean for me, plainly?</button>
+        <button onclick="askPreset('Walk me through Dr. Thompson\\'s reasoning.')">Walk me through Dr. Thompson's reasoning</button>
+        <button onclick="askPreset('What would make my plan change at the 12-week recheck?')">What would change the plan at 12 weeks?</button>
       </div>
     </div>
   </section>
 
-  <!-- Chat input (Messages only) -->
+  <!-- Chat input (Messages tab only — target changes based on active sub) -->
   <div class="chat-input" id="chatInput">
     <input type="text" id="chatField" placeholder="Ask about your plan..." onkeypress="if(event.key==='Enter') sendChat()"/>
     <button onclick="sendChat()">↑</button>
@@ -1852,6 +2056,28 @@
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
+
+<!-- Risk bottom sheet (opens from You → Risk cards) -->
+<div class="risk-sheet-backdrop" id="riskSheetBackdrop" onclick="closeRiskSheet()"></div>
+<div class="risk-sheet" id="riskSheet" role="dialog" aria-modal="true" aria-labelledby="rsTitle">
+  <div class="rs-handle"></div>
+  <div class="rs-head">
+    <h3 id="rsTitle"><span class="swatch" id="rsSwatch"></span><span id="rsName">Cardiovascular</span></h3>
+    <button class="rs-close" onclick="closeRiskSheet()" aria-label="Close">×</button>
+  </div>
+  <div class="rs-body">
+    <div class="rs-seed" id="rsSeed">
+      <!-- seeded content injected by openRiskSheet() -->
+    </div>
+    <div class="rs-presets" id="rsPresets">
+      <!-- preset questions injected by openRiskSheet() -->
+    </div>
+  </div>
+  <div class="rs-input">
+    <input type="text" id="rsInput" placeholder="Ask about this risk..."/>
+    <button aria-label="Send" onclick="sendRiskMessage()">↑</button>
+  </div>
+</div>
 
 <script>
   /* ===== Navigation ===== */
@@ -1922,7 +2148,8 @@
   })();
 
   /* ===== Adherence slider ===== */
-  const YEAR_PX = 6.4;
+  /* YEAR_PX tuned for 480-wide viewBox: 10yr span = axis 24→110 = 86px, so ~8.6px/yr */
+  const YEAR_PX = 8.6;
   function shiftOf(v) {
     v = Number(v);
     if (v <= 50) return (v / 50) * 0.65;
@@ -2080,6 +2307,119 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. The statin t
   function escapeHtml(s) {
     return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   }
+
+  /* ===== Team thread (direct physician) ===== */
+  function askTeamPreset(q) {
+    const wrap = document.getElementById('teamChatWrap');
+    if (!wrap) return;
+    const u = document.createElement('div');
+    u.className = 'msg user';
+    u.innerHTML = `<div class="av">JY</div><div class="bubble">${escapeHtml(q)}</div>`;
+    wrap.appendChild(u);
+    setTimeout(() => {
+      const a = document.createElement('div');
+      a.className = 'msg ai';
+      a.innerHTML = `<div class="av">MT</div><div class="bubble">Got it — I'll take a look and get back to you within the day. If it's urgent, call the office line.<div class="src"><b>From:</b> Dr. Marcus Thompson · Primary Care</div></div>`;
+      wrap.appendChild(a);
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }, 700);
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  }
+
+  /* ===== Risk bottom sheet (You → Risk cards) ===== */
+  const RISK_SHEETS = {
+    cardiovascular: {
+      name: 'Cardiovascular',
+      swatch: 'var(--dom-cardiac)',
+      seed: `Your 10-year cardiovascular risk is <b>9.4%</b> at baseline — with the planned statin, it drops toward <b>6.2%</b>. The drivers: ApoB <b>98</b> mg/dL (goal &lt;80), Lp(a) <b>62</b> mg/dL (goal &lt;30), age 47, and paternal-side GI cancer family history. <b>ApoB is the most sensitive lever</b>, which is why Decision 01 is the statin. Lp(a) is genetic and won't move — but lowering every other atherogenic particle matters more when Lp(a) is high, not less.`,
+      src: `Based on: your lab panel (Apr 10), intake, genetic report · model: PREVENT (AHA 2023)`,
+      presets: [
+        'Walk me through why ApoB matters more than LDL',
+        "What does my Lp(a) of 62 actually mean?",
+        'How much does the statin really lower my risk?',
+        'What would I expect to see on the CAC scan?',
+      ],
+    },
+    cancer: {
+      name: 'Cancer',
+      swatch: 'var(--dom-cancer)',
+      seed: `Your overall cancer risk is driven by a single finding: <b>ATM c.8147T&gt;C (pathogenic)</b>, heterozygous. ATM raises your lifetime risk of pancreatic, breast, and (to a lesser degree) prostate cancer. The clinically actionable one at 47 is <b>pancreatic</b> — which is why Decision 03 is annual pancreatic MRI starting November. Your paternal grandfather's GI cancer (early 80s) reinforces the surveillance stance but doesn't change it.`,
+      src: `Based on: Invitae 163-gene panel (Feb 3, 2026) · guideline: NCCN ATM+ surveillance`,
+      presets: [
+        "What are the odds I'll actually get pancreatic cancer?",
+        "Why MRI instead of CT or ultrasound?",
+        "Should my daughter Senna get tested?",
+        "Does ATM affect any other cancer risks I should track?",
+      ],
+    },
+    metabolic: {
+      name: 'Metabolic & autonomic',
+      swatch: 'var(--dom-metab)',
+      seed: `Everything in this domain is <b>in range</b>. A1c <b>5.4%</b>, fasting glucose <b>88</b>, HRV <b>52 ms</b>, RHR <b>52 bpm</b>, sleep <b>7h 10m</b>. No trajectory drift in the last 30 days of wearable data. This is why there's no metabolic action on your plan — <b>if it ain't broke, we don't fix it</b>. We'll re-run this model annually; if A1c creeps up or HRV trends down for a quarter, it moves onto the decision list.`,
+      src: `Based on: lab panel (Apr 10), Apple Watch wearable (30d)`,
+      presets: [
+        "What's the earliest sign something's drifting metabolically?",
+        "My RHR is low — is that really nothing to worry about?",
+        "Would continuous glucose monitoring add anything?",
+        'What if I stopped training for 6 weeks — would this move?',
+      ],
+    },
+    neuro: {
+      name: 'Neuro & cognitive',
+      swatch: 'var(--dom-neuro)',
+      seed: `Stable. The key drivers of long-horizon cognitive risk are sleep, cardiovascular health, and genetics. Your sleep is <b>7h 10m</b> average with <b>1h 20m deep</b> — in the favorable range. Your cardiovascular plan (statin + CAC) is also the single biggest lever for brain health, since the same arteries feed both. Your in-laws' dementia isn't genetically yours — different bloodline. Nothing to do today. <b>Annual re-run</b> is the longest-horizon lever we have.`,
+      src: `Based on: wearable sleep data (30d), cardiovascular model output, family history intake`,
+      presets: [
+        "How does cardiovascular health affect dementia risk?",
+        "Would I benefit from an APOE test?",
+        "What's the first early sign I should watch for?",
+        "Does my in-laws' dementia raise Senna's risk?",
+      ],
+    },
+  };
+
+  function openRiskSheet(key) {
+    const cfg = RISK_SHEETS[key];
+    if (!cfg) return;
+    document.getElementById('rsName').textContent = cfg.name;
+    document.getElementById('rsSwatch').style.background = cfg.swatch;
+    document.getElementById('rsSeed').innerHTML = cfg.seed + `<div class="src">${cfg.src}</div>`;
+    const presetsEl = document.getElementById('rsPresets');
+    presetsEl.innerHTML = '';
+    cfg.presets.forEach(q => {
+      const b = document.createElement('button');
+      b.textContent = q;
+      b.onclick = () => submitRiskPreset(q, key);
+      presetsEl.appendChild(b);
+    });
+    document.getElementById('riskSheet').classList.add('open');
+    document.getElementById('riskSheetBackdrop').classList.add('open');
+  }
+  function closeRiskSheet() {
+    document.getElementById('riskSheet').classList.remove('open');
+    document.getElementById('riskSheetBackdrop').classList.remove('open');
+  }
+  function submitRiskPreset(q, key) {
+    // Route into the Meridian (AI) chat, pre-seeded with the domain context
+    closeRiskSheet();
+    gotoTab('messages');
+    gotoSub('messages', 'meridian');
+    setTimeout(() => askPreset(q), 120);
+  }
+  function sendRiskMessage() {
+    const el = document.getElementById('rsInput');
+    const text = (el.value || '').trim();
+    if (!text) return;
+    el.value = '';
+    closeRiskSheet();
+    gotoTab('messages');
+    gotoSub('messages', 'meridian');
+    setTimeout(() => askPreset(text), 120);
+  }
+  // ESC closes sheet
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeRiskSheet();
+  });
 
   /* ===== Audio player (physician message) ===== */
   const audio = document.getElementById('mdAudio');
