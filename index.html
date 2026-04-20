@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#08090a">
+<title>Meridian — Your Care Plan</title>
+<style>
+  /*
+    Meridian Patient — Post-Release Experience
+    Design System: Meridian MD (Linear-native dark) — inherited from physician prototype.
+    Voice: patient-facing. "You" language is allowed here (unlike physician surface).
+    Do not introduce new tokens.
+  */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #08090a;
+    --bg-panel: #17181b;
+    --bg-surface: #24262a;
+    --bg-hover: #30333a;
+
+    --border-subtle: #24262a;
+    --border: #35383e;
+    --border-strong: #42464d;
+
+    --text: #f7f8f8;
+    --text-secondary: #d0d6e0;
+    --text-muted: #a8adb7;
+
+    --accent: #5e6ad2;
+    --accent-hover: #7170ff;
+    --accent-bright: #828fff;
+    --accent-light: rgba(113, 112, 255, 0.08);
+    --accent-tint: rgba(113, 112, 255, 0.12);
+
+    --status-ok: #27a644;
+    --status-ok-bright: #10b981;
+    --status-warn: #e09b2d;
+    --status-crit: #e8604c;
+
+    /* Domain colors for risk viz (from DS) */
+    --dom-cardiac: #e8604c;
+    --dom-cancer:  #d14a6a;
+    --dom-indep:   #e09b2d;
+    --dom-mobility: #6db1c9;
+
+    --radius: 10px;
+    --radius-sm: 6px;
+    --radius-xs: 4px;
+
+    --maxw: 480px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-feature-settings: "cv01", "ss03";
+    -webkit-font-smoothing: antialiased;
+    font-size: 15px;
+    line-height: 1.5;
+    overscroll-behavior-y: none;
+  }
+
+  /* =====================================================================
+     Phone shell
+  ===================================================================== */
+  .shell {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-bottom: 88px; /* nav height */
+  }
+
+  /* =====================================================================
+     App header
+  ===================================================================== */
+  .topbar {
+    position: sticky; top: 0;
+    background: rgba(8,9,10,0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    z-index: 40;
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 14px 20px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .brand .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent-hover);
+    box-shadow: 0 0 8px var(--accent-hover);
+  }
+  .brand b { font-weight: 600; }
+  .brand .muted { color: var(--text-muted); font-weight: 400; }
+
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, #3a3f4a, #242730);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+  }
+
+  /* =====================================================================
+     Notification banner (initial state)
+  ===================================================================== */
+  .notify {
+    margin: 14px 16px 0;
+    background: linear-gradient(135deg, rgba(113,112,255,0.14), rgba(113,112,255,0.04));
+    border: 1px solid rgba(113,112,255,0.25);
+    border-radius: var(--radius);
+    padding: 14px 14px 14px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    animation: slideIn 0.4s ease-out;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .notify .ic {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: rgba(113,112,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    color: var(--accent-bright);
+  }
+  .notify .meta {
+    font-size: 11px; color: var(--text-muted); letter-spacing: 0.02em;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .notify .headline { font-size: 14px; color: var(--text); font-weight: 500; }
+  .notify .when { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  .notify .x {
+    color: var(--text-muted); cursor: pointer; font-size: 16px; padding: 2px 6px;
+    background: none; border: none; border-radius: 4px;
+    transition: color 0.12s, background 0.12s;
+  }
+  .notify .x:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+
+  /* =====================================================================
+     Screens
+  ===================================================================== */
+  .screen {
+    display: none;
+    padding: 20px 16px 40px;
+    animation: fadeIn 0.2s ease-out;
+  }
+  .screen.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .screen-eyebrow {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .screen-title {
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    line-height: 1.25;
+    margin: 0 0 6px;
+  }
+  .screen-subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin: 0 0 24px;
+    line-height: 1.5;
+  }
+
+  .section-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    margin: 28px 0 10px;
+  }
+
+  /* =====================================================================
+     Cards
+  ===================================================================== */
+  .card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 12px;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .card.clickable { cursor: pointer; }
+  .card.clickable:hover { border-color: var(--border); }
+  .card.clickable:active { transform: scale(0.994); }
+
+  .card-row {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  /* =====================================================================
+     SCREEN 1 — Visit Summary
+  ===================================================================== */
+  .doctor-hero {
+    background: linear-gradient(160deg, rgba(113,112,255,0.05), rgba(113,112,255,0.01));
+    border: 1px solid rgba(113,112,255,0.18);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .doctor-row {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 14px;
+  }
+  .doc-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, #4a5573, #2f3547);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text);
+    font-weight: 500;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .doc-name { font-weight: 500; color: var(--text); font-size: 14px; }
+  .doc-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .doctor-note {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .doctor-note em { color: var(--text); font-style: normal; font-weight: 500; }
+
+  .visit-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 6px;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+  }
+
+  /* Decision summary cards (Do / Why / Goal pattern, patient-voice) */
+  .decision {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .decision:hover { border-color: var(--border); }
+  .decision-hd {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .decision-num {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--accent-hover);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+  }
+  .decision-num .chip {
+    background: var(--accent-tint);
+    color: var(--accent-bright);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .decision-chev {
+    color: var(--text-muted);
+    transition: transform 0.2s;
+    font-size: 12px;
+  }
+  .decision.open .decision-chev { transform: rotate(90deg); }
+
+  .decision h3 {
+    margin: 0 0 4px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.35;
+  }
+  .decision .why {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+  .decision-detail {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.28s ease-out;
+  }
+  .decision.open .decision-detail { max-height: 520px; }
+  .decision-detail-inner {
+    padding-top: 14px;
+    margin-top: 14px;
+    border-top: 1px solid var(--border-subtle);
+    display: grid;
+    gap: 12px;
+  }
+  .kv {
+    font-size: 13px; color: var(--text-secondary);
+    line-height: 1.55;
+  }
+  .kv b {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+  .decision-actions {
+    margin-top: 4px;
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+
+  /* =====================================================================
+     Buttons
+  ===================================================================== */
+  .btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background 0.12s;
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px;
+  }
+  .btn:hover { background: var(--accent-hover); }
+  .btn:active { transform: scale(0.98); }
+  .btn.ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+  }
+  .btn.ghost:hover { background: var(--bg-panel); border-color: var(--border-strong); }
+  .btn.wide { width: 100%; padding: 14px; font-size: 14px; }
+  .btn.success {
+    background: var(--status-ok);
+  }
+  .btn.success:hover { background: var(--status-ok-bright); }
+
+  /* =====================================================================
+     SCREEN 2 — This Week
+  ===================================================================== */
+  .fg-action {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .fg-action::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent-hover);
+  }
+  .fg-action.done::before { background: var(--status-ok-bright); }
+  .fg-eyebrow {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-bright);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .fg-action.done .fg-eyebrow { color: var(--status-ok-bright); }
+  .fg-title {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.35;
+    margin-bottom: 6px;
+  }
+  .fg-detail {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin-bottom: 14px;
+  }
+  .fg-meta {
+    display: flex; align-items: center; gap: 14px;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+  .fg-meta b {
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  .fg-meta .divider { color: var(--border); }
+
+  .bg-action {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .bg-action:hover { border-color: var(--border); }
+  .bg-num {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    min-width: 18px;
+  }
+  .bg-text {
+    flex: 1;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+  .bg-text small {
+    display: block;
+    color: var(--text-muted);
+    font-size: 11px;
+    margin-top: 2px;
+  }
+  .bg-chev { color: var(--text-muted); font-size: 14px; }
+
+  /* =====================================================================
+     SCREEN 3 — Your Two Futures (RiskViscerality milestone ladder)
+  ===================================================================== */
+  .framing {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .framing b { color: var(--text); font-weight: 500; }
+  .framing .note {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    display: block;
+  }
+
+  .chart-wrap {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 18px 14px 16px;
+    margin-bottom: 16px;
+  }
+  .chart-legend {
+    display: flex; flex-wrap: wrap; gap: 10px 16px;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+  .chart-legend span { display: inline-flex; align-items: center; gap: 5px; }
+  .chart-legend i {
+    width: 10px; height: 10px; border-radius: 2px; display: inline-block;
+  }
+  .chart svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .chart-summary {
+    text-align: center;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .chart-summary b { color: var(--text); font-weight: 500; font-size: 18px; display: block; margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+  /* Adherence slider (journey) */
+  .slider-wrap {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 16px 18px 18px;
+    margin-bottom: 16px;
+  }
+  .slider-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 4px;
+  }
+  .slider-head .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .slider-head .stage {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .slider-head .stage small {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 400;
+    margin-left: 6px;
+  }
+  .journey {
+    position: relative;
+    margin: 16px 0 6px;
+    height: 38px;
+  }
+  .journey input {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: var(--bg-surface);
+    border-radius: 3px;
+    outline: none;
+    margin: 16px 0;
+  }
+  .journey input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--accent-hover);
+    cursor: pointer;
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--accent-hover), 0 0 12px rgba(113,112,255,0.35);
+  }
+  .journey input::-moz-range-thumb {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--accent-hover);
+    cursor: pointer;
+    border: 3px solid var(--bg);
+  }
+  .journey-ticks {
+    display: flex; justify-content: space-between;
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: -2px;
+  }
+  .journey-gain {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-subtle);
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .journey-gain b {
+    color: var(--text);
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    display: inline-block;
+    min-width: 48px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* People grid */
+  .people-wrap {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 16px;
+  }
+  .people-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+  .people-head h4 { margin: 0; font-size: 14px; font-weight: 500; color: var(--text); }
+  .people-head .tag { font-size: 11px; color: var(--text-muted); }
+  .people-grid {
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    gap: 3px;
+    margin: 10px 0 4px;
+  }
+  .ppl {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--bg-surface);
+    transition: background 0.2s;
+  }
+  .ppl.risk { background: var(--status-crit); }
+  .ppl.saved { background: var(--status-ok-bright); }
+  .people-legend {
+    font-size: 12px; color: var(--text-muted);
+    margin-top: 12px;
+    line-height: 1.55;
+  }
+  .people-legend b { color: var(--text); font-weight: 500; }
+
+  .disclosure-footer {
+    background: transparent;
+    border: 1px dashed var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin-bottom: 8px;
+  }
+  .disclosure-footer b { color: var(--text-secondary); font-weight: 500; }
+
+  /* =====================================================================
+     SCREEN 4 — Full Plan (all cards, expandable)
+  ===================================================================== */
+  .plan-group {
+    margin-bottom: 22px;
+  }
+
+  /* =====================================================================
+     SCREEN 5 — Check-ins
+  ===================================================================== */
+  .checkin {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .checkin-hd {
+    padding: 16px 18px;
+    display: flex; align-items: center; gap: 14px;
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+  .checkin-hd:hover { background: rgba(255,255,255,0.015); }
+  .checkin-stage {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg-surface);
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .checkin.done .checkin-stage {
+    background: rgba(16,185,129,0.15);
+    border-color: rgba(16,185,129,0.4);
+    color: var(--status-ok-bright);
+  }
+  .checkin.active .checkin-stage {
+    background: var(--accent-tint);
+    border-color: var(--accent-hover);
+    color: var(--accent-bright);
+  }
+  .checkin-title {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.35;
+  }
+  .checkin-title small {
+    display: block;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 400;
+    margin-top: 2px;
+  }
+  .checkin-chev { color: var(--text-muted); transition: transform 0.2s; font-size: 14px; }
+  .checkin.open .checkin-chev { transform: rotate(90deg); }
+  .checkin-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+  }
+  .checkin.open .checkin-body { max-height: 480px; }
+  .checkin-body-inner {
+    padding: 4px 18px 18px;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .signals {
+    margin: 12px 0 4px;
+    display: grid;
+    gap: 8px;
+  }
+  .signal {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 10px 12px;
+    background: var(--bg-surface);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+  }
+  .signal .name { color: var(--text-secondary); }
+  .signal .val {
+    color: var(--text); font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  /* =====================================================================
+     Bottom navigation
+  ===================================================================== */
+  .navbar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    background: rgba(8,9,10,0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+    z-index: 50;
+  }
+  .nav-item {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 8px 4px 6px;
+    font-family: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    letter-spacing: 0.02em;
+    border-radius: 6px;
+    transition: color 0.12s, background 0.12s;
+  }
+  .nav-item:hover { color: var(--text-secondary); }
+  .nav-item.active { color: var(--accent-hover); }
+  .nav-item svg { width: 22px; height: 22px; display: block; }
+
+  /* =====================================================================
+     Toasts + misc
+  ===================================================================== */
+  .toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--text);
+    z-index: 100;
+    transition: transform 0.25s ease-out, opacity 0.25s;
+    opacity: 0;
+    pointer-events: none;
+    max-width: calc(var(--maxw) - 32px);
+  }
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  /* SVG icon helper */
+  .ic-svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+  /* Link-style button inside text */
+  .inline-link {
+    color: var(--accent-hover);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* Utility */
+  .stack > * + * { margin-top: 8px; }
+  .row { display: flex; gap: 8px; align-items: center; }
+  .spacer { flex: 1; }
+
+  /* Mobile tweaks */
+  @media (max-width: 380px) {
+    .screen { padding: 16px 12px 40px; }
+    .screen-title { font-size: 20px; }
+    .visit-stats { grid-template-columns: 1fr 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ============================================================= -->
+  <!-- TOPBAR -->
+  <!-- ============================================================= -->
+  <div class="topbar">
+    <div class="brand">
+      <span class="dot"></span>
+      <span><b>Meridian</b> <span class="muted">· your plan</span></span>
+    </div>
+    <div class="avatar" title="Jason Yim">JY</div>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- NOTIFICATION BANNER (dismissable) -->
+  <!-- ============================================================= -->
+  <div class="notify" id="notifyBanner">
+    <div class="ic">
+      <svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M20 4L9 15l-5-5"/>
+      </svg>
+    </div>
+    <div style="flex:1; min-width:0">
+      <div class="meta">New · your care plan is ready</div>
+      <div class="headline">Dr. Thompson finished reviewing your results.</div>
+      <div class="when">Released 2 hours ago · 4 decisions · 3 things to start</div>
+    </div>
+    <button class="x" onclick="dismissBanner()" aria-label="Dismiss">×</button>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- SCREEN 1 — VISIT SUMMARY -->
+  <!-- ============================================================= -->
+  <section class="screen active" id="screen-summary">
+    <div class="screen-eyebrow">This review · April 18</div>
+    <h1 class="screen-title">Here's what we decided.</h1>
+    <p class="screen-subtitle">A short note from Dr. Thompson, then your three actions. Tap any card to see the full reasoning.</p>
+
+    <!-- Doctor hero -->
+    <div class="doctor-hero">
+      <div class="doctor-row">
+        <div class="doc-avatar">MT</div>
+        <div>
+          <div class="doc-name">Dr. Marcus Thompson</div>
+          <div class="doc-meta">Primary Care · Meridian</div>
+        </div>
+      </div>
+      <div class="doctor-note">
+        "Jason — your latest labs and wearable data tell a consistent story. Your cardiovascular trajectory is drifting in the wrong direction, and the autonomic signals <em>(low HRV, elevated resting HR)</em> suggest stress load is fueling it. Everything in this plan is pointed at that one pattern. <em>The highest-leverage move is the statin — start there.</em> We'll recheck labs at 12 weeks."
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="visit-stats">
+      <div class="stat-card">
+        <div class="stat-num">3</div>
+        <div class="stat-label">to start</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">1</div>
+        <div class="stat-label">to watch</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">12w</div>
+        <div class="stat-label">to recheck</div>
+      </div>
+    </div>
+
+    <div class="section-label">Your decisions</div>
+
+    <!-- Decision 1 — Statin -->
+    <div class="decision" onclick="toggleDecision(this)">
+      <div class="decision-hd">
+        <div class="decision-num"><span class="chip">Most leverage</span> 01</div>
+        <div class="decision-chev">›</div>
+      </div>
+      <h3>Start a low-dose statin (rosuvastatin 10 mg nightly)</h3>
+      <div class="why">Because your ApoB and Lp(a) together put cardiovascular risk materially above your age band — and this is the single biggest dial to move.</div>
+      <div class="decision-detail">
+        <div class="decision-detail-inner">
+          <div class="kv">
+            <b>What the plan is</b>
+            Take one 10 mg pill at bedtime. No food requirement. Side effects to watch: unusual muscle soreness — tell us if it happens.
+          </div>
+          <div class="kv">
+            <b>Why it matters for you specifically</b>
+            ApoB 102 mg/dL (goal &lt;80) and Lp(a) elevated. Together these are driving most of your cardiac risk trajectory. This intervention alone moves your 10-year risk from 11.2% to roughly 7.6%.
+          </div>
+          <div class="kv">
+            <b>How we'll know it's working</b>
+            Repeat ApoB at 12 weeks. Target: &lt;80 mg/dL. You'll also likely see your LDL drop 40%+.
+          </div>
+          <div class="decision-actions">
+            <button class="btn" onclick="event.stopPropagation(); startAction('statin')">Start today</button>
+            <button class="btn ghost" onclick="event.stopPropagation(); askAbout('statin')">Ask a question</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decision 2 — Sleep extension + stress -->
+    <div class="decision" onclick="toggleDecision(this)">
+      <div class="decision-hd">
+        <div class="decision-num"><span class="chip">Second</span> 02</div>
+        <div class="decision-chev">›</div>
+      </div>
+      <h3>8-week sleep and stress protocol</h3>
+      <div class="why">Because your HRV has been trending down for 6 months and your resting heart rate crept up. That's a nervous-system story, and it's likely making the cardiac number worse.</div>
+      <div class="decision-detail">
+        <div class="decision-detail-inner">
+          <div class="kv">
+            <b>What the plan is</b>
+            Extend sleep to 7.5 hours as a minimum. Wind-down 30 minutes before bed — no screens, dim lights, room below 68°F. Breath work protocol 10 min/day (we'll send the specific one). Reassess in 8 weeks.
+          </div>
+          <div class="kv">
+            <b>Why it matters for you specifically</b>
+            HRV dropped from 58ms (Oct) to 42ms (now). Resting HR rose from 52 to 58. This is the autonomic pattern that amplifies inflammatory and cardiovascular risk simultaneously.
+          </div>
+          <div class="kv">
+            <b>How we'll know it's working</b>
+            HRV back above 50ms on 4-week average. Resting HR under 55.
+          </div>
+          <div class="decision-actions">
+            <button class="btn" onclick="event.stopPropagation(); startAction('sleep')">Start tonight</button>
+            <button class="btn ghost" onclick="event.stopPropagation(); askAbout('sleep')">Ask a question</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decision 3 — Cardiac gate -->
+    <div class="decision" onclick="toggleDecision(this)">
+      <div class="decision-hd">
+        <div class="decision-num"><span class="chip">Third</span> 03</div>
+        <div class="decision-chev">›</div>
+      </div>
+      <h3>Cardiac workup before endurance training spikes</h3>
+      <div class="why">Because you're pushing hard on the bike — we want a clean look at the coronary arteries before we let the intensity climb further.</div>
+      <div class="decision-detail">
+        <div class="decision-detail-inner">
+          <div class="kv">
+            <b>What the plan is</b>
+            One-time coronary calcium scan (CAC) + stress echocardiogram. Both are low-risk, done outpatient in ~90 minutes total. Scheduling handled by our office.
+          </div>
+          <div class="kv">
+            <b>Why it matters for you specifically</b>
+            At 47 with elevated ApoB/Lp(a) and a family history of cardiac disease, we want a baseline before the statin has time to remodel anything. It's the most durable data point we'll ever get on your arteries.
+          </div>
+          <div class="kv">
+            <b>How we'll know it's working</b>
+            Result itself is the answer. If CAC &lt; 100 we stay the course; if higher we revisit intensity targets.
+          </div>
+          <div class="decision-actions">
+            <button class="btn" onclick="event.stopPropagation(); startAction('cardiac')">Schedule now</button>
+            <button class="btn ghost" onclick="event.stopPropagation(); askAbout('cardiac')">Ask a question</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decision 4 — Surveillance (to watch) -->
+    <div class="decision" onclick="toggleDecision(this)">
+      <div class="decision-hd">
+        <div class="decision-num"><span class="chip" style="background: rgba(224,155,45,0.18); color: var(--status-warn)">To watch</span> 04</div>
+        <div class="decision-chev">›</div>
+      </div>
+      <h3>Annual pancreatic MRI surveillance</h3>
+      <div class="why">Because of your ATM+ status, we want to keep a continuous eye here. Not urgent — due in November.</div>
+      <div class="decision-detail">
+        <div class="decision-detail-inner">
+          <div class="kv">
+            <b>What the plan is</b>
+            MRI with MRCP, contrast. 45-minute scan. One time per year ongoing. Next one: November 2026.
+          </div>
+          <div class="kv">
+            <b>Why it matters for you specifically</b>
+            ATM+ raises pancreatic cancer risk meaningfully. Early detection is the whole game here — MRI catches what ultrasound and CT miss. This is prevention, not diagnosis.
+          </div>
+          <div class="kv">
+            <b>How we'll know it's working</b>
+            Every annual scan is "the result." We're looking for stability year-over-year.
+          </div>
+          <div class="decision-actions">
+            <button class="btn ghost" onclick="event.stopPropagation(); startAction('mri')">Add to November</button>
+            <button class="btn ghost" onclick="event.stopPropagation(); askAbout('mri')">Ask a question</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 28px">
+      <button class="btn wide" onclick="goto('week')">See what to start this week →</button>
+    </div>
+  </section>
+
+  <!-- ============================================================= -->
+  <!-- SCREEN 2 — THIS WEEK -->
+  <!-- ============================================================= -->
+  <section class="screen" id="screen-week">
+    <div class="screen-eyebrow">This week</div>
+    <h1 class="screen-title">Two things, nothing else.</h1>
+    <p class="screen-subtitle">Dr. Thompson narrowed your plan down to what matters this week. The rest can wait.</p>
+
+    <div class="section-label">Start today</div>
+
+    <!-- FG Action 1 -->
+    <div class="fg-action" id="fg-statin">
+      <div class="fg-eyebrow">
+        <span>●</span> Most important
+      </div>
+      <div class="fg-title">Take your first statin tonight.</div>
+      <div class="fg-detail">Rosuvastatin 10 mg. Any time before bed, with or without food. We'll send one reminder a day for the first two weeks — you can turn it off in Settings anytime.</div>
+      <div class="fg-meta">
+        <span>🕘 <b>Nightly</b></span>
+        <span class="divider">·</span>
+        <span>📅 Recheck <b>12 weeks</b></span>
+      </div>
+      <button class="btn wide" onclick="markStartedTonight(this)">I started tonight</button>
+    </div>
+
+    <!-- FG Action 2 -->
+    <div class="fg-action" id="fg-sleep">
+      <div class="fg-eyebrow">
+        <span>●</span> Starts tonight too
+      </div>
+      <div class="fg-title">Set a 9:45 PM wind-down.</div>
+      <div class="fg-detail">Lights dim, screens off. Asleep by 10:15 gets you a real 7.5 hours. We'll pair this with a 5-minute breath-work protocol — tap below to see it.</div>
+      <div class="fg-meta">
+        <span>🌙 <b>Every night</b></span>
+        <span class="divider">·</span>
+        <span>📊 Reassess <b>8 weeks</b></span>
+      </div>
+      <div style="display:flex; gap: 8px;">
+        <button class="btn" style="flex:1" onclick="toast('Protocol opened — find it in Check-ins')">See the protocol</button>
+        <button class="btn ghost" onclick="toast('Reminder set: 9:45 PM nightly')">Set reminder</button>
+      </div>
+    </div>
+
+    <div class="section-label">Scheduled separately</div>
+
+    <div class="bg-action" onclick="toast('Cardiac workup — we\\'ll text you dates')">
+      <div class="bg-num">03</div>
+      <div class="bg-text">
+        Cardiac workup (CAC + stress echo)
+        <small>Office will text scheduling options within 48 hours</small>
+      </div>
+      <div class="bg-chev">›</div>
+    </div>
+
+    <div class="bg-action" onclick="toast('Pancreatic MRI — queued for November')">
+      <div class="bg-num">04</div>
+      <div class="bg-text">
+        Annual pancreatic MRI
+        <small>Scheduled for November 2026 · you'll get a reminder at 60 days</small>
+      </div>
+      <div class="bg-chev">›</div>
+    </div>
+
+    <div class="section-label">Background, ongoing</div>
+
+    <div class="bg-action" onclick="toast('Continue what you are already doing.')">
+      <div class="bg-num">—</div>
+      <div class="bg-text">
+        Keep up current training + nutrition
+        <small>No changes needed. Your base is already contributing.</small>
+      </div>
+      <div class="bg-chev">›</div>
+    </div>
+
+    <div style="margin-top: 28px">
+      <button class="btn wide ghost" onclick="goto('futures')">See why this matters long-term →</button>
+    </div>
+  </section>
+
+  <!-- ============================================================= -->
+  <!-- SCREEN 3 — YOUR TWO FUTURES -->
+  <!-- ============================================================= -->
+  <section class="screen" id="screen-futures">
+    <div class="screen-eyebrow">What's at stake</div>
+    <h1 class="screen-title">Two futures. The difference is the plan.</h1>
+    <p class="screen-subtitle">This isn't a prediction about you specifically. It's what happens for people like you, at your age and profile, over 20 years.</p>
+
+    <div class="framing">
+      <b>What you're looking at:</b> people with your risk profile (47, male, ApoB elevated, HRV dropping, ATM+) are tracked in the research cohort below. We're showing when half of them hit each milestone, with and without this kind of plan.
+      <span class="note">Cohort: matched on age ±3y, sex, ApoB ±10 mg/dL, HRV ±5ms, ATM status. N ≈ 1,800.</span>
+    </div>
+
+    <!-- SVG chart -->
+    <div class="chart-wrap">
+      <div class="chart-legend">
+        <span><i style="background: var(--dom-cardiac)"></i>Heart attack / stroke</span>
+        <span><i style="background: var(--dom-cancer)"></i>Cancer diagnosis</span>
+        <span><i style="background: var(--dom-indep)"></i>Loss of independence</span>
+        <span><i style="background: var(--dom-mobility)"></i>Noticeable mobility loss</span>
+      </div>
+
+      <div class="chart">
+        <svg viewBox="0 0 360 250" xmlns="http://www.w3.org/2000/svg">
+          <!-- Axis line -->
+          <line x1="24" y1="220" x2="340" y2="220" stroke="#35383e" stroke-width="1"/>
+          <!-- Age labels -->
+          <g font-family="Inter" font-size="10" fill="#a8adb7" text-anchor="middle">
+            <text x="24"  y="236">50</text>
+            <text x="88"  y="236">60</text>
+            <text x="152" y="236">70</text>
+            <text x="216" y="236">80</text>
+            <text x="280" y="236">90</text>
+            <text x="340" y="236">100</text>
+          </g>
+
+          <!-- Track labels (above each stack, not inside) -->
+          <g font-family="Inter" font-size="10" fill="#a8adb7">
+            <text x="24" y="20" font-weight="500">WITHOUT this plan</text>
+            <text x="24" y="128" font-weight="500">WITH this plan</text>
+          </g>
+
+          <!-- =======  WITHOUT track (hollow bands, lanes 40-86)  ======= -->
+          <g id="track-without">
+            <!-- Cardiac  age 62 (±4) lane 40 -->
+            <rect class="band" data-dom="cardiac" data-track="without"
+                  x="241" y="34" width="51" height="11" rx="2"
+                  fill="#e8604c" fill-opacity="0.08" stroke="#e8604c" stroke-width="1"/>
+            <!-- Cancer  age 71 (±5) lane 54 -->
+            <rect class="band" data-dom="cancer" data-track="without"
+                  x="288" y="56" width="64" height="11" rx="2"
+                  fill="#d14a6a" fill-opacity="0.08" stroke="#d14a6a" stroke-width="1"/>
+            <!-- Loss of independence  age 76 (±4) lane 68 -->
+            <rect class="band" data-dom="indep" data-track="without"
+                  x="317" y="78" width="51" height="11" rx="2"
+                  fill="#e09b2d" fill-opacity="0.08" stroke="#e09b2d" stroke-width="1"/>
+            <!-- Mobility  age 73 (±5) lane 82 -->
+            <rect class="band" data-dom="mobility" data-track="without"
+                  x="304" y="100" width="64" height="11" rx="2"
+                  fill="#6db1c9" fill-opacity="0.08" stroke="#6db1c9" stroke-width="1"/>
+          </g>
+
+          <!-- =======  WITH track (solid bands; these move)  ======= -->
+          <g id="track-with">
+            <rect class="band" data-dom="cardiac" data-track="with" data-baseline-age="62" data-max-shift="10"
+                  x="282" y="140" width="51" height="11" rx="2"
+                  fill="#e8604c" fill-opacity="0.55"/>
+            <rect class="band" data-dom="cancer"  data-track="with" data-baseline-age="71" data-max-shift="6"
+                  x="320" y="162" width="64" height="11" rx="2"
+                  fill="#d14a6a" fill-opacity="0.55"/>
+            <rect class="band" data-dom="indep"   data-track="with" data-baseline-age="76" data-max-shift="9"
+                  x="362" y="184" width="51" height="11" rx="2"
+                  fill="#e09b2d" fill-opacity="0.55"/>
+            <rect class="band" data-dom="mobility" data-track="with" data-baseline-age="73" data-max-shift="7"
+                  x="349" y="206" width="64" height="11" rx="2"
+                  fill="#6db1c9" fill-opacity="0.55"/>
+          </g>
+
+          <!-- Connector threads (dashed) — drawn last so they're on top -->
+          <g id="connectors" stroke-dasharray="2,2" stroke-width="0.8" stroke-opacity="0.5">
+            <line data-connect="cardiac"  x1="266" y1="45"  x2="307" y2="140" stroke="#e8604c"/>
+            <line data-connect="cancer"   x1="320" y1="67"  x2="352" y2="162" stroke="#d14a6a"/>
+            <line data-connect="indep"    x1="342" y1="89"  x2="387" y2="184" stroke="#e09b2d"/>
+            <line data-connect="mobility" x1="336" y1="111" x2="381" y2="206" stroke="#6db1c9"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="chart-summary">
+        With this plan, on average, these events arrive
+        <b><span id="yearsGained">7.8</span> years later</b>
+      </div>
+    </div>
+
+    <!-- Adherence slider (journey-reframed) -->
+    <div class="slider-wrap">
+      <div class="slider-head">
+        <span class="label">Your journey</span>
+        <span class="stage"><span id="stageLabel">Fundamentals</span><small id="stageStatus">in progress</small></span>
+      </div>
+      <div class="journey">
+        <input type="range" id="adherence" min="0" max="100" value="85" oninput="updateAdherence(this.value)"/>
+        <div class="journey-ticks">
+          <span>Nothing</span>
+          <span>Fundamentals</span>
+          <span>Optimized</span>
+        </div>
+      </div>
+      <div class="journey-gain">
+        That adds <b><span id="yearsGainedInline">7.8</span></b> years, on average
+      </div>
+    </div>
+
+    <!-- People grid -->
+    <div class="people-wrap">
+      <div class="people-head">
+        <h4>Out of 100 people like you</h4>
+        <span class="tag">by age 65</span>
+      </div>
+      <div class="people-grid" id="peopleGrid"></div>
+      <div class="people-legend">
+        Without the plan, <b style="color: var(--status-crit)">11</b> have a major cardiac event by 65. With the plan, <b style="color: var(--status-ok-bright)">7</b> do. <b>4 events out of 100 are avoided</b> — that's what this plan is buying.
+      </div>
+    </div>
+
+    <div class="disclosure-footer">
+      <b>What this is and isn't.</b> Estimates come from cohort-level models (PREVENT, SEER, Framingham functional, Studenski gait). This is not an individual prediction — it's what similar people experience. Effect sizes scale with how much of the plan you actually do; the slider above is yours to move.
+    </div>
+  </section>
+
+  <!-- ============================================================= -->
+  <!-- SCREEN 4 — FULL PLAN -->
+  <!-- ============================================================= -->
+  <section class="screen" id="screen-plan">
+    <div class="screen-eyebrow">Everything</div>
+    <h1 class="screen-title">Your full plan.</h1>
+    <p class="screen-subtitle">All four decisions, every detail. Tap any card to expand.</p>
+
+    <div class="plan-group">
+      <div class="section-label">Active — start this week</div>
+
+      <div class="decision" onclick="toggleDecision(this)">
+        <div class="decision-hd">
+          <div class="decision-num"><span class="chip">Most leverage</span> 01</div>
+          <div class="decision-chev">›</div>
+        </div>
+        <h3>Start a low-dose statin (rosuvastatin 10 mg nightly)</h3>
+        <div class="why">Biggest single dial for your cardiovascular trajectory.</div>
+        <div class="decision-detail">
+          <div class="decision-detail-inner">
+            <div class="kv"><b>Your goal</b>ApoB &lt; 80 mg/dL at 12 weeks (from 102 now)</div>
+            <div class="kv"><b>Started</b><span id="statin-status">Not yet</span></div>
+            <div class="kv"><b>Watch for</b>Unusual muscle soreness. Tell us if it happens.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="decision" onclick="toggleDecision(this)">
+        <div class="decision-hd">
+          <div class="decision-num"><span class="chip">Second</span> 02</div>
+          <div class="decision-chev">›</div>
+        </div>
+        <h3>Sleep + stress protocol (8 weeks)</h3>
+        <div class="why">Your autonomic nervous system is the accelerator — we're easing off it.</div>
+        <div class="decision-detail">
+          <div class="decision-detail-inner">
+            <div class="kv"><b>Your goals</b>HRV back above 50ms (4-week avg) · Resting HR under 55</div>
+            <div class="kv"><b>Daily</b>7.5h sleep minimum · 10 min breath work · 9:45 PM wind-down</div>
+            <div class="kv"><b>Next review</b>8 weeks from now (June 13)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="plan-group">
+      <div class="section-label">Scheduled</div>
+
+      <div class="decision" onclick="toggleDecision(this)">
+        <div class="decision-hd">
+          <div class="decision-num"><span class="chip">One-time</span> 03</div>
+          <div class="decision-chev">›</div>
+        </div>
+        <h3>Cardiac workup — CAC + stress echo</h3>
+        <div class="why">Baseline your arteries before endurance intensity climbs.</div>
+        <div class="decision-detail">
+          <div class="decision-detail-inner">
+            <div class="kv"><b>Status</b>Office scheduling · you'll hear within 48h</div>
+            <div class="kv"><b>Expected window</b>Within 2–3 weeks</div>
+            <div class="kv"><b>What it will tell us</b>Coronary calcium score + wall motion at load. If CAC &lt; 100 we stay the course.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="decision" onclick="toggleDecision(this)">
+        <div class="decision-hd">
+          <div class="decision-num"><span class="chip" style="background: rgba(224,155,45,0.18); color: var(--status-warn)">Watch</span> 04</div>
+          <div class="decision-chev">›</div>
+        </div>
+        <h3>Annual pancreatic MRI</h3>
+        <div class="why">ATM+ surveillance. Early detection is the whole game.</div>
+        <div class="decision-detail">
+          <div class="decision-detail-inner">
+            <div class="kv"><b>Next scan</b>November 2026</div>
+            <div class="kv"><b>Reminder</b>You'll be notified at 60 days</div>
+            <div class="kv"><b>What we're looking for</b>Stability year-over-year. Any change triggers a conversation.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="plan-group">
+      <div class="section-label">Evidence &amp; sources</div>
+      <div class="disclosure-footer" style="margin-top:0">
+        Statin recommendation grounded in CTT meta-analyses and 2023 AHA PREVENT model. Sleep/stress protocol follows HOPE-3 autonomic extension. CAC thresholds from MESA. ATM surveillance per NCCN v.2.2025. Every number in this plan has a source — tap any decision above and ask a question to see it.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= -->
+  <!-- SCREEN 5 — CHECK-INS -->
+  <!-- ============================================================= -->
+  <section class="screen" id="screen-checkins">
+    <div class="screen-eyebrow">How we'll know it's working</div>
+    <h1 class="screen-title">What you should notice.</h1>
+    <p class="screen-subtitle">At each checkpoint, here's what the data should show and — importantly — what your body should tell you. Tap any card.</p>
+
+    <div class="checkin active open" onclick="toggleCheckin(this)">
+      <div class="checkin-hd">
+        <div class="checkin-stage">W2</div>
+        <div class="checkin-title">Week 2
+          <small>Just a vibes check</small>
+        </div>
+        <div class="checkin-chev">›</div>
+      </div>
+      <div class="checkin-body">
+        <div class="checkin-body-inner">
+          Honestly, nothing dramatic. The statin is doing silent work. The wind-down protocol should start to feel like less effort by day 10 — if you're still fighting it, we'll adjust.
+          <div class="signals">
+            <div class="signal"><span class="name">Sleep feels</span><span class="val">Less jagged</span></div>
+            <div class="signal"><span class="name">Wind-down</span><span class="val">Auto by day 10</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="checkin" onclick="toggleCheckin(this)">
+      <div class="checkin-hd">
+        <div class="checkin-stage">W4</div>
+        <div class="checkin-title">Week 4
+          <small>First real signal from your wearable</small>
+        </div>
+        <div class="checkin-chev">›</div>
+      </div>
+      <div class="checkin-body">
+        <div class="checkin-body-inner">
+          Your 4-week HRV average should start climbing. Not linearly — some nights will be worse — but the trendline turns.
+          <div class="signals">
+            <div class="signal"><span class="name">HRV (4-wk avg)</span><span class="val">≥ 45 ms</span></div>
+            <div class="signal"><span class="name">Resting HR</span><span class="val">≤ 56 bpm</span></div>
+            <div class="signal"><span class="name">Recovery between rides</span><span class="val">Returning</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="checkin" onclick="toggleCheckin(this)">
+      <div class="checkin-hd">
+        <div class="checkin-stage">W8</div>
+        <div class="checkin-title">Week 8
+          <small>Autonomic targets · this is where the math shows up</small>
+        </div>
+        <div class="checkin-chev">›</div>
+      </div>
+      <div class="checkin-body">
+        <div class="checkin-body-inner">
+          This is where the plan validates itself. If your HRV is above 50 and RHR under 55, the autonomic story is working.
+          <div class="signals">
+            <div class="signal"><span class="name">HRV (4-wk avg)</span><span class="val">≥ 50 ms</span></div>
+            <div class="signal"><span class="name">Resting HR</span><span class="val">&lt; 55 bpm</span></div>
+            <div class="signal"><span class="name">Sleep duration</span><span class="val">≥ 7.5 h avg</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="checkin" onclick="toggleCheckin(this)">
+      <div class="checkin-hd">
+        <div class="checkin-stage">W12</div>
+        <div class="checkin-title">Week 12
+          <small>Lab recheck · ApoB is the headline number</small>
+        </div>
+        <div class="checkin-chev">›</div>
+      </div>
+      <div class="checkin-body">
+        <div class="checkin-body-inner">
+          Repeat labs. ApoB below 80 is the target. If we're there, we sustain. If not, we adjust the statin dose before talking about anything else.
+          <div class="signals">
+            <div class="signal"><span class="name">ApoB</span><span class="val">&lt; 80 mg/dL</span></div>
+            <div class="signal"><span class="name">LDL</span><span class="val">−40% from baseline</span></div>
+            <div class="signal"><span class="name">hs-CRP</span><span class="val">&lt; 1.0 mg/L</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 28px">
+      <div class="disclosure-footer">
+        <b>A note about signals.</b> Wearable data is noisy day-to-day. We look at 4-week averages, not overnight swings. Don't read your ring at 6am and think the plan isn't working — the curve matters, not the point.
+      </div>
+      <button class="btn wide ghost" onclick="toast('Care team message queued')">Message the care team</button>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============================================================= -->
+<!-- BOTTOM NAV -->
+<!-- ============================================================= -->
+<nav class="navbar">
+  <button class="nav-item active" data-screen="summary" onclick="goto('summary')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+      <path d="M3 12l9-9 9 9M5 10v11h14V10"/>
+    </svg>
+    Summary
+  </button>
+  <button class="nav-item" data-screen="week" onclick="goto('week')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 7v5l3 2"/>
+    </svg>
+    This Week
+  </button>
+  <button class="nav-item" data-screen="futures" onclick="goto('futures')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+      <path d="M3 18l6-6 4 4 8-8"/>
+      <path d="M17 8h4v4"/>
+    </svg>
+    Futures
+  </button>
+  <button class="nav-item" data-screen="plan" onclick="goto('plan')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+      <path d="M4 5h16M4 12h16M4 19h10"/>
+    </svg>
+    Plan
+  </button>
+  <button class="nav-item" data-screen="checkins" onclick="goto('checkins')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+      <path d="M4 12l4 4 12-12"/>
+      <path d="M4 20l4 2"/>
+    </svg>
+    Check-ins
+  </button>
+</nav>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // =====================================================================
+  // Navigation
+  // =====================================================================
+  function goto(name) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const target = document.getElementById('screen-' + name);
+    if (target) target.classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => {
+      n.classList.toggle('active', n.dataset.screen === name);
+    });
+    // Scroll to top of the new screen
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // =====================================================================
+  // Decision cards — expand/collapse
+  // =====================================================================
+  function toggleDecision(el) {
+    el.classList.toggle('open');
+  }
+
+  // =====================================================================
+  // Check-in cards
+  // =====================================================================
+  function toggleCheckin(el) {
+    el.classList.toggle('open');
+  }
+
+  // =====================================================================
+  // Notification dismiss
+  // =====================================================================
+  function dismissBanner() {
+    const b = document.getElementById('notifyBanner');
+    b.style.transition = 'opacity 0.2s, transform 0.2s';
+    b.style.opacity = '0';
+    b.style.transform = 'translateY(-8px)';
+    setTimeout(() => b.remove(), 200);
+  }
+
+  // =====================================================================
+  // Action starters
+  // =====================================================================
+  function startAction(kind) {
+    const labels = {
+      statin: 'Statin added to your nightly reminders.',
+      sleep:  'Sleep protocol set for tonight.',
+      cardiac: 'Scheduling request sent. We\'ll text within 48h.',
+      mri:    'MRI pre-booked for November.',
+    };
+    toast(labels[kind] || 'Done.');
+    if (kind === 'statin') {
+      const s = document.getElementById('statin-status');
+      if (s) s.textContent = 'Started today';
+    }
+  }
+
+  function askAbout(kind) {
+    toast('Question sent to Dr. Thompson\'s team');
+  }
+
+  function markStartedTonight(btn) {
+    const card = btn.closest('.fg-action');
+    card.classList.add('done');
+    btn.classList.remove('btn');
+    btn.classList.add('btn', 'success', 'wide');
+    btn.innerHTML = '✓ Started tonight';
+    btn.disabled = true;
+    btn.style.opacity = '0.85';
+    btn.style.cursor = 'default';
+    toast('Nice. We\'ll check back at Week 2.');
+    // Reflect in plan screen too
+    const s = document.getElementById('statin-status');
+    if (s) s.textContent = 'Started today';
+  }
+
+  // =====================================================================
+  // Toast
+  // =====================================================================
+  let toastTimer;
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // =====================================================================
+  // People grid (icon array for absolute-frequency format)
+  // =====================================================================
+  (function renderPeople() {
+    const grid = document.getElementById('peopleGrid');
+    if (!grid) return;
+    // 100 dots · 7 saved (green) + 4 risk remaining (red) + 89 neutral
+    // Ordering: saved 0-3, risk 4-10, rest baseline
+    for (let i = 0; i < 100; i++) {
+      const d = document.createElement('div');
+      d.className = 'ppl';
+      if (i < 4) d.classList.add('saved');
+      else if (i < 11) d.classList.add('risk');
+      grid.appendChild(d);
+    }
+  })();
+
+  // =====================================================================
+  // Adherence slider — journey model
+  //   0-50 slider  -> 0-65% of maxShift (Fundamentals)
+  //   50-100 slider -> 65-100% of maxShift (Optimization)
+  //   Domain bands move horizontally; connector threads follow.
+  // =====================================================================
+  const YEAR_PX = 6.4; // 360 width covers 50→100 → (100-50)=50 yrs ≈ 320px => 6.4px/yr roughly
+  function shiftOf(sliderVal) {
+    const v = Number(sliderVal);
+    // Piecewise: fundamentals delivers 65% in first half, optimization 35% in second half
+    if (v <= 50) return (v / 50) * 0.65;
+    return 0.65 + ((v - 50) / 50) * 0.35;
+  }
+
+  function updateAdherence(v) {
+    const val = Number(v);
+    const frac = shiftOf(val); // 0..1 of max delta
+
+    // Update stage text
+    const stage = document.getElementById('stageLabel');
+    const status = document.getElementById('stageStatus');
+    if (val === 0) { stage.textContent = 'Nothing started'; status.textContent = ''; }
+    else if (val < 50) { stage.textContent = 'Fundamentals'; status.textContent = 'in progress'; }
+    else if (val === 50) { stage.textContent = 'Fundamentals'; status.textContent = 'complete'; }
+    else if (val < 100) { stage.textContent = 'Optimization'; status.textContent = 'in progress'; }
+    else { stage.textContent = 'Optimization'; status.textContent = 'complete'; }
+
+    // Move WITH bands horizontally (leftward = more years gained vs. without)
+    // At frac=0: With lies on top of Without. At frac=1: max shift applied.
+    // Max shift per domain encoded in data-max-shift (years)
+    let totalShift = 0;
+    let n = 0;
+    document.querySelectorAll('#track-with .band').forEach(band => {
+      const baselineAge = Number(band.dataset.baselineAge);
+      const maxShift = Number(band.dataset.maxShift);
+      const currentShift = maxShift * frac; // years pushed right
+
+      // Without band x = (baselineAge - 50) * 6.4 + 24 - width/2  — rough
+      // Actually we computed positions by hand in SVG. Easier: apply transform.
+      const tx = currentShift * YEAR_PX;
+      band.setAttribute('transform', `translate(${tx}, 0)`);
+      totalShift += currentShift;
+      n++;
+    });
+    document.querySelectorAll('#connectors line').forEach(line => {
+      const dom = line.dataset.connect;
+      const band = document.querySelector(`#track-with .band[data-dom="${dom}"]`);
+      if (!band) return;
+      const maxShift = Number(band.dataset.maxShift);
+      const tx = maxShift * frac * YEAR_PX;
+      const x2 = Number(line.getAttribute('x2')) + tx - Number(line.dataset.lastTx || 0);
+      line.setAttribute('x2', x2);
+      line.dataset.lastTx = maxShift * frac * YEAR_PX;
+    });
+
+    // Update summary numbers
+    const avgShift = n ? (totalShift / n) : 0;
+    const shown = avgShift.toFixed(1);
+    const yg = document.getElementById('yearsGained');
+    const ygi = document.getElementById('yearsGainedInline');
+    if (yg)  yg.textContent = shown;
+    if (ygi) ygi.textContent = shown;
+
+    // Update people grid saved/at-risk counts based on fraction (4 saved at 100% → scales)
+    const saved = Math.round(4 * frac);
+    const grid = document.getElementById('peopleGrid');
+    if (grid) {
+      const dots = grid.querySelectorAll('.ppl');
+      dots.forEach((d, i) => {
+        d.classList.remove('saved', 'risk');
+        if (i < saved) d.classList.add('saved');
+        else if (i < 11) d.classList.add('risk');
+      });
+      const legend = grid.parentElement.querySelector('.people-legend');
+      if (legend) {
+        legend.innerHTML = `Without the plan, <b style="color: var(--status-crit)">11</b> have a major cardiac event by 65. At your current journey, <b style="color: var(--status-ok-bright)">${11 - saved}</b> still do. <b>${saved} events out of 100 are avoided</b> — that's what this plan is buying.`;
+      }
+    }
+  }
+
+  // Initialize at 85% (default)
+  updateAdherence(85);
+</script>
+</body>
+</html>
