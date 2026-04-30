@@ -1880,55 +1880,43 @@
 
       <div class="section-label">Risk reduction</div>
 
-      <div class="fg-action" id="fg-statin">
-        <div class="fg-eyebrow"><span>●</span> First move</div>
-        <div class="fg-title">Start rosuvastatin tonight.</div>
-        <div class="fg-detail">ApoB 98, LDL 128, Lp(a) 62. Lower the modifiable cholesterol burden, then recheck ApoB and LDL in 8 weeks.</div>
-        <div class="fg-meta">
-          <span>🕘 <b>Nightly</b></span>
-          <span class="divider">·</span>
-          <span>🎯 ApoB <b>&lt;80</b></span>
-        </div>
-        <button class="btn wide" onclick="markStartedTonight(this)">I started tonight</button>
-      </div>
-
-      <div class="fg-action" id="fg-cac" style="margin-top:14px;">
-        <div class="fg-eyebrow"><span>●</span> Calibrate intensity</div>
-        <div class="fg-title">Schedule the CAC scan.</div>
-        <div class="fg-detail">Not a separate objective. CAC tells the team whether standard lipid lowering is enough or whether the plan should intensify.</div>
-        <div class="fg-meta">
-          <span>🫀 <b>10 min CT</b></span>
-          <span class="divider">·</span>
-          <span>📍 Changes <b>treatment intensity</b></span>
-        </div>
-        <button class="btn wide" onclick="toast('CAC scan: office will text scheduling options')">Schedule CAC</button>
-      </div>
-
-      <div class="section-label">Monitoring</div>
-
-      <div class="fg-action" id="fg-psa">
-        <div class="fg-eyebrow"><span>●</span> Setup</div>
-        <div class="fg-title">Get baseline PSA this week.</div>
-        <div class="fg-detail">ATM pathogenic variant plus no PSA on file. Establish the prostate surveillance cadence.</div>
-        <div class="fg-meta">
-          <span>🩸 <b>Blood draw</b></span>
-          <span class="divider">·</span>
-          <span>📅 Annual <b>cadence</b></span>
-        </div>
-        <button class="btn wide" onclick="markStartedTonight(this)">I scheduled it</button>
-      </div>
-
-      <div class="bg-action" onclick="toast('Genetic counseling: ATM context, cascade testing, surveillance plan')">
-        <div class="bg-num">ATM</div>
-        <div class="bg-text">Genetic counseling
-          <small>ATM context, cascade testing, surveillance cadence</small>
+      <div class="bg-action" onclick="markStartedTonight(this)">
+        <div class="bg-num">01</div>
+        <div class="bg-text">Start rosuvastatin
+          <small>ApoB 98 to target &lt;80</small>
         </div>
         <div class="bg-chev">›</div>
       </div>
 
-      <div class="bg-action" onclick="toast('Pancreatic surveillance: cadence documented')">
+      <div class="bg-action" onclick="toast('CAC scan: office will text scheduling options')">
+        <div class="bg-num">02</div>
+        <div class="bg-text">Schedule CAC
+          <small>Sets lipid intensity</small>
+        </div>
+        <div class="bg-chev">›</div>
+      </div>
+
+      <div class="section-label">Monitoring</div>
+
+      <div class="bg-action" onclick="markStartedTonight(this)">
+        <div class="bg-num">PSA</div>
+        <div class="bg-text">Baseline PSA
+          <small>Start prostate cadence</small>
+        </div>
+        <div class="bg-chev">›</div>
+      </div>
+
+      <div class="bg-action" onclick="toast('Genetic counseling: ATM context and cascade testing')">
+        <div class="bg-num">ATM</div>
+        <div class="bg-text">Genetic counseling
+          <small>ATM context, cascade testing</small>
+        </div>
+        <div class="bg-chev">›</div>
+      </div>
+
+      <div class="bg-action" onclick="toast('Pancreatic surveillance: start age, modality, interval')">
         <div class="bg-num">50</div>
-        <div class="bg-text">Pancreatic surveillance cadence
+        <div class="bg-text">Pancreatic surveillance
           <small>Start age, modality, interval</small>
         </div>
         <div class="bg-chev">›</div>
@@ -1936,35 +1924,8 @@
 
       <div class="bg-action" onclick="toast('Colonoscopy status: confirm prior screening or schedule baseline')">
         <div class="bg-num">CRC</div>
-        <div class="bg-text">Confirm colonoscopy status
-          <small>If none on file, schedule baseline</small>
-        </div>
-        <div class="bg-chev">›</div>
-      </div>
-
-      <div class="section-label">Next checks</div>
-
-      <div class="watch-card active">
-        <div class="watch-stage">W2</div>
-        <div class="watch-body">
-          <div class="watch-title">Statin tolerance</div>
-          <div class="watch-signals">Muscle symptoms, adherence, dose path</div>
-        </div>
-        <div class="bg-chev">›</div>
-      </div>
-      <div class="watch-card">
-        <div class="watch-stage">W8</div>
-        <div class="watch-body">
-          <div class="watch-title">ApoB and LDL response</div>
-          <div class="watch-signals">If ApoB stays ≥80 or LDL drop is weak, change tactic</div>
-        </div>
-        <div class="bg-chev">›</div>
-      </div>
-      <div class="watch-card">
-        <div class="watch-stage">CAC</div>
-        <div class="watch-body">
-          <div class="watch-title">Risk calibration</div>
-          <div class="watch-signals">Result sets lipid intensity</div>
+        <div class="bg-text">Colonoscopy status
+          <small>Baseline if none on file</small>
         </div>
         <div class="bg-chev">›</div>
       </div>
