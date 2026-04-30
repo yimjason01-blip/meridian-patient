@@ -2464,64 +2464,6 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeRiskSheet();
   });
-
-  /* ===== Audio player (physician message) ===== */
-  const audio = document.getElementById('mdAudio');
-  const playBtn = document.getElementById('apPlay');
-  const fill = document.getElementById('apFill');
-  const thumb = document.getElementById('apThumb');
-  const timeEl = document.getElementById('apTime');
-  const durEl = document.getElementById('audioDuration');
-
-  function fmtTime(s) {
-    if (!isFinite(s)) return '0:00';
-    const m = Math.floor(s / 60);
-    const sec = Math.floor(s % 60).toString().padStart(2, '0');
-    return `${m}:${sec}`;
-  }
-
-  if (audio) {
-    audio.addEventListener('loadedmetadata', () => {
-      if (durEl) durEl.textContent = fmtTime(audio.duration);
-    });
-    audio.addEventListener('timeupdate', () => {
-      const pct = (audio.currentTime / (audio.duration || 1)) * 100;
-      if (fill)  fill.style.width = pct + '%';
-      if (thumb) thumb.style.left = pct + '%';
-      if (timeEl) timeEl.textContent = fmtTime(audio.currentTime);
-    });
-    audio.addEventListener('ended', () => {
-      if (playBtn) playBtn.classList.remove('playing');
-    });
-    audio.addEventListener('play', () => {
-      if (playBtn) playBtn.classList.add('playing');
-    });
-    audio.addEventListener('pause', () => {
-      if (playBtn) playBtn.classList.remove('playing');
-    });
-  }
-
-  function togglePlay() {
-    if (!audio) return;
-    if (audio.paused) audio.play().catch(e => toast('Tap play to start'));
-    else audio.pause();
-  }
-
-  function seekAudio(event) {
-    if (!audio || !audio.duration) return;
-    const track = event.currentTarget;
-    const rect = track.getBoundingClientRect();
-    const pct = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-    audio.currentTime = pct * audio.duration;
-  }
-
-  function toggleTranscript(btn) {
-    btn.classList.toggle('open');
-    const panel = document.getElementById('mdTranscript');
-    if (panel) panel.classList.toggle('open');
-    const lbl = btn.querySelector('.lbl');
-    if (lbl) lbl.textContent = panel && panel.classList.contains('open') ? 'Hide transcript' : 'Read transcript';
-  }
 </script>
 </body>
 </html>
