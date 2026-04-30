@@ -43,6 +43,7 @@
     --dom-cancer:  #d14a6a;
     --dom-metab:   #6db1c9;
     --dom-neuro:   #9d7ae3;
+    --dom-renal:   #6fa66f;
     /* Legacy alias during migration: */
     --dom-indep:   #e09b2d;
     --dom-mobility: #6db1c9;
@@ -1325,6 +1326,9 @@
   .flag.ok { background: rgba(39,166,68,0.15); color: var(--status-ok-bright); }
   .flag.warn { background: rgba(224,155,45,0.18); color: var(--status-warn); }
   .flag.high { background: rgba(232,96,76,0.18); color: var(--status-crit); }
+  .flag.gap { background: rgba(255,255,255,0.04); color: var(--text-muted); border: 1px dashed rgba(255,255,255,0.14); }
+  .metric.muted .name, .metric.muted .val { color: var(--text-muted); }
+  .metric.muted .val { font-feature-settings: "tnum"; }
 
   /* Sparkline */
   .spark {
@@ -2519,30 +2523,103 @@
     <div class="substate active" id="you-data">
       <h1 class="screen-title">You, in numbers.</h1>
 
-      <!-- Wearable (open by default) -->
+      <!-- Body & vitals -->
       <div class="data-group open">
         <div class="data-hd" onclick="toggleData(this.parentElement)">
           <div>
-            <h4>Wearable · 30-day</h4>
-            <div class="sub">Apple Watch · last synced 3h ago</div>
+            <h4>Body &amp; vitals</h4>
+            <div class="sub">Intake April 10, 2026</div>
           </div>
           <span class="chev">›</span>
         </div>
         <div class="data-body"><div class="data-body-inner">
           <div class="metric">
-            <div class="name">HRV <small>4-week average, SDNN</small></div>
-            <div class="val">52 ms</div>
-            <div class="flag ok">normal</div>
+            <div class="name">Age / sex</div>
+            <div class="val">47 · male</div>
+            <div class="flag ok">on file</div>
           </div>
           <div class="metric">
-            <div class="name">Resting HR <small>7-day average</small></div>
-            <div class="val">52 bpm</div>
+            <div class="name">Height / weight</div>
+            <div class="val">5'10" · 160 lb</div>
+            <div class="flag ok">on file</div>
+          </div>
+          <div class="metric">
+            <div class="name">BMI</div>
+            <div class="val">23.0 <small>normal range</small></div>
+            <div class="flag ok">ok</div>
+          </div>
+          <div class="metric">
+            <div class="name">Blood pressure <small>clinic</small></div>
+            <div class="val">116 / 76 mmHg</div>
+            <div class="flag ok">ok</div>
+          </div>
+          <div class="metric">
+            <div class="name">Tobacco</div>
+            <div class="val">Never</div>
+            <div class="flag ok">ok</div>
+          </div>
+          <div class="metric">
+            <div class="name">Alcohol</div>
+            <div class="val">3 drinks / wk <small>moderate</small></div>
+            <div class="flag ok">ok</div>
+          </div>
+          <div class="metric">
+            <div class="name">Allergies</div>
+            <div class="val">NKDA</div>
+            <div class="flag ok">none</div>
+          </div>
+          <div class="metric">
+            <div class="name">Family history</div>
+            <div class="val">Paternal grandfather GI cancer (age 82)</div>
+            <div class="flag warn">noted</div>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- Wearable -->
+      <div class="data-group">
+        <div class="data-hd" onclick="toggleData(this.parentElement)">
+          <div>
+            <h4>Wearable · 30-day</h4>
+            <div class="sub">Apple Watch · last synced April 19, 2026</div>
+          </div>
+          <span class="chev">›</span>
+        </div>
+        <div class="data-body"><div class="data-body-inner">
+          <div class="metric">
+            <div class="name">VO₂max <small>30-day rolling median, wearable estimate</small></div>
+            <div class="val">52 ml/kg/min</div>
+            <div class="flag ok">elite</div>
+          </div>
+          <div class="metric">
+            <div class="name">CRF percentile <small>derived, age/sex</small></div>
+            <div class="val">~80th</div>
+            <div class="flag ok">strong</div>
+          </div>
+          <div class="metric">
+            <div class="name">Resting HR <small>30-day rolling median, sleep RHR</small></div>
+            <div class="val">46 bpm</div>
             <div class="flag ok">athletic</div>
           </div>
           <div class="metric">
-            <div class="name">Sleep <small>30-day average</small></div>
-            <div class="val">7h 10m <small>deep 1h 20m</small></div>
+            <div class="name">HRV <small>30-day rolling median, RMSSD overnight</small></div>
+            <div class="val">77 ms</div>
+            <div class="flag ok">strong</div>
+          </div>
+          <div class="metric">
+            <div class="name">Sleep duration <small>30-day median</small></div>
+            <div class="val">7h 10m</div>
             <div class="flag ok">ok</div>
+          </div>
+          <div class="metric">
+            <div class="name">Sleep efficiency <small>30-day median</small></div>
+            <div class="val">88%</div>
+            <div class="flag ok">ok</div>
+          </div>
+          <div class="metric">
+            <div class="name">Activity <small>moderate-equivalent / week</small></div>
+            <div class="val">360 min</div>
+            <div class="flag ok">above target</div>
           </div>
           <div class="metric">
             <div class="name">Steps <small>daily average</small></div>
@@ -2559,6 +2636,11 @@
             <div class="val">11 <small>9 cycling · 2 walking</small></div>
             <div class="flag ok">consistent</div>
           </div>
+          <div class="metric">
+            <div class="name">AFib alerts</div>
+            <div class="val">None</div>
+            <div class="flag ok">clear</div>
+          </div>
         </div></div>
       </div>
 
@@ -2567,7 +2649,7 @@
         <div class="data-hd" onclick="toggleData(this.parentElement)">
           <div>
             <h4>Labs · most recent panel</h4>
-            <div class="sub">Drawn April 10, 2026 · Quest Diagnostics</div>
+            <div class="sub">Drawn April 10, 2026 · Quest Elite Health · Quest Diagnostics</div>
           </div>
           <span class="chev">›</span>
         </div>
@@ -2579,13 +2661,18 @@
           </div>
           <div class="metric">
             <div class="name">Lp(a)</div>
-            <div class="val">62 mg/dL <small>goal &lt;30</small></div>
+            <div class="val">62 mg/dL <small>goal &lt;30 · molar units pending</small></div>
             <div class="flag high">high</div>
           </div>
           <div class="metric">
             <div class="name">LDL-C</div>
             <div class="val">128 mg/dL <small>goal &lt;100</small></div>
             <div class="flag high">high</div>
+          </div>
+          <div class="metric">
+            <div class="name">Non-HDL-C</div>
+            <div class="val">145 mg/dL</div>
+            <div class="flag warn">borderline</div>
           </div>
           <div class="metric">
             <div class="name">HDL-C</div>
@@ -2603,6 +2690,16 @@
             <div class="flag warn">borderline</div>
           </div>
           <div class="metric">
+            <div class="name">Oxidized LDL</div>
+            <div class="val">54 U/L</div>
+            <div class="flag ok">ok</div>
+          </div>
+          <div class="metric">
+            <div class="name">Omega-3 index</div>
+            <div class="val">5.1%</div>
+            <div class="flag warn">below target</div>
+          </div>
+          <div class="metric">
             <div class="name">hs-CRP</div>
             <div class="val">1.1 mg/L <small>goal &lt;1.0</small></div>
             <div class="flag warn">borderline</div>
@@ -2618,13 +2715,33 @@
             <div class="flag ok">ok</div>
           </div>
           <div class="metric">
+            <div class="name">Fasting insulin</div>
+            <div class="val">7.8 µIU/mL</div>
+            <div class="flag ok">ok</div>
+          </div>
+          <div class="metric">
+            <div class="name">HOMA-IR</div>
+            <div class="val">1.7</div>
+            <div class="flag ok">ok</div>
+          </div>
+          <div class="metric">
             <div class="name">Creatinine / eGFR</div>
-            <div class="val">0.98 / &gt;90</div>
+            <div class="val">0.98 mg/dL · 92 mL/min</div>
+            <div class="flag ok">ok</div>
+          </div>
+          <div class="metric">
+            <div class="name">Cystatin C / eGFR</div>
+            <div class="val">0.86 mg/L · 96 mL/min</div>
+            <div class="flag ok">ok</div>
+          </div>
+          <div class="metric">
+            <div class="name">UACR</div>
+            <div class="val">8 mg/g</div>
             <div class="flag ok">ok</div>
           </div>
           <div class="metric">
             <div class="name">ALT / AST</div>
-            <div class="val">24 / 22</div>
+            <div class="val">24 / 22 U/L · FIB-4 0.78</div>
             <div class="flag ok">ok</div>
           </div>
           <div class="metric">
@@ -2633,8 +2750,23 @@
             <div class="flag ok">ok</div>
           </div>
           <div class="metric">
-            <div class="name">CBC</div>
+            <div class="name">Testosterone, total</div>
+            <div class="val">620 ng/dL</div>
+            <div class="flag ok">ok</div>
+          </div>
+          <div class="metric">
+            <div class="name">Vitamin D / B12 / Ferritin</div>
+            <div class="val">38 · 520 · 105</div>
+            <div class="flag ok">ok</div>
+          </div>
+          <div class="metric">
+            <div class="name">CBC / urinalysis</div>
             <div class="val">WNL</div>
+            <div class="flag ok">ok</div>
+          </div>
+          <div class="metric">
+            <div class="name">H. pylori / HBV / HCV</div>
+            <div class="val">Negative</div>
             <div class="flag ok">ok</div>
           </div>
         </div></div>
@@ -2653,9 +2785,9 @@
           <div class="gene-hero">
             <div class="hd">
               <div class="title">ATM c.8147T&gt;C</div>
-              <div class="chip">Pathogenic</div>
+              <div class="chip">Pathogenic · heterozygous</div>
             </div>
-            <div class="detail">Associated with increased risk for pancreatic, breast, and prostate cancer. Drives the annual pancreatic MRI decision in your plan.</div>
+            <div class="detail">Associated with increased risk for pancreatic, breast, and prostate cancer. Drives the annual pancreatic MRI plan and the baseline PSA decision.</div>
           </div>
           <div class="metric">
             <div class="name">Genes tested</div>
@@ -2663,14 +2795,72 @@
             <div class="flag ok">complete</div>
           </div>
           <div class="metric">
-            <div class="name">Other pathogenic findings</div>
+            <div class="name">Other pathogenic / likely pathogenic findings</div>
             <div class="val">None</div>
             <div class="flag ok">clean</div>
           </div>
           <div class="metric">
-            <div class="name">Variants of uncertain significance</div>
-            <div class="val">2 <small>inactionable</small></div>
-            <div class="flag ok">noted</div>
+            <div class="name">CKD monogenic genes <small>PKD1/2, COL4A3-5, UMOD, MUC1, REN, HNF1B</small></div>
+            <div class="val">All negative</div>
+            <div class="flag ok">clean</div>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- Not yet collected (gap inventory) -->
+      <div class="data-group">
+        <div class="data-hd" onclick="toggleData(this.parentElement)">
+          <div>
+            <h4>Not yet collected</h4>
+            <div class="sub">Inputs the engine flagged as missing · drives the plan</div>
+          </div>
+          <span class="chev">›</span>
+        </div>
+        <div class="data-body"><div class="data-body-inner">
+          <div class="metric muted">
+            <div class="name">Baseline PSA <small>ATM-driven, overdue from age 40</small></div>
+            <div class="val">Not collected</div>
+            <div class="flag gap">gap · in plan</div>
+          </div>
+          <div class="metric muted">
+            <div class="name">Coronary calcium (CAC) <small>recalibrates lipid plan intensity</small></div>
+            <div class="val">Not collected</div>
+            <div class="flag gap">gap · in plan</div>
+          </div>
+          <div class="metric muted">
+            <div class="name">Baseline colonoscopy <small>family GI history + age</small></div>
+            <div class="val">Not collected</div>
+            <div class="flag gap">gap · in plan</div>
+          </div>
+          <div class="metric muted">
+            <div class="name">Pancreatic MRI <small>ATM surveillance, starts age 50</small></div>
+            <div class="val">Not collected</div>
+            <div class="flag gap">queued</div>
+          </div>
+          <div class="metric muted">
+            <div class="name">APOE genotype <small>longitudinal neuro baseline</small></div>
+            <div class="val">Not collected</div>
+            <div class="flag gap">queued</div>
+          </div>
+          <div class="metric muted">
+            <div class="name">Lp(a) in nmol/L <small>molar units, standard for risk stratification</small></div>
+            <div class="val">Not collected</div>
+            <div class="flag gap">queued</div>
+          </div>
+          <div class="metric muted">
+            <div class="name">Abdominal imaging</div>
+            <div class="val">Not collected</div>
+            <div class="flag gap">not collected</div>
+          </div>
+          <div class="metric muted">
+            <div class="name">Neuro biomarkers <small>ptau217, NfL, GFAP</small></div>
+            <div class="val">Not collected</div>
+            <div class="flag gap">not collected</div>
+          </div>
+          <div class="metric muted">
+            <div class="name">24h ABPM / CPET</div>
+            <div class="val">Not collected</div>
+            <div class="flag gap">not collected</div>
           </div>
         </div></div>
       </div>
@@ -2679,27 +2869,27 @@
 
     <!-- ---- RISK ---- -->
     <div class="substate" id="you-reasoning">
-      <h1 class="screen-title">Four risk models.</h1>
+      <h1 class="screen-title">Five risk models.</h1>
 
       <div class="dom-card">
         <div class="dom-hd">
           <div class="dom-name"><span class="swatch" style="background: var(--dom-cardiac)"></span>Cardiovascular</div>
-          <div class="dom-risk">10y risk <b>9.4%</b> → <b style="color: var(--status-ok-bright)">6.2%</b></div>
+          <div class="dom-risk">10y risk <b>9.4%</b> &rarr; <b style="color: var(--status-ok-bright)">6.2%</b></div>
         </div>
         <div class="dom-bar">
           <div class="dom-bar-fill" style="width: 48%"></div>
           <div class="dom-bar-fill after" style="width: 32%"></div>
         </div>
         <div class="dom-inputs">
-          Driven by: <b>ApoB 98</b> · <b>Lp(a) 62</b> · age 47 · paternal GI cancer
+          Driven by: <b>ApoB 98</b> · <b>Lp(a) 62</b> · LDL 128 · age 47, male · BP 116/76 · RHR 46 · HRV 77 · VO&#8322;max 52 · hs-CRP 1.1 · no smoking · no T2D · no HTN
         </div>
         <div class="dom-conn">
-          Highest-sensitivity input → ApoB <span class="arrow">→</span> <em style="color: var(--accent-hover); font-style: normal">Decision 01 (statin)</em>
+          Highest-sensitivity input &rarr; ApoB <span class="arrow">&rarr;</span> <em style="color: var(--accent-hover); font-style: normal">Rosuvastatin 5 mg</em>
         </div>
         <div class="dom-conn">
-          Baseline data gap → CAC <span class="arrow">→</span> <em style="color: var(--accent-hover); font-style: normal">Decision 02 (CAC + stress echo)</em>
+          Baseline data gap &rarr; CAC not collected <span class="arrow">&rarr;</span> <em style="color: var(--accent-hover); font-style: normal">CAC scan in plan</em>
         </div>
-        <button class="dom-ask" onclick="openRiskSheet('cardiovascular')">Ask about this <span class="arrow">→</span></button>
+        <button class="dom-ask" onclick="openRiskSheet('cardiovascular')">Ask about this <span class="arrow">&rarr;</span></button>
       </div>
 
       <div class="dom-card">
@@ -2711,12 +2901,18 @@
           <div class="dom-bar-fill" style="width: 42%"></div>
         </div>
         <div class="dom-inputs">
-          Driven by: <b>ATM c.8147T&gt;C pathogenic</b> · paternal GI cancer (early 80s)
+          Driven by: <b>ATM c.8147T&gt;C pathogenic</b> · paternal grandfather GI cancer (age 82) · age 47, male · 162 other genes negative
         </div>
         <div class="dom-conn">
-          Surveillance trigger → NCCN ATM+ <span class="arrow">→</span> <em style="color: var(--accent-hover); font-style: normal">Decision 03 (annual pancreatic MRI)</em>
+          Surveillance gap &rarr; PSA never drawn <span class="arrow">&rarr;</span> <em style="color: var(--accent-hover); font-style: normal">Baseline PSA in plan</em>
         </div>
-        <button class="dom-ask" onclick="openRiskSheet('cancer')">Ask about this <span class="arrow">→</span></button>
+        <div class="dom-conn">
+          Surveillance gap &rarr; colonoscopy never done <span class="arrow">&rarr;</span> <em style="color: var(--accent-hover); font-style: normal">Baseline colonoscopy queued</em>
+        </div>
+        <div class="dom-conn">
+          Surveillance trigger &rarr; NCCN ATM+ <span class="arrow">&rarr;</span> <em style="color: var(--accent-hover); font-style: normal">Annual pancreatic MRI starting age 50</em>
+        </div>
+        <button class="dom-ask" onclick="openRiskSheet('cancer')">Ask about this <span class="arrow">&rarr;</span></button>
       </div>
 
       <div class="dom-card">
@@ -2728,12 +2924,29 @@
           <div class="dom-bar-fill" style="width: 18%; background: var(--status-ok-bright)"></div>
         </div>
         <div class="dom-inputs">
-          Driven by: <b>A1c 5.4</b> · <b>fasting glucose 88</b> · <b>HRV 52 ms</b> · <b>RHR 52 bpm</b> · <b>sleep 7h 10m</b>
+          Driven by: <b>A1c 5.4</b> · fasting glucose 88 · fasting insulin 7.8 · <b>HOMA-IR 1.7</b> · BMI 23 · weight 160 lb · <b>VO&#8322;max 52</b> · CRF percentile ~80 · RHR 46 · HRV 77 · sleep 7h 10m / 88% efficiency · activity 360 min/wk · AFib clear
         </div>
         <div class="dom-conn">
-          No action needed · wearable and metabolic markers are in range
+          No action needed · all metabolic and autonomic markers in range
         </div>
-        <button class="dom-ask" onclick="openRiskSheet('metabolic')">Ask about this <span class="arrow">→</span></button>
+        <button class="dom-ask" onclick="openRiskSheet('metabolic')">Ask about this <span class="arrow">&rarr;</span></button>
+      </div>
+
+      <div class="dom-card">
+        <div class="dom-hd">
+          <div class="dom-name"><span class="swatch" style="background: var(--dom-renal)"></span>Renal / CKD</div>
+          <div class="dom-risk">Trajectory <b style="color: var(--status-ok-bright)">stable</b></div>
+        </div>
+        <div class="dom-bar">
+          <div class="dom-bar-fill" style="width: 12%; background: var(--status-ok-bright)"></div>
+        </div>
+        <div class="dom-inputs">
+          Driven by: <b>eGFR creatinine 92</b> · <b>eGFR cystatin C 96</b> · cystatin C 0.86 · <b>UACR 8</b> · creatinine 0.98 · BP 116/76 · no T2D · no HTN · RHR 46 · HRV 77 · CKD monogenic genes (PKD1/2, COL4A3-5, UMOD, MUC1, REN, HNF1B) all negative
+        </div>
+        <div class="dom-conn">
+          No action needed · filtration, albuminuria, and monogenic risk all clear
+        </div>
+        <button class="dom-ask" onclick="openRiskSheet('renal')">Ask about this <span class="arrow">&rarr;</span></button>
       </div>
 
       <div class="dom-card">
@@ -2745,12 +2958,18 @@
           <div class="dom-bar-fill" style="width: 22%; background: var(--status-ok-bright)"></div>
         </div>
         <div class="dom-inputs">
-          Driven by: <b>sleep 7h 10m</b> · <b>deep sleep 1h 20m</b> · active lifestyle · in-laws dementia (not genetic)
+          Driven by: <b>sleep 7h 10m / 88% efficiency</b> · activity 360 min/wk · VO&#8322;max 52 · BP 116/76 · no premature ASCVD family history · no first-degree dementia history
+        </div>
+        <div class="dom-conn">
+          Data gap &rarr; APOE genotype not collected <span class="arrow">&rarr;</span> <em style="color: var(--accent-hover); font-style: normal">APOE add-on queued in backlog</em>
+        </div>
+        <div class="dom-conn">
+          Data gap &rarr; ptau217, NfL, GFAP not collected <span class="arrow">&rarr;</span> <em style="color: var(--accent-hover); font-style: normal">Optional, not yet indicated</em>
         </div>
         <div class="dom-conn">
           No action needed today · annual re-run is the longest-horizon lever
         </div>
-        <button class="dom-ask" onclick="openRiskSheet('neuro')">Ask about this <span class="arrow">→</span></button>
+        <button class="dom-ask" onclick="openRiskSheet('neuro')">Ask about this <span class="arrow">&rarr;</span></button>
       </div>
     </div>
   </section>
@@ -3257,8 +3476,8 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
     cardiovascular: {
       name: 'Cardiovascular',
       swatch: 'var(--dom-cardiac)',
-      seed: `Your 10-year cardiovascular risk is <b>9.4%</b> at baseline — with the planned statin, it drops toward <b>6.2%</b>. The drivers: ApoB <b>98</b> mg/dL (goal &lt;80), Lp(a) <b>62</b> mg/dL (goal &lt;30), age 47, and paternal-side GI cancer family history. <b>ApoB is the most sensitive lever</b>, which is why Decision 01 is the statin. Lp(a) is genetic and won't move — but lowering every other atherogenic particle matters more when Lp(a) is high, not less.`,
-      src: `Based on: your lab panel (Apr 10), intake, genetic report · model: PREVENT (AHA 2023)`,
+      seed: `Your 10-year cardiovascular risk is <b>9.4%</b> at baseline. With the planned statin it drops toward <b>6.2%</b>. The drivers: ApoB <b>98</b> mg/dL (goal &lt;80), Lp(a) <b>62</b> mg/dL (goal &lt;30), LDL <b>128</b>, age 47 male, BP <b>116/76</b>, RHR <b>46</b>, HRV <b>77</b> ms, VO&#8322;max <b>52</b>, hs-CRP <b>1.1</b>. <b>ApoB is the most sensitive lever</b>, which is why rosuvastatin is the priority action. Lp(a) is genetic and won't move, but lowering every other atherogenic particle matters more when Lp(a) is high, not less. Coronary calcium is not collected yet, which is the next data gap.`,
+      src: `Based on: lab panel (Apr 10), intake, Apple Watch (30d), genetic report · model: PREVENT (AHA 2023)`,
       presets: [
         'Walk me through why ApoB matters more than LDL',
         "What does my Lp(a) of 62 actually mean?",
@@ -3269,7 +3488,7 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
     cancer: {
       name: 'Cancer',
       swatch: 'var(--dom-cancer)',
-      seed: `Your overall cancer risk is driven by a single finding: <b>ATM c.8147T&gt;C (pathogenic)</b>, heterozygous. ATM raises your lifetime risk of pancreatic, breast, and (to a lesser degree) prostate cancer. The clinically actionable one at 47 is <b>pancreatic</b> — which is why Decision 03 is annual pancreatic MRI starting November. Your paternal grandfather's GI cancer (early 80s) reinforces the surveillance stance but doesn't change it.`,
+      seed: `Your overall cancer risk is driven by a single finding: <b>ATM c.8147T&gt;C (pathogenic), heterozygous</b>. ATM raises your lifetime risk of pancreatic, breast (in carriers), and prostate cancer. Your paternal grandfather's GI cancer (age 82) reinforces the stance but doesn't change it. The actionable items at 47: a <b>baseline PSA</b> (overdue from age 40), a <b>baseline colonoscopy</b>, and <b>annual pancreatic MRI starting age 50</b>. The other 162 genes on your panel are negative.`,
       src: `Based on: Invitae 163-gene panel (Feb 3, 2026) · guideline: NCCN ATM+ surveillance`,
       presets: [
         "What are the odds I'll actually get pancreatic cancer?",
@@ -3281,25 +3500,37 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
     metabolic: {
       name: 'Metabolic & autonomic',
       swatch: 'var(--dom-metab)',
-      seed: `Everything in this domain is <b>in range</b>. A1c <b>5.4%</b>, fasting glucose <b>88</b>, HRV <b>52 ms</b>, RHR <b>52 bpm</b>, sleep <b>7h 10m</b>. No trajectory drift in the last 30 days of wearable data. This is why there's no metabolic action on your plan — <b>if it ain't broke, we don't fix it</b>. We'll re-run this model annually; if A1c creeps up or HRV trends down for a quarter, it moves onto the decision list.`,
-      src: `Based on: lab panel (Apr 10), Apple Watch wearable (30d)`,
+      seed: `Everything in this domain is <b>in range</b>. A1c <b>5.4%</b>, fasting glucose <b>88</b>, fasting insulin <b>7.8</b>, HOMA-IR <b>1.7</b>, BMI <b>23</b>, VO&#8322;max <b>52</b> (CRF percentile ~80), RHR <b>46</b> bpm, HRV <b>77</b> ms RMSSD, sleep <b>7h 10m</b> at <b>88%</b> efficiency, activity <b>360</b> min/wk, no AFib alerts. No trajectory drift in the last 30 days of wearable data. There's no metabolic action on the plan because there's nothing to fix. We re-run this model annually; if A1c creeps up or HRV trends down for a quarter, it moves onto the action list.`,
+      src: `Based on: lab panel (Apr 10), Apple Watch wearable (30d ending Apr 18)`,
       presets: [
         "What's the earliest sign something's drifting metabolically?",
-        "My RHR is low — is that really nothing to worry about?",
+        "My RHR is 46. Is that really nothing to worry about?",
         "Would continuous glucose monitoring add anything?",
-        'What if I stopped training for 6 weeks — would this move?',
+        'What if I stopped training for 6 weeks?',
+      ],
+    },
+    renal: {
+      name: 'Renal / CKD',
+      swatch: 'var(--dom-renal)',
+      seed: `All clear. Filtration is strong from both estimators: <b>eGFR creatinine 92</b> and <b>eGFR cystatin C 96</b> (the cystatin reading is a more stable confirmation, especially for athletes with higher muscle mass). Albuminuria is <b>UACR 8</b> mg/g, well below the 30 threshold. BP <b>116/76</b>. No T2D, no hypertension, no NSAID load to flag. Your panel also explicitly cleared the monogenic CKD genes: PKD1, PKD2, COL4A3-5, UMOD, MUC1, REN, HNF1B, all negative. There's nothing to act on; we monitor annually with the same labs.`,
+      src: `Based on: lab panel (Apr 10), Invitae panel (Feb 3) · model: KDIGO 2024 staging + monogenic CKD screen`,
+      presets: [
+        "What does eGFR actually measure?",
+        "Why two different eGFR estimators?",
+        "Should I worry about NSAIDs or supplements?",
+        "What would change if my UACR went up?",
       ],
     },
     neuro: {
       name: 'Neuro & cognitive',
       swatch: 'var(--dom-neuro)',
-      seed: `Stable. The key drivers of long-horizon cognitive risk are sleep, cardiovascular health, and genetics. Your sleep is <b>7h 10m</b> average with <b>1h 20m deep</b> — in the favorable range. Your cardiovascular plan (statin + CAC) is also the single biggest lever for brain health, since the same arteries feed both. Your in-laws' dementia isn't genetically yours — different bloodline. Nothing to do today. <b>Annual re-run</b> is the longest-horizon lever we have.`,
+      seed: `Stable. The strongest long-horizon levers for cognitive risk are sleep, cardiovascular health, and aerobic fitness. Your sleep is <b>7h 10m</b> at <b>88%</b> efficiency, your VO&#8322;max is <b>52</b>, your activity is <b>360</b> min/wk. The cardiovascular plan (statin + CAC) is also a brain-health lever, since the same arteries feed both. You have no first-degree dementia history. Two data gaps the engine flagged: <b>APOE genotype</b> (queued in backlog) and the optional neuro biomarkers ptau217, NfL, GFAP. Annual re-run is the longest-horizon lever we have.`,
       src: `Based on: wearable sleep data (30d), cardiovascular model output, family history intake`,
       presets: [
         "How does cardiovascular health affect dementia risk?",
         "Would I benefit from an APOE test?",
         "What's the first early sign I should watch for?",
-        "Does my in-laws' dementia raise Senna's risk?",
+        "What do ptau217 and NfL tell us?",
       ],
     },
   };
