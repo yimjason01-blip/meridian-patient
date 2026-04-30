@@ -224,7 +224,7 @@ function render() {
   STEPS.forEach((s, i) => {
     const done = !!state[s.id];
     const active = i === activeIdx;
-    const locked = i > activeIdx;
+    const locked = false;
     const row = document.createElement('div');
     row.className = 'row' + (done ? ' done' : '') + (active ? ' active' : '') + (locked ? ' locked' : '');
     row.innerHTML = `
