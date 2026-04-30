@@ -319,6 +319,102 @@
   .exec-body ul { margin: 0; padding-left: 18px; display: grid; gap: 10px; }
   .exec-body b { color: var(--text); font-weight: 500; }
 
+  .objectives {
+    margin: 0 0 20px;
+  }
+  .objective-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin: 0 2px 10px;
+  }
+  .objective-head h2 {
+    margin: 0;
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+  .objective-head span {
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+  .objective-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .objective-main {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .objective-kicker {
+    color: var(--status-ok-bright);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .objective-title {
+    color: var(--text);
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .objective-copy {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .objective-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .objective-row {
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px dashed var(--border-subtle);
+  }
+  .objective-row:last-child { border-bottom: none; }
+  .objective-label {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding-top: 2px;
+  }
+  .objective-value {
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .objective-value b {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .objective-tactics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 2px;
+  }
+  .objective-tactics span {
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-surface);
+    border-radius: var(--radius-sm);
+    padding: 5px 8px;
+    color: var(--text-secondary);
+    font-size: 12px;
+  }
+
   /* Physician hero — main event. Portrait + audio + pull quote. */
   .md-hero {
     background: var(--bg-panel);
@@ -1754,6 +1850,41 @@
           </ul>
         </div>
       </details>
+
+      <div class="objectives">
+        <div class="objective-head">
+          <h2>Objectives</h2>
+          <span>Shared strategy</span>
+        </div>
+        <div class="objective-card">
+          <div class="objective-main">
+            <div class="objective-kicker">Cardiovascular</div>
+            <div class="objective-title">Lower modifiable cholesterol burden enough to shift event risk.</div>
+            <div class="objective-copy">Your Lp(a) is high and mostly inherited. The objective is not to debate one tactic in isolation. It is to agree on the risk we are trying to move, then choose the path that fits you.</div>
+          </div>
+          <div class="objective-grid">
+            <div class="objective-row">
+              <div class="objective-label">Success</div>
+              <div class="objective-value"><b>ApoB &lt;80 mg/dL</b> in 6 to 8 weeks, LDL down about 40%, then CAC used to decide whether standard therapy is enough.</div>
+            </div>
+            <div class="objective-row">
+              <div class="objective-label">Why</div>
+              <div class="objective-value">Lp(a) is a fixed inherited risk signal. ApoB is the near-term dial we can move to lower the risk around it.</div>
+            </div>
+            <div class="objective-row">
+              <div class="objective-label">Tactics</div>
+              <div class="objective-value">
+                <div class="objective-tactics">
+                  <span>Statin start</span>
+                  <span>Nutrition support</span>
+                  <span>CAC calibration</span>
+                  <span>Escalate if needed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- ---- SUBSTATE: ACT ---- -->
