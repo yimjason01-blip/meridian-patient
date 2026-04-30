@@ -248,7 +248,8 @@ function render() {
 
 function handleClick(step, done, locked) {
   if (locked) return;
-  window.location.href = step.href + '?return=hub';
+  const sep = step.href.includes('?') ? '&' : '?';
+  window.location.href = step.href + sep + 'return=hub';
 }
 
 /* If we got back here with ?completed=<id>, mark and render */
