@@ -2294,9 +2294,6 @@
       <div class="section-label">Risk reduction <span class="section-label-aux">| Top priority</span></div>
 
       <div class="priority-card" id="rxCard">
-        <div class="priority-card-head">
-          <span class="priority-card-tag">Rx</span>
-        </div>
         <div class="priority-card-title" id="rxCardTitle">Rosuvastatin 5 mg</div>
         <div class="priority-card-meta" id="rxCardMeta">
           New prescription. <b>Select a pharmacy</b> to send to. Targets ApoB &lt; 80 mg/dL with recheck at 8 weeks.
@@ -2317,9 +2314,6 @@
       <div class="section-label">Monitoring <span class="section-label-aux">| Top priority</span></div>
 
       <div class="priority-card" id="psaCard">
-        <div class="priority-card-head">
-          <span class="priority-card-tag">PSA</span>
-        </div>
         <div class="priority-card-title" id="psaCardTitle">Baseline PSA</div>
         <div class="priority-card-meta" id="psaCardMeta">
           ATM-driven prostate surveillance. <b>Schedule a draw</b> at a nearby lab. Sets the annual cadence going forward.
@@ -3457,8 +3451,6 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
     const p = PHARMACIES.find(x => x.id === pharmSelected);
     pharmConfirmed = p;
     const eta = etaLabel(p.etaHours);
-    const tag = document.querySelector('#rxCard .priority-card-tag');
-    if (tag) tag.textContent = 'Sent';
     document.getElementById('rxCardMeta').innerHTML =
       `<span class="accent">Sent to ${p.name}</span>. ${eta}. Take any time before bed, with or without food.`;
     const actions = document.querySelector('#rxCard .priority-card-actions');
@@ -3635,7 +3627,6 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
     const title = document.getElementById('psaCardTitle');
     const meta = document.getElementById('psaCardMeta');
     const actions = document.getElementById('psaCardActions');
-    const tag = document.querySelector('#psaCard .priority-card-tag');
     if (!title || !meta || !actions) return;
     const askBtn = `
       <button class="pc-secondary" onclick="askAboutAction('psa')">
@@ -3647,7 +3638,6 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
         Ask Meridian
       </button>`;
     if (psaState === 'unscheduled') {
-      tag.textContent = 'PSA';
       title.textContent = 'Baseline PSA';
       meta.innerHTML = `ATM-driven prostate surveillance. <b>Schedule a draw</b> at a nearby lab. Sets the annual cadence going forward.`;
       actions.innerHTML = `<button class="pc-primary" onclick="openLabSheet()">Schedule draw</button>${askBtn}`;
@@ -3655,31 +3645,18 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
       const l = labConfirmed.lab;
       const slot = labConfirmed.slot;
       const slotLabel = slot === 'Walk-in' ? `Walk-in (${l.hours.split('·')[0].trim()})` : slot;
-      tag.textContent = 'Scheduled';
       title.textContent = 'Baseline PSA';
-      meta.innerHTML = `<span class="accent">${slotLabel}</span> at <b>${l.name}</b>. Prep: no ejaculation 48h before, no cycling 24h before.`;
+      meta.innerHTML = `Scheduled <span class="accent">${slotLabel}</span> at <b>${l.name}</b>. Prep: no ejaculation 48h before, no cycling 24h before.`;
       actions.innerHTML = `<button class="pc-primary" onclick="openLabSheet()">Reschedule</button>${askBtn}`;
     } else if (psaState === 'drawn') {
-      tag.textContent = 'Awaiting result';
       title.textContent = 'Baseline PSA';
       meta.innerHTML = `Drawn at <b>${labConfirmed.lab.name}</b>. Result expected within 1–2 business days.`;
       actions.innerHTML = `<button class="pc-secondary" onclick="toast('Result expected within 1–2 business days')" style="flex:1;">Track status</button>${askBtn}`;
     } else if (psaState === 'resulted') {
       const r = labConfirmed.result;
-      tag.textContent = 'Result in';
-      title.innerHTML = `PSA <span style="color:var(--text);font-feature-settings:'tnum';">${r.value}</span> <span style="color:var(--text-muted);font-size:13px;font-weight:400;">ng/mL · ref &lt; 4.0 · in range</span>`;
+      title.innerHTML = `PSA <span style="color:var(--text);font-feature-settings:'tnum';">${r.value}</span> <span style="color:var(--text-muted);font-size:13px;font-weight:400;">ng/mL · in range</span>`;
       meta.innerHTML = `Drawn ${r.drawnDate} at <b>${labConfirmed.lab.name}</b>. Next draw <b>${r.nextDate}</b>.`;
       actions.innerHTML = `<button class="pc-secondary" onclick="toast('Annual cadence set · next draw ${r.nextDate}')" style="flex:1;">View details</button>${askBtn}`;
-    }
-    // Demo advance link in tag area
-    if (!document.getElementById('psaDemoAdv')) {
-      const adv = document.createElement('span');
-      adv.id = 'psaDemoAdv';
-      adv.className = 'demo-advance';
-      adv.style.marginLeft = 'auto';
-      adv.textContent = 'demo: advance';
-      adv.onclick = (e) => { e.stopPropagation(); advancePsaState(); };
-      document.querySelector('#psaCard .priority-card-head').appendChild(adv);
     }
   }
   function advancePsaState() {
