@@ -1,0 +1,958 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Meridian · Onboarding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #000;
+    --surface: #1f1f22;
+    --surface-strong: #2a2a2e;
+    --border-subtle: #232327;
+    --text: #fff;
+    --text-muted: #888;
+    --text-faint: #555;
+    --accent: #fff;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  body { min-height: 100vh; min-height: 100dvh; }
+
+  /* Phone shell — fills screen on mobile, frames on desktop */
+  .shell {
+    position: relative;
+    width: 100vw;
+    max-width: 430px;
+    margin: 0 auto;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Status bar */
+  .statusbar {
+    height: 44px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px;
+    font-size: 15px; font-weight: 600; letter-spacing: -0.01em;
+  }
+  .statusbar .right { display: flex; align-items: center; gap: 5px; color: var(--text); }
+  .statusbar .right span {
+    width: 5px; height: 5px; border-radius: 50%; background: var(--text);
+  }
+
+  /* Top bar: back + tab stepper */
+  .topbar { padding: 4px 16px 0; flex-shrink: 0; }
+  .back-btn {
+    background: none; border: none; color: var(--text);
+    font-size: 22px; padding: 8px 4px; cursor: pointer;
+    line-height: 1;
+  }
+  .back-btn:disabled { color: var(--text-faint); cursor: default; }
+
+  .stepper {
+    display: flex; gap: 0;
+    margin-top: 8px;
+    border-bottom: 1px solid #232327;
+  }
+  .stepper button {
+    flex: 1; background: none; border: none;
+    color: var(--text-muted); font: inherit; font-size: 14px; font-weight: 500;
+    padding: 10px 0 11px; cursor: default;
+    position: relative;
+    letter-spacing: -0.01em;
+  }
+  .stepper button.active { color: var(--text); font-weight: 600; }
+  .stepper button.active::after {
+    content: ''; position: absolute; left: 18%; right: 18%; bottom: -1px;
+    height: 2px; background: var(--text); border-radius: 1px;
+  }
+
+  /* Chat scroll area */
+  .chat {
+    flex: 1; overflow-y: auto; overflow-x: hidden;
+    padding: 14px 16px 8px;
+    display: flex; flex-direction: column; gap: 12px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  .chat::-webkit-scrollbar { width: 0; }
+
+  /* Bot row: avatar + bubble */
+  .row { display: flex; align-items: flex-end; gap: 8px; max-width: 100%; }
+  .row.bot { justify-content: flex-start; }
+  .row.user { justify-content: flex-end; }
+  .row.options { padding-left: 44px; flex-wrap: wrap; gap: 8px; }
+
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--surface-strong);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; color: var(--text);
+    flex-shrink: 0;
+  }
+
+  .bubble {
+    background: var(--surface);
+    color: var(--text);
+    border-radius: 18px;
+    padding: 12px 16px;
+    font-size: 15.5px;
+    line-height: 1.45;
+    max-width: calc(100% - 44px);
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    animation: pop 0.18s ease-out;
+  }
+  .bubble.user {
+    background: #2f2f33;
+    color: var(--text);
+  }
+  .bubble strong { font-weight: 600; }
+
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Option pills */
+  .pill {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid #2e2e32;
+    border-radius: 22px;
+    padding: 10px 18px;
+    font: inherit; font-size: 14.5px; font-weight: 500;
+    cursor: pointer;
+    transition: background .12s, border-color .12s, transform .08s;
+    white-space: nowrap;
+  }
+  .pill:hover { background: #26262a; border-color: #3a3a3e; }
+  .pill:active { transform: scale(0.97); }
+  .pill.selected { background: #fff; color: #000; border-color: #fff; }
+
+  /* Input area */
+  .composer {
+    flex-shrink: 0;
+    padding: 8px 12px 14px;
+    background: var(--bg);
+  }
+  .composer-inner {
+    background: var(--surface);
+    border-radius: 28px;
+    height: 52px;
+    display: flex; align-items: center;
+    padding: 4px 4px 4px 20px;
+    gap: 8px;
+  }
+  .composer input {
+    flex: 1; min-width: 0;
+    background: transparent; border: none; outline: none;
+    color: var(--text);
+    font: inherit; font-size: 16px;
+  }
+  .composer input::placeholder { color: var(--text-muted); }
+  .composer .send {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: #fff; color: #000;
+    border: none; cursor: pointer;
+    font-size: 18px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity .12s;
+  }
+  .composer .send:disabled { opacity: 0.3; cursor: default; }
+
+  /* Home indicator */
+  .home-indicator {
+    height: 21px;
+    flex-shrink: 0;
+    display: flex; justify-content: center; align-items: flex-end;
+    padding-bottom: 8px;
+  }
+  .home-indicator i {
+    width: 134px; height: 5px; border-radius: 3px; background: rgba(255,255,255,0.4);
+  }
+
+  /* Wheel picker bottom sheet */
+  .sheet-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.5);
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s;
+    z-index: 10;
+  }
+  .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+
+  .sheet {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    background: #1a1a1d;
+    border-radius: 18px 18px 0 0;
+    padding: 8px 0 12px;
+    transform: translateY(100%);
+    transition: transform .26s cubic-bezier(.32,.72,0,1);
+    z-index: 11;
+  }
+  .sheet.open { transform: translateY(0); }
+  .sheet-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 18px 12px;
+    border-bottom: 1px solid #2a2a2e;
+  }
+  .sheet-head .title { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+  .sheet-head button {
+    background: none; border: none; color: #fff; font: inherit; font-size: 15px;
+    font-weight: 600; cursor: pointer;
+  }
+  .wheel {
+    height: 200px;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 80px 0;
+    text-align: center;
+    position: relative;
+  }
+  .wheel::-webkit-scrollbar { width: 0; }
+  .wheel-item {
+    height: 40px;
+    line-height: 40px;
+    font-size: 21px;
+    color: var(--text-muted);
+    scroll-snap-align: center;
+    transition: color .15s, font-weight .15s;
+  }
+  .wheel-item.center {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .wheel-overlay {
+    position: absolute; left: 0; right: 0;
+    top: 50%; transform: translateY(-50%);
+    height: 40px;
+    border-top: 1px solid #2a2a2e;
+    border-bottom: 1px solid #2a2a2e;
+    pointer-events: none;
+  }
+
+  /* Multi-line edit sheet */
+  .sheet-textarea {
+    background: #131316;
+    border: 1px solid #2a2a2e;
+    border-radius: 14px;
+    margin: 12px 16px;
+    padding: 14px 16px;
+    color: #fff;
+    font: inherit; font-size: 16px; line-height: 1.5;
+    width: calc(100% - 32px);
+    min-height: 120px;
+    resize: none;
+    outline: none;
+  }
+  .sheet-actions {
+    display: flex; gap: 10px; padding: 4px 16px 8px;
+  }
+  .sheet-actions button {
+    flex: 1;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid #2e2e32;
+    border-radius: 14px;
+    padding: 14px;
+    font: inherit; font-size: 15px; font-weight: 500;
+    cursor: pointer;
+  }
+  .sheet-actions button.primary {
+    background: #fff; color: #000; border-color: #fff;
+  }
+
+  /* Review screen */
+  .review-title {
+    font-size: 18px; font-weight: 600; padding: 16px 16px 8px;
+  }
+  .review-list {
+    flex: 1; overflow-y: auto;
+    padding: 0 8px 8px;
+  }
+  .review-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid #1a1a1d;
+    cursor: pointer;
+  }
+  .review-row:hover { background: #0e0e10; }
+  .review-row .label {
+    font-size: 11px; font-weight: 600; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    margin-bottom: 2px;
+  }
+  .review-row .value {
+    font-size: 15px; color: var(--text);
+  }
+  .review-row .chev {
+    color: var(--text-muted); font-size: 18px; line-height: 1;
+  }
+  .review-actions {
+    flex-shrink: 0;
+    display: flex; gap: 10px;
+    padding: 12px 16px 8px;
+  }
+  .review-actions button {
+    flex: 1;
+    border-radius: 14px;
+    padding: 15px;
+    font: inherit; font-size: 15px; font-weight: 600;
+    cursor: pointer;
+    border: 1px solid;
+  }
+  .review-actions .done { background: #fff; color: #000; border-color: #fff; }
+  .review-actions .redo { background: transparent; color: var(--text); border-color: #2e2e32; }
+
+  /* Done screen */
+  .done-screen {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 40px 32px;
+    text-align: center;
+    gap: 16px;
+  }
+  .done-screen h1 { margin: 0; font-size: 30px; font-weight: 600; letter-spacing: -0.02em; }
+  .done-screen p { margin: 0; color: var(--text-muted); font-size: 16px; line-height: 1.5; }
+  .done-screen .check {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: #fff; color: #000;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .done-screen .cta {
+    margin-top: 24px;
+    background: #fff; color: #000;
+    border: none; border-radius: 14px;
+    padding: 15px 28px;
+    font: inherit; font-size: 15px; font-weight: 600;
+    cursor: pointer;
+  }
+  .done-screen .secondary {
+    background: transparent; color: var(--text-muted);
+    border: none;
+    font: inherit; font-size: 14px;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+
+  /* Hide scrollbars on review */
+  .review-list::-webkit-scrollbar { width: 0; }
+
+  /* Typing indicator */
+  .typing { display: inline-flex; align-items: center; gap: 4px; padding: 4px 0; }
+  .typing i {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted);
+    animation: blink 1.2s infinite;
+  }
+  .typing i:nth-child(2) { animation-delay: .2s; }
+  .typing i:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 0%, 60%, 100% { opacity: 0.3; } 30% { opacity: 1; } }
+</style>
+</head>
+<body>
+
+<div class="shell" id="shell">
+  <!-- Status bar -->
+  <div class="statusbar">
+    <span>9:41</span>
+    <span class="right"><span></span><span></span><span></span></span>
+  </div>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <button class="back-btn" id="backBtn" onclick="goBack()" aria-label="Back">←</button>
+    <div class="stepper" id="stepper">
+      <button data-section="about">About You</button>
+      <button data-section="lifestyle">Lifestyle</button>
+      <button data-section="meds">Meds</button>
+      <button data-section="family">Family</button>
+    </div>
+  </div>
+
+  <!-- Main view container -->
+  <div id="view-chat" style="flex:1; display:flex; flex-direction:column; min-height:0;">
+    <div class="chat" id="chat"></div>
+    <div class="composer" id="composer" style="display:none;">
+      <div class="composer-inner">
+        <input type="text" id="composerInput" placeholder="Type a message..." autocomplete="off"/>
+        <button class="send" id="sendBtn" onclick="submitText()" aria-label="Send">↑</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Review view (hidden until end) -->
+  <div id="view-review" style="flex:1; display:none; flex-direction:column; min-height:0;">
+    <div class="review-title">Here's what you shared</div>
+    <div class="review-list" id="reviewList"></div>
+    <div class="review-actions">
+      <button class="redo" onclick="redoFlow()">Redo</button>
+      <button class="done" onclick="finishFlow()">Done</button>
+    </div>
+  </div>
+
+  <!-- Done view -->
+  <div id="view-done" style="flex:1; display:none; flex-direction:column; min-height:0;">
+    <div class="done-screen">
+      <div class="check">✓</div>
+      <h1>Profile complete.</h1>
+      <p>We'll use what you shared to tailor screenings, risk factors, and conversations with your physician.</p>
+      <button class="cta" onclick="redoFlow()">Start over</button>
+      <button class="secondary" onclick="window.location.href='index.html'">Continue to app</button>
+    </div>
+  </div>
+
+  <!-- Home indicator -->
+  <div class="home-indicator"><i></i></div>
+
+  <!-- Wheel picker sheet -->
+  <div class="sheet-backdrop" id="sheetBackdrop" onclick="closeSheet()"></div>
+  <div class="sheet" id="sheet">
+    <div class="sheet-head">
+      <span class="title" id="sheetTitle">Pick</span>
+      <button onclick="confirmSheet()">Done</button>
+    </div>
+    <div class="wheel" id="wheel"></div>
+    <div class="wheel-overlay" style="display:none;"></div>
+  </div>
+
+  <!-- Edit text sheet -->
+  <div class="sheet-backdrop" id="editBackdrop" onclick="closeEditSheet()"></div>
+  <div class="sheet" id="editSheet">
+    <div class="sheet-head">
+      <span class="title" id="editTitle">Edit</span>
+    </div>
+    <textarea class="sheet-textarea" id="editTextarea" placeholder=""></textarea>
+    <div class="sheet-actions">
+      <button onclick="closeEditSheet()">Cancel</button>
+      <button class="primary" onclick="confirmEditSheet()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ FLOW DEFINITION ============ */
+/* Each step: { id, section, type, q, opts?, key, render? } */
+const STEPS = [
+  { id:'intro', section:'about', type:'narrate',
+    text:"This questionnaire will help inform your physician's recommendations. At the end, you'll be able to make any corrections and changes if needed." },
+  { id:'sex', section:'about', type:'pills', key:'sex',
+    q:"First, what is your biological sex? This helps us tailor health screenings and risk factors.",
+    opts:['Male','Female'] },
+  { id:'height', section:'about', type:'wheel', key:'height',
+    q:"What's your height?",
+    title:'Height',
+    options: heightOptions(),
+    initial: "5'10\"" },
+  { id:'weight', section:'about', type:'wheel', key:'weight',
+    q:"And your weight?",
+    title:'Weight',
+    options: weightOptions(),
+    initial: '160 lbs' },
+  { id:'lifestyle-intro', section:'lifestyle', type:'narrate',
+    text:"Great, now a few lifestyle questions." },
+  { id:'exercise', section:'lifestyle', type:'pills', key:'exercise',
+    q:"How often do you exercise?",
+    opts:['Daily','3–5 times a week','1–2 times a week','Rarely or never'] },
+  { id:'diet', section:'lifestyle', type:'pills', key:'diet',
+    q:"How would you describe your diet?",
+    opts:['Mostly whole foods','Mixed','Mostly convenience','Specific diet'] },
+  { id:'sleep', section:'lifestyle', type:'pills', key:'sleep',
+    q:"How many hours of sleep do you typically get per night?",
+    opts:['Less than 5','5–6 hours','7–8 hours','More than 8'] },
+  { id:'alcohol', section:'lifestyle', type:'pills', key:'alcohol_tobacco',
+    q:"Do you use alcohol or tobacco?",
+    opts:['Neither','Occasional alcohol','Regular alcohol','Tobacco use','Both'] },
+  { id:'meds-intro', section:'meds', type:'pills', key:'has_meds',
+    q:"Thanks for sharing that. Now let's talk medications.\n\nAre you currently taking any prescription medications?",
+    opts:['Yes','No'],
+    branch:(v, ctx) => v === 'Yes' ? 'med-name' : 'supps' },
+  // Med capture loop (3-step: name, dosage, then loop)
+  { id:'med-name', section:'meds', type:'text', key:'_med_name',
+    q:"What is the name of the medication?",
+    placeholder:'Type a message...',
+    cancelLabel:'Nevermind',
+    cancelTo:'supps' },
+  { id:'med-dose', section:'meds', type:'text', key:'_med_dose',
+    q: ctx => `What's the dosage for ${ctx._med_name}?`,
+    placeholder:'e.g. 10mg',
+    skip:true,
+    skipTo:'med-freq' },
+  { id:'med-freq', section:'meds', type:'pills', key:'_med_freq',
+    q:"How often do you take it?",
+    opts:['Once daily','Twice daily','Three times daily','As needed','Other'],
+    after:(v, ctx) => {
+      const med = `${ctx._med_name}${ctx._med_dose ? ', ' + ctx._med_dose : ''}, ${v.toLowerCase()}`;
+      ctx.medications = ctx.medications || [];
+      ctx.medications.push(med);
+      delete ctx._med_name; delete ctx._med_dose; delete ctx._med_freq;
+    } },
+  { id:'med-loop', section:'meds', type:'pills', key:'_med_loop',
+    q:"Got it. Any more medications to add?",
+    opts:['+ Add another medication',"I'm done"],
+    branch:(v) => v.startsWith('+') ? 'med-name' : 'supps' },
+  { id:'supps', section:'meds', type:'pills', key:'has_supplements',
+    q:"Are you currently taking any vitamins or supplements?",
+    opts:['Yes','No'],
+    branch:(v) => v === 'Yes' ? 'supp-name' : 'family-intro' },
+  { id:'supp-name', section:'meds', type:'text', key:'_supp_name',
+    q:"What's the name of the supplement?",
+    placeholder:'Type a message...',
+    cancelLabel:'Nevermind',
+    cancelTo:'family-intro' },
+  { id:'supp-loop', section:'meds', type:'pills', key:'_supp_loop',
+    q:"Got it. Any more supplements?",
+    opts:['+ Add another','I\'m done'],
+    after:(v, ctx) => {
+      ctx.supplements = ctx.supplements || [];
+      ctx.supplements.push(ctx._supp_name);
+      delete ctx._supp_name;
+    },
+    branch:(v) => v.startsWith('+') ? 'supp-name' : 'family-intro' },
+  { id:'family-intro', section:'family', type:'narrate',
+    text:"Almost done. Let's talk about your family's health history. This helps us understand genetic risk factors." },
+  { id:'family-heart', section:'family', type:'pills', key:'family_heart',
+    q:"Has anyone in your immediate family had heart disease or a heart attack?",
+    opts:['Yes',"I don't know",'No'] },
+  { id:'family-cancer', section:'family', type:'pills', key:'family_cancer',
+    q:"Has anyone in your immediate family had cancer?",
+    opts:['Yes',"I don't know",'No'] },
+  { id:'family-diabetes', section:'family', type:'pills', key:'family_diabetes',
+    q:"Has anyone in your family been diagnosed with Type 1 or Type 2 diabetes?",
+    opts:['Yes, Type 2','Yes, Type 1',"I don't know",'No'] },
+  { id:'anything-else', section:'family', type:'text', key:'anything_else',
+    q:"Last question. Is there anything else you'd like us to know about your health? Anything at all.",
+    placeholder:'Type anything you want us to know...',
+    skip:true, skipLabel:'Nothing else' },
+  { id:'_review', section:'family', type:'review' },
+];
+
+function heightOptions() {
+  const out = [];
+  for (let ft=4; ft<=7; ft++) {
+    for (let inch=0; inch<12; inch++) {
+      if (ft===7 && inch>2) break;
+      out.push(`${ft}'${inch}"`);
+    }
+  }
+  return out;
+}
+function weightOptions() {
+  const out = [];
+  for (let w=80; w<=400; w+=5) out.push(`${w} lbs`);
+  return out;
+}
+
+/* ============ STATE ============ */
+const ctx = {};
+let stepIdx = 0;
+let activeSection = 'about';
+const history = []; // for back nav
+let pendingStep = null; // for sheet/text input
+
+/* ============ RENDERING ============ */
+const chatEl = document.getElementById('chat');
+const composerEl = document.getElementById('composer');
+const composerInput = document.getElementById('composerInput');
+
+function setActiveSection(section) {
+  activeSection = section;
+  document.querySelectorAll('#stepper button').forEach(b => {
+    b.classList.toggle('active', b.dataset.section === section);
+  });
+}
+
+function addBotBubble(text, opts={}) {
+  const row = document.createElement('div');
+  row.className = 'row bot';
+  row.innerHTML = `
+    <div class="avatar">M</div>
+    <div class="bubble">${text}</div>
+  `;
+  chatEl.appendChild(row);
+  scrollToBottom();
+  return row;
+}
+
+function addUserBubble(text) {
+  const row = document.createElement('div');
+  row.className = 'row user';
+  row.innerHTML = `<div class="bubble user">${text}</div>`;
+  chatEl.appendChild(row);
+  scrollToBottom();
+  return row;
+}
+
+function addOptions(opts, onPick) {
+  const row = document.createElement('div');
+  row.className = 'row options';
+  opts.forEach(o => {
+    const b = document.createElement('button');
+    b.className = 'pill';
+    b.textContent = o;
+    b.onclick = () => {
+      // Remove option row + select feedback
+      row.remove();
+      addUserBubble(o);
+      onPick(o);
+    };
+    row.appendChild(b);
+  });
+  chatEl.appendChild(row);
+  scrollToBottom();
+  return row;
+}
+
+function scrollToBottom() {
+  requestAnimationFrame(() => {
+    chatEl.scrollTop = chatEl.scrollHeight;
+  });
+}
+
+async function pause(ms=380) { return new Promise(r => setTimeout(r, ms)); }
+
+/* ============ FLOW ENGINE ============ */
+function findStepIdx(id) {
+  return STEPS.findIndex(s => s.id === id);
+}
+
+async function runStep(idx) {
+  if (idx >= STEPS.length || idx < 0) return;
+  stepIdx = idx;
+  const step = STEPS[idx];
+  setActiveSection(step.section);
+  history.push(idx);
+
+  const qText = typeof step.q === 'function' ? step.q(ctx) : step.q;
+
+  if (step.type === 'narrate') {
+    addBotBubble(step.text);
+    await pause(700);
+    return runStep(idx + 1);
+  }
+
+  if (step.type === 'pills') {
+    addBotBubble(qText);
+    await pause(220);
+    addOptions(step.opts, async (val) => {
+      if (step.key && !step.key.startsWith('_')) ctx[step.key] = val;
+      else if (step.key) ctx[step.key] = val;
+      if (step.after) step.after(val, ctx);
+      await pause(280);
+      if (step.branch) {
+        const target = step.branch(val, ctx);
+        const targetIdx = findStepIdx(target);
+        if (targetIdx >= 0) return runStep(targetIdx);
+      }
+      runStep(idx + 1);
+    });
+    return;
+  }
+
+  if (step.type === 'text') {
+    addBotBubble(qText);
+    await pause(180);
+    // optional skip/cancel pill row
+    if (step.skip || step.cancelLabel) {
+      const row = document.createElement('div');
+      row.className = 'row options';
+      const label = step.skipLabel || step.cancelLabel || 'Skip';
+      const b = document.createElement('button');
+      b.className = 'pill';
+      b.textContent = label;
+      b.onclick = async () => {
+        row.remove();
+        addUserBubble(label);
+        await pause(220);
+        if (step.cancelTo) {
+          const targetIdx = findStepIdx(step.cancelTo);
+          if (targetIdx >= 0) return runStep(targetIdx);
+        }
+        if (step.skipTo) {
+          const targetIdx = findStepIdx(step.skipTo);
+          if (targetIdx >= 0) return runStep(targetIdx);
+        }
+        runStep(idx + 1);
+      };
+      row.appendChild(b);
+      chatEl.appendChild(row);
+    }
+    showComposer(step.placeholder || 'Type a message...', async (val) => {
+      ctx[step.key] = val;
+      addUserBubble(val);
+      await pause(280);
+      runStep(idx + 1);
+    });
+    return;
+  }
+
+  if (step.type === 'wheel') {
+    addBotBubble(qText);
+    await pause(260);
+    openWheel(step, async (val) => {
+      ctx[step.key] = val;
+      addUserBubble(val);
+      await pause(280);
+      runStep(idx + 1);
+    });
+    return;
+  }
+
+  if (step.type === 'review') {
+    showReview();
+    return;
+  }
+}
+
+/* Composer */
+let composerCallback = null;
+function showComposer(placeholder, cb) {
+  composerEl.style.display = '';
+  composerInput.placeholder = placeholder;
+  composerInput.value = '';
+  composerInput.focus();
+  composerCallback = cb;
+}
+function hideComposer() {
+  composerEl.style.display = 'none';
+  composerCallback = null;
+}
+function submitText() {
+  const v = composerInput.value.trim();
+  if (!v) return;
+  hideComposer();
+  if (composerCallback) composerCallback(v);
+}
+composerInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); submitText(); }
+});
+
+/* Wheel picker */
+let wheelCallback = null;
+let wheelOptions = [];
+let wheelInitial = null;
+function openWheel(step, cb) {
+  wheelOptions = step.options;
+  wheelInitial = step.initial;
+  wheelCallback = cb;
+  document.getElementById('sheetTitle').textContent = step.title || 'Pick';
+  const wheel = document.getElementById('wheel');
+  wheel.innerHTML = wheelOptions.map(o => `<div class="wheel-item" data-v="${o}">${o}</div>`).join('');
+  document.getElementById('sheetBackdrop').classList.add('open');
+  document.getElementById('sheet').classList.add('open');
+  // Center on initial
+  setTimeout(() => {
+    const idx = Math.max(0, wheelOptions.indexOf(wheelInitial));
+    const itemH = 40;
+    wheel.scrollTop = idx * itemH;
+    updateWheelCenter();
+  }, 50);
+  wheel.onscroll = updateWheelCenter;
+}
+function updateWheelCenter() {
+  const wheel = document.getElementById('wheel');
+  const itemH = 40;
+  const idx = Math.round(wheel.scrollTop / itemH);
+  wheel.querySelectorAll('.wheel-item').forEach((el, i) => {
+    el.classList.toggle('center', i === idx);
+  });
+}
+function confirmSheet() {
+  const wheel = document.getElementById('wheel');
+  const itemH = 40;
+  const idx = Math.round(wheel.scrollTop / itemH);
+  const v = wheelOptions[Math.max(0, Math.min(idx, wheelOptions.length-1))];
+  closeSheet();
+  if (wheelCallback) wheelCallback(v);
+}
+function closeSheet() {
+  document.getElementById('sheetBackdrop').classList.remove('open');
+  document.getElementById('sheet').classList.remove('open');
+  wheelCallback = null;
+}
+
+/* Edit sheet (review) */
+let editCallback = null;
+let editType = null;
+let editKey = null;
+function openEditSheet({title, type, value, key}) {
+  editKey = key;
+  editType = type;
+  document.getElementById('editTitle').textContent = title;
+  const ta = document.getElementById('editTextarea');
+  ta.value = value || '';
+  ta.placeholder = type === 'multiline' ? 'One per line' : 'Anything you want us to know';
+  document.getElementById('editBackdrop').classList.add('open');
+  document.getElementById('editSheet').classList.add('open');
+  setTimeout(() => ta.focus(), 200);
+}
+function closeEditSheet() {
+  document.getElementById('editBackdrop').classList.remove('open');
+  document.getElementById('editSheet').classList.remove('open');
+}
+function confirmEditSheet() {
+  const v = document.getElementById('editTextarea').value.trim();
+  if (editType === 'multiline-meds') {
+    ctx.medications = v ? v.split('\n').filter(Boolean) : [];
+  } else if (editType === 'multiline-supps') {
+    ctx.supplements = v ? v.split('\n').filter(Boolean) : [];
+  } else {
+    ctx[editKey] = v;
+  }
+  closeEditSheet();
+  showReview();
+}
+
+/* Review screen */
+function showReview() {
+  hideComposer();
+  document.getElementById('view-chat').style.display = 'none';
+  document.getElementById('view-review').style.display = 'flex';
+  setActiveSection('family');
+  renderReview();
+}
+function renderReview() {
+  const list = document.getElementById('reviewList');
+  const rows = [
+    {label:'Biological sex', key:'sex', value:ctx.sex || '—', type:'pills', opts:['Male','Female']},
+    {label:'Height', key:'height', value:ctx.height || '—', type:'wheel', opts:heightOptions(), initial:ctx.height || "5'10\""},
+    {label:'Weight', key:'weight', value:ctx.weight || '—', type:'wheel', opts:weightOptions(), initial:ctx.weight || '160 lbs'},
+    {label:'Exercise', key:'exercise', value:ctx.exercise || '—', type:'pills', opts:['Daily','3–5 times a week','1–2 times a week','Rarely or never']},
+    {label:'Diet', key:'diet', value:ctx.diet || '—', type:'pills', opts:['Mostly whole foods','Mixed','Mostly convenience','Specific diet']},
+    {label:'Sleep', key:'sleep', value:ctx.sleep || '—', type:'pills', opts:['Less than 5','5–6 hours','7–8 hours','More than 8']},
+    {label:'Alcohol / tobacco', key:'alcohol_tobacco', value:ctx.alcohol_tobacco || '—', type:'pills', opts:['Neither','Occasional alcohol','Regular alcohol','Tobacco use','Both']},
+    {label:'Prescriptions', key:'medications', value: (ctx.medications && ctx.medications.length) ? ctx.medications.join(' · ') : 'None', type:'multiline-meds'},
+    {label:'Supplements', key:'supplements', value: (ctx.supplements && ctx.supplements.length) ? ctx.supplements.join(' · ') : 'None', type:'multiline-supps'},
+    {label:'Heart disease (family)', key:'family_heart', value:ctx.family_heart || '—', type:'pills', opts:['Yes',"I don't know",'No']},
+    {label:'Cancer (family)', key:'family_cancer', value:ctx.family_cancer || '—', type:'pills', opts:['Yes',"I don't know",'No']},
+    {label:'Diabetes (family)', key:'family_diabetes', value:ctx.family_diabetes || '—', type:'pills', opts:['Yes, Type 2','Yes, Type 1',"I don't know",'No']},
+    {label:'Other details', key:'anything_else', value:ctx.anything_else || 'Nothing additional', type:'text'},
+  ];
+  list.innerHTML = '';
+  rows.forEach(r => {
+    const div = document.createElement('div');
+    div.className = 'review-row';
+    div.innerHTML = `
+      <div>
+        <div class="label">${r.label}</div>
+        <div class="value">${escapeHtml(String(r.value))}</div>
+      </div>
+      <div class="chev">›</div>
+    `;
+    div.onclick = () => editRow(r);
+    list.appendChild(div);
+  });
+}
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+}
+function editRow(r) {
+  if (r.type === 'pills') {
+    // Show inline pills sheet (simulate via reused edit sheet w/ pill row)
+    editPillsInSheet(r);
+  } else if (r.type === 'wheel') {
+    openWheel({title: r.label, options: r.opts, initial: r.initial}, (val) => {
+      ctx[r.key] = val;
+      renderReview();
+    });
+  } else if (r.type === 'multiline-meds' || r.type === 'multiline-supps') {
+    const list = (r.type === 'multiline-meds' ? ctx.medications : ctx.supplements) || [];
+    openEditSheet({title: r.label, type: r.type, value: list.join('\n'), key: r.key});
+  } else {
+    openEditSheet({title: r.label, type: 'text', value: ctx[r.key] || '', key: r.key});
+  }
+}
+function editPillsInSheet(r) {
+  // Reuse edit sheet but show pills instead of textarea
+  const sheet = document.getElementById('editSheet');
+  const ta = document.getElementById('editTextarea');
+  const actions = sheet.querySelector('.sheet-actions');
+  document.getElementById('editTitle').textContent = r.label;
+  ta.style.display = 'none';
+  actions.style.display = 'none';
+  // Insert pill row (cleanup any previous)
+  let pillRow = document.getElementById('editPillRow');
+  if (pillRow) pillRow.remove();
+  pillRow = document.createElement('div');
+  pillRow.id = 'editPillRow';
+  pillRow.style.cssText = 'display:flex; flex-wrap:wrap; gap:8px; padding:14px 16px 18px;';
+  r.opts.forEach(o => {
+    const b = document.createElement('button');
+    b.className = 'pill' + (o === ctx[r.key] ? ' selected' : '');
+    b.textContent = o;
+    b.onclick = () => {
+      ctx[r.key] = o;
+      pillRow.remove();
+      ta.style.display = '';
+      actions.style.display = '';
+      closeEditSheet();
+      renderReview();
+    };
+    pillRow.appendChild(b);
+  });
+  sheet.insertBefore(pillRow, sheet.querySelector('.sheet-actions'));
+  document.getElementById('editBackdrop').classList.add('open');
+  sheet.classList.add('open');
+}
+
+/* Done + restart */
+function finishFlow() {
+  document.getElementById('view-review').style.display = 'none';
+  document.getElementById('view-done').style.display = 'flex';
+  console.log('Onboarding complete · ctx:', ctx);
+}
+function redoFlow() {
+  for (const k of Object.keys(ctx)) delete ctx[k];
+  history.length = 0;
+  chatEl.innerHTML = '';
+  document.getElementById('view-review').style.display = 'none';
+  document.getElementById('view-done').style.display = 'none';
+  document.getElementById('view-chat').style.display = 'flex';
+  hideComposer();
+  closeSheet();
+  closeEditSheet();
+  runStep(0);
+}
+
+/* Back navigation: pop the last step's user/option/bubble exchange and re-run */
+function goBack() {
+  if (history.length <= 1) return;
+  // Remove the current step's bot bubble + any options (last 1–2 children)
+  // Simpler approach: pop last 2 entries from history and replay from the prior step
+  history.pop(); // current
+  const prevIdx = history.pop();
+  // Trim chat: remove last 2 rows (bot question + the next user/option row), but track exact deletion via marker — simpler: rerender from scratch up to prev step.
+  rebuildChatUpTo(prevIdx);
+  runStep(prevIdx);
+}
+
+/* Rebuild chat by replaying step history (simplistic for back nav — we reset and replay narrate/q without options) */
+function rebuildChatUpTo(targetIdx) {
+  chatEl.innerHTML = '';
+  hideComposer();
+  // Replay any narrate steps and previously-asked questions with their answers.
+  // We don't have a recorded log of answers per-step, so just clear and let runStep render from scratch.
+  // For a more polished UX we'd track turn history; for prototype, this is acceptable.
+}
+
+/* Init */
+runStep(0);
+</script>
+</body>
+</html>
