@@ -8,7 +8,7 @@
 <style>
   /*
     Meridian Patient — v2 (4-tab architecture)
-    Plan (Understand ↔ Execute) · Futures · You (Data ↔ Reasoning) · Messages (AI + pinned MD)
+    Plan (Understand ↔ Execute) · Futures · You (Data ↔ Reasoning) · Connect (doctor + Ali)
     Inherits Meridian MD Linear-dark design system. Patient-voice allowed.
   */
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -1176,13 +1176,15 @@
     border-top: 1px solid var(--border);
     border-radius: 16px 16px 0 0;
     z-index: 99;
-    transform: translateY(100%);
+    transform: translateY(calc(100% + 24px));
     transition: transform .22s cubic-bezier(.2,.8,.2,1);
     max-height: 86vh;
     display: flex; flex-direction: column;
     box-shadow: 0 -8px 32px rgba(0,0,0,0.6);
+    visibility: hidden;
+    pointer-events: none;
   }
-  .risk-sheet.open { transform: translateY(0); }
+  .risk-sheet.open { transform: translateY(0); visibility: visible; pointer-events: auto; }
   .rs-handle {
     width: 36px; height: 4px; border-radius: 2px;
     background: var(--border-strong);
@@ -1295,6 +1297,206 @@
   }
   .md-strip.empty {
     display: none;
+  }
+
+  .schedule-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    margin: 0 16px 14px;
+    padding: 16px;
+  }
+  .schedule-card .top {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .schedule-card h3 {
+    margin: 0 0 4px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .schedule-card p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+  .schedule-badge {
+    color: var(--status-ok-bright);
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .schedule-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .schedule-option {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+  }
+  .schedule-option b {
+    display: block;
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  .schedule-option span {
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+  .contact-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    margin: 0 16px 14px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .contact-card .av {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .contact-card .name {
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .contact-card .role {
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-top: 2px;
+  }
+  .contact-card .state {
+    margin-left: auto;
+    color: var(--status-ok-bright);
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .schedule-sheet-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(8,9,10,0.72);
+    z-index: 98;
+    opacity: 0; pointer-events: none;
+    transition: opacity .18s;
+  }
+  .schedule-sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+  .schedule-sheet {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    max-width: var(--maxw); margin: 0 auto;
+    background: var(--bg-panel);
+    border-top: 1px solid var(--border);
+    border-radius: 16px 16px 0 0;
+    z-index: 99;
+    transform: translateY(calc(100% + 24px));
+    transition: transform .22s cubic-bezier(.2,.8,.2,1);
+    max-height: 86vh;
+    overflow-y: auto;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .schedule-sheet.open { transform: translateY(0); visibility: visible; pointer-events: auto; }
+  .ss-handle {
+    width: 36px; height: 4px; border-radius: 2px;
+    background: var(--border-strong);
+    margin: 10px auto 2px;
+  }
+  .ss-head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .ss-head h3 {
+    margin: 0 0 3px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .ss-head p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .ss-close {
+    background: transparent; border: none; color: var(--text-muted);
+    font-size: 22px; line-height: 1; cursor: pointer; padding: 0 4px;
+  }
+  .ss-body { padding: 14px 16px 16px; }
+  .ss-section { margin-bottom: 16px; }
+  .ss-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .visit-types,
+  .slot-grid {
+    display: grid;
+    gap: 8px;
+  }
+  .visit-type,
+  .slot-btn {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font: inherit;
+    text-align: left;
+    padding: 11px 12px;
+    cursor: pointer;
+  }
+  .visit-type b,
+  .slot-btn b {
+    display: block;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  .visit-type span,
+  .slot-btn span {
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+  .slot-btn.selected {
+    border-color: var(--accent-hover);
+    background: var(--accent-tint);
+  }
+  .ss-note {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .ss-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding-top: 2px;
   }
 
   /* Chat thread */
@@ -1995,78 +2197,99 @@
   </section>
 
   <!-- =================================================== -->
-  <!-- TAB 4 — MESSAGES (Team ↔ Meridian) -->
+  <!-- TAB 4: CONNECT (Doctor + Ali) -->
   <!-- =================================================== -->
   <section class="screen" id="screen-messages">
     <div class="segmented" role="tablist">
-      <button class="seg-btn active" data-sub="team" onclick="gotoSub('messages','team')">Your team</button>
-      <button class="seg-btn" data-sub="meridian" onclick="gotoSub('messages','meridian')">Meridian</button>
+      <button class="seg-btn active" data-sub="team" onclick="gotoSub('messages','team')">Doctor</button>
+      <button class="seg-btn" data-sub="meridian" onclick="gotoSub('messages','meridian')">Ali</button>
     </div>
 
-    <!-- ---- TEAM (direct physician thread) ---- -->
+    <!-- ---- DOCTOR ---- -->
     <div class="substate active" id="messages-team">
       <div style="padding: 4px 16px 0">
-        <h1 class="screen-title" style="margin-bottom: 8px">Your care team.</h1>
+        <h1 class="screen-title" style="margin-bottom: 8px">Dr. Thompson.</h1>
       </div>
 
-      <div class="md-strip" onclick="toast('Opening Dr. Thompson\\'s note')">
-        <div class="av">MT</div>
-        <div class="body">
-          <div class="lbl">From Dr. Thompson</div>
-          <div class="txt">"Jim — I'm out of town next week but wanted to make sure you saw the statin change. Start tonight if you can. Message me here if anything feels off."</div>
-          <div class="when">2 hours ago</div>
+      <div class="schedule-card">
+        <div class="top">
+          <div>
+            <h3>Schedule a visit</h3>
+            <p>Pick a follow-up with Dr. Thompson. Ali will attach your plan summary, labs, and open questions before the visit.</p>
+          </div>
+          <div class="schedule-badge">2 openings</div>
         </div>
+        <div class="schedule-options">
+          <div class="schedule-option"><b>Video follow-up</b><span>25 minutes</span></div>
+          <div class="schedule-option"><b>Care plan review</b><span>50 minutes</span></div>
+        </div>
+        <button class="btn wide" onclick="openScheduler()">Schedule appointment</button>
+      </div>
+
+      <div class="contact-card">
+        <div class="av">MT</div>
+        <div>
+          <div class="name">Marcus Thompson, MD</div>
+          <div class="role">Primary care physician</div>
+        </div>
+        <div class="state">Available</div>
       </div>
 
       <div class="chat-wrap" id="teamChatWrap">
         <div class="msg ai">
           <div class="av">MT</div>
           <div class="bubble">
-            Hey Jim — any questions about the plan? Happy to clarify anything. I'll also have my office reach out in the next day or two to schedule the CAC scan.
+            Jim, I reviewed the plan. The two things I want to talk through live are the statin decision and how aggressively we use the CAC result. If you want, grab one of the openings above and send me anything you want covered.
             <div class="src"><b>From:</b> Dr. Marcus Thompson · Primary Care</div>
           </div>
         </div>
       </div>
 
       <div class="suggest">
-        <button onclick="askTeamPreset('About scheduling the cardiac workup')">Scheduling the cardiac workup</button>
-        <button onclick="askTeamPreset('Question about the statin')">Question about the statin</button>
-        <button onclick="askTeamPreset('Something doesn\\'t feel right')">Something doesn't feel right</button>
+        <button onclick="askTeamPreset('I want to review the statin decision during the visit')">Review the statin decision</button>
+        <button onclick="askTeamPreset('Can we cover the CAC scan and what the result changes?')">Cover the CAC scan</button>
+        <button onclick="openScheduler()">Schedule with Dr. Thompson</button>
       </div>
     </div>
 
-    <!-- ---- MERIDIAN (AI) ---- -->
+    <!-- ---- ALI ---- -->
     <div class="substate" id="messages-meridian">
       <div style="padding: 4px 16px 0">
-        <h1 class="screen-title" style="margin-bottom: 8px">Anything on your mind.</h1>
+        <h1 class="screen-title" style="margin-bottom: 8px">Ali.</h1>
+      </div>
+
+      <div class="contact-card">
+        <div class="av">AI</div>
+        <div>
+          <div class="name">Ali</div>
+          <div class="role">Aleron assistant · answers from your plan</div>
+        </div>
+        <div class="state">Online</div>
       </div>
 
       <div class="chat-wrap" id="chatWrap">
         <div class="msg ai">
           <div class="av">AI</div>
           <div class="bubble">
-            Good morning, Jim. Your plan was released two hours ago — <em>three decisions, plus the genetic counseling visit on the books</em>. Want me to walk through how Dr. Thompson thought about this, or jump to a specific question?
-            <div class="src"><b>Source:</b> Your plan (released Apr 18) · Dr. Thompson's note</div>
+            I can help you understand the plan, prepare questions for Dr. Thompson, or schedule the next visit. I will route anything clinical or urgent to your care team.
+            <div class="src"><b>Source:</b> Your Aleron plan · Dr. Thompson's note</div>
           </div>
         </div>
       </div>
 
-      <!-- Preloaded questions — shown until the user sends the first message -->
       <div class="suggest" id="suggest">
         <div class="suggest-label">Good places to start</div>
+        <button onclick="askPreset('Help me prepare for my appointment with Dr. Thompson.')">Prep for my appointment</button>
         <button onclick="askPreset('Why the statin and not just lifestyle changes?')">Why a statin first?</button>
-        <button onclick="askPreset('What side effects should I actually watch for?')">Side effects I should actually watch for</button>
-        <button onclick="askPreset('How fast will my numbers change?')">How fast will my numbers change?</button>
-        <button onclick="askPreset('Explain ATM in plain language.')">What does ATM mean for me, plainly?</button>
-        <button onclick="askPreset('Walk me through Dr. Thompson\\'s reasoning.')">Walk me through Dr. Thompson's reasoning</button>
-        <button onclick="askPreset('What would make my plan change at the 12-week recheck?')">What would change the plan at 12 weeks?</button>
+        <button onclick="askPreset('What should I ask about the CAC scan?')">Questions for the CAC scan</button>
+        <button onclick="openScheduler()">Schedule with my doctor</button>
       </div>
     </div>
   </section>
 
-  <!-- Chat input (Messages tab only — target changes based on active sub) -->
+  <!-- Chat input (Connect tab only, target changes by subtab) -->
   <div class="chat-input" id="chatInput">
-    <input type="text" id="chatField" placeholder="Ask about your plan..." onkeypress="if(event.key==='Enter') sendChat()"/>
+    <input type="text" id="chatField" placeholder="Message your care team..." onkeypress="if(event.key==='Enter') sendChat()"/>
     <button onclick="sendChat()">↑</button>
   </div>
 
@@ -2096,14 +2319,55 @@
   </button>
   <button class="nav-item" data-tab="messages" onclick="gotoTab('messages')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-      <path d="M21 12a8 8 0 0 1-11.4 7.3L4 21l1.7-5.6A8 8 0 1 1 21 12z"/>
+      <circle cx="9" cy="8" r="3.2"/>
+      <path d="M3.5 20c0-3.4 2.7-6 5.5-6s5.5 2.6 5.5 6"/>
+      <circle cx="16.5" cy="9" r="2.6"/>
+      <path d="M14.5 14.8c2.8.3 5 2.4 5.5 5.2"/>
     </svg>
-    Messages
+    Connect
   </button>
 </nav>
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
+
+<!-- Schedule appointment sheet -->
+<div class="schedule-sheet-backdrop" id="scheduleSheetBackdrop" onclick="closeScheduler()"></div>
+<div class="schedule-sheet" id="scheduleSheet" role="dialog" aria-modal="true" aria-labelledby="ssTitle">
+  <div class="ss-handle"></div>
+  <div class="ss-head">
+    <div>
+      <h3 id="ssTitle">Schedule with Dr. Thompson</h3>
+      <p>Video visit · Aleron Care Team</p>
+    </div>
+    <button class="ss-close" onclick="closeScheduler()" aria-label="Close">×</button>
+  </div>
+  <div class="ss-body">
+    <div class="ss-section">
+      <div class="ss-label">Visit type</div>
+      <div class="visit-types">
+        <button class="visit-type" type="button"><b>Care plan follow-up</b><span>25 min · Statin start, CAC scan, PSA plan</span></button>
+        <button class="visit-type" type="button"><b>Deep review</b><span>50 min · Full plan review plus open questions</span></button>
+      </div>
+    </div>
+    <div class="ss-section">
+      <div class="ss-label">Next openings</div>
+      <div class="slot-grid">
+        <button class="slot-btn selected" type="button" onclick="selectApptSlot(this)"><b>Tomorrow, 8:30 AM</b><span>Video · Dr. Thompson</span></button>
+        <button class="slot-btn" type="button" onclick="selectApptSlot(this)"><b>Thu, 12:10 PM</b><span>Video · Dr. Thompson</span></button>
+        <button class="slot-btn" type="button" onclick="selectApptSlot(this)"><b>Fri, 4:20 PM</b><span>Video · Dr. Thompson</span></button>
+      </div>
+    </div>
+    <div class="ss-section">
+      <div class="ss-label">Ali will attach</div>
+      <div class="ss-note">Plan summary, latest labs, CAC scheduling status, and any questions you send before the appointment.</div>
+    </div>
+    <div class="ss-actions">
+      <button class="btn wide" onclick="confirmAppointment(this)">Confirm appointment</button>
+      <button class="btn wide ghost" onclick="closeScheduler()">Not now</button>
+    </div>
+  </div>
+</div>
 
 <!-- Risk bottom sheet (opens from You → Risk cards) -->
 <div class="risk-sheet-backdrop" id="riskSheetBackdrop" onclick="closeRiskSheet()"></div>
@@ -2136,9 +2400,10 @@
     document.querySelectorAll('.nav-item').forEach(n => {
       n.classList.toggle('active', n.dataset.tab === name);
     });
-    // Chat input only on messages tab
+    // Chat input only on Connect tab
     const ci = document.getElementById('chatInput');
     ci.classList.toggle('show', name === 'messages');
+    if (name === 'messages') updateConnectPlaceholder();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
   }
@@ -2150,6 +2415,14 @@
     scope.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b.dataset.sub === sub));
     const target = document.getElementById(tab + '-' + sub);
     if (target) target.classList.add('active');
+    updateConnectPlaceholder();
+  }
+
+  function updateConnectPlaceholder() {
+    const field = document.getElementById('chatField');
+    if (!field) return;
+    const teamActive = document.getElementById('messages-team')?.classList.contains('active');
+    field.placeholder = teamActive ? 'Message Dr. Thompson...' : 'Message Ali...';
   }
 
   /* ===== Decision + data accordions ===== */
@@ -2302,7 +2575,9 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
     const field = document.getElementById('chatField');
     const text = field.value.trim();
     if (!text) return;
-    askPreset(text);
+    const teamActive = document.getElementById('messages-team')?.classList.contains('active');
+    if (teamActive) askTeamPreset(text);
+    else askPreset(text);
     field.value = '';
   }
 
@@ -2363,7 +2638,7 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
     setTimeout(() => {
       const a = document.createElement('div');
       a.className = 'msg ai';
-      a.innerHTML = `<div class="av">MT</div><div class="bubble">Got it — I'll take a look and get back to you within the day. If it's urgent, call the office line.<div class="src"><b>From:</b> Dr. Marcus Thompson · Primary Care</div></div>`;
+      a.innerHTML = `<div class="av">MT</div><div class="bubble">Got it. I will review this before the visit. If you want to talk it through live, use the schedule button above and my team will add this to the agenda.<div class="src"><b>From:</b> Dr. Marcus Thompson · Primary Care</div></div>`;
       wrap.appendChild(a);
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }, 700);
@@ -2460,9 +2735,30 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
     gotoSub('messages', 'meridian');
     setTimeout(() => askPreset(text), 120);
   }
+  function openScheduler() {
+    document.getElementById('scheduleSheet')?.classList.add('open');
+    document.getElementById('scheduleSheetBackdrop')?.classList.add('open');
+  }
+  function closeScheduler() {
+    document.getElementById('scheduleSheet')?.classList.remove('open');
+    document.getElementById('scheduleSheetBackdrop')?.classList.remove('open');
+  }
+  function selectApptSlot(btn) {
+    document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+  function confirmAppointment(btn) {
+    const slot = document.querySelector('.slot-btn.selected b')?.textContent || 'the selected time';
+    btn.textContent = 'Appointment confirmed';
+    btn.disabled = true;
+    btn.style.opacity = '0.85';
+    toast(`Scheduled with Dr. Thompson: ${slot}`);
+    setTimeout(closeScheduler, 700);
+  }
+
   // ESC closes sheet
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeRiskSheet();
+    if (e.key === 'Escape') { closeRiskSheet(); closeScheduler(); }
   });
 </script>
 </body>
