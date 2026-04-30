@@ -1283,7 +1283,7 @@
     overflow: hidden;
     transition: max-height 0.3s ease-out;
   }
-  .data-group.open .data-body { max-height: 720px; }
+  .data-group.open .data-body { max-height: 4200px; }
   .data-body-inner {
     padding: 4px 16px 16px;
     border-top: 1px solid var(--border-subtle);
@@ -1329,6 +1329,18 @@
   .flag.gap { background: rgba(255,255,255,0.04); color: var(--text-muted); border: 1px dashed rgba(255,255,255,0.14); }
   .metric.muted .name, .metric.muted .val { color: var(--text-muted); }
   .metric.muted .val { font-feature-settings: "tnum"; }
+  .metric-subhead {
+    grid-column: 1 / -1;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    font-weight: 500;
+    padding: 14px 0 4px;
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: 4px;
+  }
+  .metric-subhead:first-child { padding-top: 0; }
 
   /* Sparkline */
   .spark {
@@ -2648,127 +2660,107 @@
       <div class="data-group">
         <div class="data-hd" onclick="toggleData(this.parentElement)">
           <div>
-            <h4>Labs · most recent panel</h4>
-            <div class="sub">Drawn April 10, 2026 · Quest Elite Health · Quest Diagnostics</div>
+            <h4>Labs · Quest Elite Health panel</h4>
+            <div class="sub">Drawn April 10, 2026 · resulted April 11 · ~75 analytes</div>
           </div>
           <span class="chev">›</span>
         </div>
         <div class="data-body"><div class="data-body-inner">
-          <div class="metric">
-            <div class="name">ApoB</div>
-            <div class="val">98 mg/dL <small>goal &lt;80</small></div>
-            <div class="flag high">high</div>
-          </div>
-          <div class="metric">
-            <div class="name">Lp(a)</div>
-            <div class="val">62 mg/dL <small>goal &lt;30 · molar units pending</small></div>
-            <div class="flag high">high</div>
-          </div>
-          <div class="metric">
-            <div class="name">LDL-C</div>
-            <div class="val">128 mg/dL <small>goal &lt;100</small></div>
-            <div class="flag high">high</div>
-          </div>
-          <div class="metric">
-            <div class="name">Non-HDL-C</div>
-            <div class="val">145 mg/dL</div>
-            <div class="flag warn">borderline</div>
-          </div>
-          <div class="metric">
-            <div class="name">HDL-C</div>
-            <div class="val">58 mg/dL</div>
-            <div class="flag ok">ok</div>
-          </div>
-          <div class="metric">
-            <div class="name">Triglycerides</div>
-            <div class="val">85 mg/dL</div>
-            <div class="flag ok">ok</div>
-          </div>
-          <div class="metric">
-            <div class="name">Total cholesterol</div>
-            <div class="val">203 mg/dL <small>ref &lt;200</small></div>
-            <div class="flag warn">borderline</div>
-          </div>
-          <div class="metric">
-            <div class="name">Oxidized LDL</div>
-            <div class="val">54 U/L</div>
-            <div class="flag ok">ok</div>
-          </div>
-          <div class="metric">
-            <div class="name">Omega-3 index</div>
-            <div class="val">5.1%</div>
-            <div class="flag warn">below target</div>
-          </div>
-          <div class="metric">
-            <div class="name">hs-CRP</div>
-            <div class="val">1.1 mg/L <small>goal &lt;1.0</small></div>
-            <div class="flag warn">borderline</div>
-          </div>
-          <div class="metric">
-            <div class="name">A1c</div>
-            <div class="val">5.4% <small>normal</small></div>
-            <div class="flag ok">ok</div>
-          </div>
-          <div class="metric">
-            <div class="name">Fasting glucose</div>
-            <div class="val">88 mg/dL</div>
-            <div class="flag ok">ok</div>
-          </div>
-          <div class="metric">
-            <div class="name">Fasting insulin</div>
-            <div class="val">7.8 µIU/mL</div>
-            <div class="flag ok">ok</div>
-          </div>
-          <div class="metric">
-            <div class="name">HOMA-IR</div>
-            <div class="val">1.7</div>
-            <div class="flag ok">ok</div>
-          </div>
-          <div class="metric">
-            <div class="name">Creatinine / eGFR</div>
-            <div class="val">0.98 mg/dL · 92 mL/min</div>
-            <div class="flag ok">ok</div>
-          </div>
-          <div class="metric">
-            <div class="name">Cystatin C / eGFR</div>
-            <div class="val">0.86 mg/L · 96 mL/min</div>
-            <div class="flag ok">ok</div>
-          </div>
-          <div class="metric">
-            <div class="name">UACR</div>
-            <div class="val">8 mg/g</div>
-            <div class="flag ok">ok</div>
-          </div>
-          <div class="metric">
-            <div class="name">ALT / AST</div>
-            <div class="val">24 / 22 U/L · FIB-4 0.78</div>
-            <div class="flag ok">ok</div>
-          </div>
-          <div class="metric">
-            <div class="name">TSH</div>
-            <div class="val">1.8 mIU/L</div>
-            <div class="flag ok">ok</div>
-          </div>
-          <div class="metric">
-            <div class="name">Testosterone, total</div>
-            <div class="val">620 ng/dL</div>
-            <div class="flag ok">ok</div>
-          </div>
-          <div class="metric">
-            <div class="name">Vitamin D / B12 / Ferritin</div>
-            <div class="val">38 · 520 · 105</div>
-            <div class="flag ok">ok</div>
-          </div>
-          <div class="metric">
-            <div class="name">CBC / urinalysis</div>
-            <div class="val">WNL</div>
-            <div class="flag ok">ok</div>
-          </div>
-          <div class="metric">
-            <div class="name">H. pylori / HBV / HCV</div>
-            <div class="val">Negative</div>
-            <div class="flag ok">ok</div>
-          </div>
+
+          <div class="metric-subhead">Lipids &amp; cardiovascular</div>
+          <div class="metric"><div class="name">ApoB</div><div class="val">98 mg/dL <small>goal &lt;80</small></div><div class="flag high">high</div></div>
+          <div class="metric"><div class="name">Lp(a)</div><div class="val">62 mg/dL <small>goal &lt;30 · molar pending</small></div><div class="flag high">high</div></div>
+          <div class="metric"><div class="name">LDL-C</div><div class="val">128 mg/dL <small>goal &lt;100</small></div><div class="flag high">high</div></div>
+          <div class="metric"><div class="name">Non-HDL-C</div><div class="val">145 mg/dL</div><div class="flag warn">borderline</div></div>
+          <div class="metric"><div class="name">HDL-C</div><div class="val">58 mg/dL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">VLDL-C</div><div class="val">17 mg/dL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Triglycerides</div><div class="val">85 mg/dL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Total cholesterol</div><div class="val">203 mg/dL <small>ref &lt;200</small></div><div class="flag warn">borderline</div></div>
+          <div class="metric"><div class="name">TC / HDL ratio</div><div class="val">3.5</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Oxidized LDL</div><div class="val">54 U/L</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Omega-3 index</div><div class="val">5.1%</div><div class="flag warn">below target</div></div>
+
+          <div class="metric-subhead">Inflammation</div>
+          <div class="metric"><div class="name">hs-CRP</div><div class="val">1.1 mg/L <small>goal &lt;1.0</small></div><div class="flag warn">borderline</div></div>
+
+          <div class="metric-subhead">Glycemic &amp; metabolic</div>
+          <div class="metric"><div class="name">A1c</div><div class="val">5.4%</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Fasting glucose</div><div class="val">88 mg/dL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Fasting insulin</div><div class="val">7.8 µIU/mL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">HOMA-IR</div><div class="val">1.7</div><div class="flag ok">ok</div></div>
+
+          <div class="metric-subhead">Renal</div>
+          <div class="metric"><div class="name">Creatinine</div><div class="val">0.98 mg/dL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">eGFR (creatinine)</div><div class="val">92 mL/min/1.73m²</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Cystatin C</div><div class="val">0.86 mg/L</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">eGFR (cystatin C)</div><div class="val">96 mL/min/1.73m²</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">UACR</div><div class="val">8 mg/g <small>ref &lt;30</small></div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">BUN</div><div class="val">14 mg/dL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Serum phosphate</div><div class="val">3.4 mg/dL</div><div class="flag ok">ok</div></div>
+
+          <div class="metric-subhead">Electrolytes &amp; chemistry</div>
+          <div class="metric"><div class="name">Sodium</div><div class="val">140 mmol/L</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Potassium</div><div class="val">4.3 mmol/L</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Chloride</div><div class="val">103 mmol/L</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">CO₂ / bicarbonate</div><div class="val">27 mmol/L</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Calcium</div><div class="val">9.6 mg/dL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Albumin</div><div class="val">4.6 g/dL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Total protein</div><div class="val">7.1 g/dL</div><div class="flag ok">ok</div></div>
+
+          <div class="metric-subhead">Liver</div>
+          <div class="metric"><div class="name">ALT</div><div class="val">24 U/L</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">AST</div><div class="val">22 U/L</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Alkaline phosphatase</div><div class="val">62 U/L</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Total bilirubin</div><div class="val">0.7 mg/dL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">GGT</div><div class="val">18 U/L</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">FIB-4</div><div class="val">0.78</div><div class="flag ok">low risk</div></div>
+
+          <div class="metric-subhead">Complete blood count</div>
+          <div class="metric"><div class="name">WBC</div><div class="val">5.4 ×10³/µL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Hemoglobin</div><div class="val">14.8 g/dL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Hematocrit</div><div class="val">44.1%</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Platelets</div><div class="val">238 ×10³/µL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">RBC</div><div class="val">4.95 ×10⁶/µL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">MCV</div><div class="val">89 fL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">MCH</div><div class="val">29.9 pg</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">MCHC</div><div class="val">33.6 g/dL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">RDW</div><div class="val">12.7%</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Neutrophils</div><div class="val">58%</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Lymphocytes</div><div class="val">31%</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Monocytes</div><div class="val">7%</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Eosinophils</div><div class="val">3%</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Basophils</div><div class="val">1%</div><div class="flag ok">ok</div></div>
+
+          <div class="metric-subhead">Thyroid</div>
+          <div class="metric"><div class="name">TSH</div><div class="val">1.8 mIU/L</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Free T3</div><div class="val">3.2 pg/mL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Free T4</div><div class="val">1.2 ng/dL</div><div class="flag ok">ok</div></div>
+
+          <div class="metric-subhead">Hormones</div>
+          <div class="metric"><div class="name">Testosterone, total</div><div class="val">620 ng/dL</div><div class="flag ok">ok</div></div>
+
+          <div class="metric-subhead">Vitamins &amp; micronutrients</div>
+          <div class="metric"><div class="name">Vitamin D, 25-OH</div><div class="val">38 ng/mL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Vitamin B12</div><div class="val">520 pg/mL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Folate</div><div class="val">12.4 ng/mL</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Ferritin</div><div class="val">105 ng/mL</div><div class="flag ok">ok</div></div>
+
+          <div class="metric-subhead">Infectious / cancer-related</div>
+          <div class="metric"><div class="name">H. pylori</div><div class="val">Negative</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">HBsAg</div><div class="val">Negative</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">HCV antibody</div><div class="val">Negative</div><div class="flag ok">ok</div></div>
+
+          <div class="metric-subhead">Urinalysis</div>
+          <div class="metric"><div class="name">pH</div><div class="val">6.0</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Specific gravity</div><div class="val">1.018</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Glucose</div><div class="val">Negative</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Protein</div><div class="val">Negative</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Blood</div><div class="val">Negative</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Bilirubin</div><div class="val">Negative</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Ketones</div><div class="val">Negative</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Nitrite</div><div class="val">Negative</div><div class="flag ok">ok</div></div>
+          <div class="metric"><div class="name">Leukocyte esterase</div><div class="val">Negative</div><div class="flag ok">ok</div></div>
+
         </div></div>
       </div>
 
