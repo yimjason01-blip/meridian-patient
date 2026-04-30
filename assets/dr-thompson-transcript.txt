@@ -1,4 +1,4 @@
-Jason, Dr. Thompson here.
+Jim, Dr. Thompson here.
 
 First, I want to acknowledge something. You're already on a great path. The intake, the wearable data, the fact that you're asking these questions at 47 — that's more than most people will ever do. Honestly, it's what makes this work. I love working with patients who are this dedicated to a great future.
 
@@ -8,20 +8,22 @@ When there's a high-risk area we can do something about, I prioritize that. Some
 
 With that in mind — here's what I'm seeing. Overall, you're in great shape. But a couple things are standing out.
 
-First, your genetic panel came back with a variant called ATM. This raises your susceptibility to certain diseases down the road, including some cancers and some cardiovascular risk. Combined with a couple of numbers in your cholesterol panel — specifically ApoB and Lp(a) — your cardiovascular risk is a little higher than I want to see right now.
+First, your genetic panel came back with a variant called ATM. This raises your susceptibility to certain cancers and some cardiovascular risk. Because that's a guideline-level finding, we've already set up a genetic counseling visit for you, and we'll talk about cascade testing for first-degree relatives there. That part isn't up for ranking — we just do it.
 
-So the first thing I want to do is start you on a statin. It'll pull those cholesterol numbers into a range that meaningfully reduces your cardiovascular risk.
+Then there are three things from your data that rose to the top.
 
-Now, I know there's a narrative about statins out there, and there are indeed a couple real challenges with some versions of them. But those affect a pretty small slice of the population, and the current generation really addresses most of what people have heard. I'm prescribing one I think is a good fit for you, and we'll see how you do. We'll recheck in 12 weeks and see how you're trending.
+The first is a baseline PSA today. As an ATM carrier you should have started prostate surveillance at 40, and we're seven years overdue. It's a single blood test plus a brief exam — and it sets up your annual cadence going forward.
 
-Related to this — this is the pulling-the-picture-into-focus piece — your resting heart rate is pretty low. Now, from your notes you're really active on the bike, so this could just mean you're genuinely fit. But I want to make sure. So I'd like to do a stress echo to see how your heart responds to load, and a coronary calcium scan to see whether there are any deposits in your arteries already.
+Second, I want to start you on a low-dose statin. Your Lp(a) came back high — that's a lifetime, genetically determined cardiovascular risk factor. Lifestyle won't lower it, but a statin lowers the modifiable side of the equation. We'll recheck cholesterol and ApoB in eight weeks.
 
-These are easy tests, and the value of the information is incredible. It helps both of us understand your heart, and gives us the tools we need to steer things in the right direction.
+Now, I know there's a narrative about statins out there, and there are indeed a couple real challenges with some versions of them. But those affect a pretty small slice of the population, and the current generation really addresses most of what people have heard. I'm prescribing one I think is a good fit for you.
 
-The third thing is purely proactive — I want to start an annual pancreatic MRI now. Normally we'd recommend this in your early fifties, but because of your ATM variant, which raises your pancreatic cancer risk, I want to start it now. We don't have a great tool to shift that risk itself, so the best thing we can do is catch anything early. MRI is the tool for that.
+Third — and this is the pull-the-picture-into-focus piece — I want a coronary calcium scan. Your Lp(a) and ApoB profile is exactly the situation where this scan changes the next move. It tells me whether to push harder on the lipid plan or hold steady. It's an easy outpatient test and the value of the information is incredible.
 
-So — overall, you're doing great. I'm going to keep you doing great. Let's get this done and make sure you're working from a solid foundation.
+Beyond those three, we're documenting a pancreatic surveillance plan to start at age 50 because of your ATM status — that's a few years out. And there are a handful of smaller items in your full plan: confirming Lp(a) in molar units, an APOE add-on test, a baseline colonoscopy, and a few others.
+
+So — overall, you're doing great. Let's get this done and make sure you're working from a solid foundation.
 
 If you want to schedule a visit and talk any of this through, tap below. And if you just want to send a question, message me any time. I'll get back to you.
 
-Take care of yourself, Jason.
+Take care of yourself, Jim.

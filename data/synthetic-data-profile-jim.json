@@ -1,0 +1,519 @@
+{
+  "_meta": {
+    "profile_id": "SP-JIM-001",
+    "label": "Jim synthetic data profile",
+    "version": "1.0",
+    "created": "2026-04-25",
+    "purpose": "Fixed source-data profile for Meridian end-to-end testing.",
+    "scope": "Synthetic normal-onboarding source data only: intake, Invitae 163-gene panel, Quest Elite Health panel, and canonical wearable inputs. No risk scores, recommendations, UI summaries, or clinical interpretation.",
+    "source_policy": "Uses established Meridian-relevant fixture values where available; fills missing required model inputs with plausible synthetic normals or mild abnormalities so all domain models can run. This is not a real patient record."
+  },
+  "patient": {
+    "patient_id": "SP-JIM-001",
+    "name": "Jim",
+    "age_years": 47,
+    "sex_at_birth": "male",
+    "gender_identity": "male",
+    "height_cm": 178,
+    "weight_kg": 72.5,
+    "bmi_kg_m2": 23.0,
+    "ethnicity": "East Asian",
+    "ancestry": [
+      "Korean"
+    ]
+  },
+  "intake": {
+    "collection_date": "2026-04-10",
+    "active_diagnoses": [],
+    "current_medications": [],
+    "supplements": [],
+    "allergies": "NKDA",
+    "tobacco_use": {
+      "status": "never",
+      "pack_years": 0,
+      "quit_date": "not_applicable_never_smoker"
+    },
+    "alcohol_use": {
+      "drinks_per_week": 3,
+      "pattern": "moderate"
+    },
+    "physical_activity_self_report": {
+      "activity_type": "cycling",
+      "hours_per_week": 6,
+      "notes": "Recreational endurance activity"
+    },
+    "sleep_self_report": {
+      "typical_sleep_hours": 7.2,
+      "sleep_quality": "generally consistent"
+    },
+    "family_history": {
+      "cardiovascular_disease": {
+        "premature_ascvd_first_degree_relative": false,
+        "details": []
+      },
+      "diabetes": {
+        "first_degree_relative_t2d": false,
+        "details": []
+      },
+      "kidney_disease": {
+        "first_degree_relative_ckd_eskd_dialysis_transplant": false,
+        "family_history_pkd": false,
+        "details": []
+      },
+      "neurodegenerative_disease": {
+        "first_degree_relative_dementia": false,
+        "details": []
+      },
+      "cancer": {
+        "breast_cancer": [],
+        "colorectal_cancer": [],
+        "ovarian_cancer": [],
+        "prostate_cancer": [],
+        "pancreatic_cancer": [],
+        "gastric_or_gi_cancer": [
+          {
+            "relationship": "paternal_grandfather",
+            "diagnosis": "GI cancer",
+            "age_at_diagnosis": null,
+            "age_at_death": 82,
+            "age_at_diagnosis_status": "unknown"
+          }
+        ]
+      }
+    },
+    "screening_history": {
+      "last_colonoscopy_date": null,
+      "last_mammogram_date": null,
+      "last_pap_hpv_date": null,
+      "last_psa_date": null,
+      "last_ldct_date": null,
+      "cac_scan_date": null,
+      "cac_score_agatston": null,
+      "abdominal_imaging_date": null,
+      "last_colonoscopy_status": "not_collected",
+      "last_mammogram_status": "not_applicable_male",
+      "last_pap_hpv_status": "not_applicable_male",
+      "last_psa_status": "not_collected",
+      "last_ldct_status": "not_applicable_never_smoker",
+      "cac_status": "not_collected",
+      "abdominal_imaging_status": "not_collected"
+    },
+    "diagnosis_flags": {
+      "diabetes": false,
+      "hypertension": false,
+      "prior_cardiac_events": false,
+      "cardiovascular_disease_history": false,
+      "t2d_present": false,
+      "gestational_diabetes_history": "not_applicable_male",
+      "pcos_history": "not_applicable_male"
+    },
+    "medication_flags": {
+      "antihypertensive_use": false,
+      "statin_use": false,
+      "steroid_use": false,
+      "antipsychotic_use": false,
+      "sglt2i_use": false,
+      "glp1ra_use": false
+    }
+  },
+  "genetics": {
+    "source": "Invitae 163-gene panel",
+    "panel_name": "Invitae Comprehensive Cancer + Cardiovascular panel",
+    "genes_tested_count": 163,
+    "result_date": "2026-02-03",
+    "variants": [
+      {
+        "gene": "ATM",
+        "variant": "c.8147T>C",
+        "zygosity": "heterozygous",
+        "classification": "pathogenic"
+      }
+    ],
+    "negative_gene_notes": "All other reported genes negative/benign/likely benign unless listed above.",
+    "apoe_genotype": null,
+    "apol1_genotype": null,
+    "prs_cad_percentile": null,
+    "apoe_genotype_status": "not_collected",
+    "apol1_genotype_status": "not_collected",
+    "prs_cad_status": "not_collected",
+    "vus_status": "not_included_in_fixture",
+    "vus_notes": "VUS may be reported by Invitae, but Jim fixture does not model or assert any VUS.",
+    "explicit_negative_groups": {
+      "ckd_monogenic_genes": {
+        "HNF1B": "no_pathogenic_or_likely_pathogenic_variant_reported",
+        "PKD1": "no_pathogenic_or_likely_pathogenic_variant_reported",
+        "PKD2": "no_pathogenic_or_likely_pathogenic_variant_reported",
+        "COL4A3": "no_pathogenic_or_likely_pathogenic_variant_reported",
+        "COL4A4": "no_pathogenic_or_likely_pathogenic_variant_reported",
+        "COL4A5": "no_pathogenic_or_likely_pathogenic_variant_reported",
+        "UMOD": "no_pathogenic_or_likely_pathogenic_variant_reported",
+        "MUC1": "no_pathogenic_or_likely_pathogenic_variant_reported",
+        "REN": "no_pathogenic_or_likely_pathogenic_variant_reported"
+      }
+    }
+  },
+  "labs": {
+    "panel_name": "Quest Elite Health panel",
+    "lab": "Quest Diagnostics",
+    "collection_date": "2026-04-10",
+    "result_date": "2026-04-11",
+    "units_policy": "US conventional units unless otherwise specified.",
+    "lipids": {
+      "total_cholesterol_mg_dl": 203,
+      "ldl_c_mg_dl": 128,
+      "hdl_c_mg_dl": 58,
+      "triglycerides_mg_dl": 85,
+      "non_hdl_c_mg_dl": 145,
+      "apob_mg_dl": 98,
+      "omega3_index_percent": 5.1,
+      "oxidized_ldl_u_l": 54,
+      "lp_a": {
+        "value": 62,
+        "unit": "mg/dL",
+        "status": "reported",
+        "alternate_unit_nmol_l": null,
+        "alternate_unit_status": "not_reported"
+      },
+      "vldl_mg_dl": 17,
+      "tc_hdl_ratio": 3.5
+    },
+    "inflammation": {
+      "hs_crp_mg_l": 1.1
+    },
+    "glycemic_metabolic": {
+      "fasting_glucose_mg_dl": 88,
+      "hba1c_percent": 5.4,
+      "fasting_insulin_uIU_ml": 7.8,
+      "homa_ir": 1.7
+    },
+    "renal": {
+      "creatinine_mg_dl": 0.98,
+      "egfr_creatinine_ml_min_1_73m2": 92,
+      "cystatin_c_mg_l": 0.86,
+      "egfr_cystatin_c_ml_min_1_73m2": 96,
+      "uacr_mg_g": 8,
+      "serum_phosphate_mg_dl": 3.4,
+      "bun_mg_dl": 14
+    },
+    "electrolytes_chemistry": {
+      "sodium_mmol_l": 140,
+      "potassium_mmol_l": 4.3,
+      "chloride_mmol_l": 103,
+      "carbon_dioxide_bicarbonate_mmol_l": 27,
+      "calcium_mg_dl": 9.6,
+      "albumin_g_dl": 4.6,
+      "total_protein_g_dl": 7.1
+    },
+    "liver": {
+      "alt_u_l": 24,
+      "ast_u_l": 22,
+      "alkaline_phosphatase_u_l": 62,
+      "total_bilirubin_mg_dl": 0.7,
+      "ggt_u_l": 18,
+      "fib4": 0.78
+    },
+    "cbc": {
+      "wbc_10e3_ul": 5.4,
+      "hemoglobin_g_dl": 14.8,
+      "hematocrit_percent": 44.1,
+      "platelets_10e3_ul": 238,
+      "mcv_fl": 89,
+      "rbc_10e6_ul": 4.95,
+      "mch_pg": 29.9,
+      "mchc_g_dl": 33.6,
+      "rdw_percent": 12.7,
+      "neutrophils_percent": 58,
+      "lymphocytes_percent": 31,
+      "monocytes_percent": 7,
+      "eosinophils_percent": 3,
+      "basophils_percent": 1
+    },
+    "thyroid": {
+      "tsh_mIU_l": 1.8,
+      "free_t3_pg_ml": 3.2,
+      "free_t4_ng_dl": 1.2
+    },
+    "neuro_biomarkers": {
+      "ptau217": null,
+      "nfl": null,
+      "gfap": null,
+      "ptau217_status": "not_collected",
+      "nfl_status": "not_collected",
+      "gfap_status": "not_collected"
+    },
+    "infectious_cancer_related": {
+      "h_pylori_status": "negative",
+      "hbsag": "negative",
+      "hcv_ab": "negative",
+      "high_risk_hpv_status": null,
+      "high_risk_hpv_status_note": "not_applicable_male"
+    },
+    "vitals_at_collection": {
+      "systolic_bp_mmHg": 116,
+      "diastolic_bp_mmHg": 76,
+      "blood_pressure_source": "clinic/intake reading"
+    },
+    "hormones": {
+      "testosterone_total_ng_dl": 620
+    },
+    "vitamins_micronutrients": {
+      "vitamin_d_25_oh_ng_ml": 38,
+      "vitamin_b12_pg_ml": 520,
+      "folate_ng_ml": 12.4,
+      "ferritin_ng_ml": 105
+    },
+    "urinalysis": {
+      "ph": 6.0,
+      "specific_gravity": 1.018,
+      "glucose": "negative",
+      "protein": "negative",
+      "blood": "negative",
+      "bilirubin": "negative",
+      "ketones": "negative",
+      "nitrite": "negative",
+      "leukocyte_esterase": "negative"
+    }
+  },
+  "wearables": {
+    "source_device": "Apple Watch",
+    "last_sync": "2026-04-19T14:02:00Z",
+    "canonical_inputs": {
+      "ckd_rhr_bpm": {
+        "value": 46,
+        "statistic": "median device-reported sleep/resting RHR",
+        "window_days": 7,
+        "valid_nights": 7,
+        "window_start": "2026-04-12",
+        "window_end": "2026-04-18",
+        "recency_requirement": "window_end <= 14 days before engine_run"
+      },
+      "ckd_hrv_rmssd_ms": {
+        "value": 77,
+        "statistic": "median overnight HRV RMSSD",
+        "window_days": 7,
+        "valid_nights": 7,
+        "window_start": "2026-04-12",
+        "window_end": "2026-04-18",
+        "recency_requirement": "window_end <= 14 days before engine_run"
+      },
+      "cvd_rhr_bpm": {
+        "value": 46,
+        "statistic": "30-day rolling median device-reported sleep/resting RHR",
+        "window_days": 30,
+        "valid_nights": 28,
+        "window_start": "2026-03-20",
+        "window_end": "2026-04-18",
+        "recency_requirement": "window_end <= 45 days before engine_run"
+      },
+      "cvd_hrv_rmssd_ms": {
+        "value": 77,
+        "statistic": "30-day rolling median overnight HRV RMSSD",
+        "window_days": 30,
+        "valid_nights": 28,
+        "window_start": "2026-03-20",
+        "window_end": "2026-04-18",
+        "recency_requirement": "window_end <= 45 days before engine_run"
+      },
+      "neuro_physical_activity_min_per_week": {
+        "value": 360,
+        "statistic": "moderate-equivalent activity minutes per week from most recent completed 30-day wearable window",
+        "window_days": 30,
+        "valid_days": 29,
+        "window_start": "2026-03-20",
+        "window_end": "2026-04-18",
+        "recency_requirement": "window_end <= 45 days before engine_run"
+      },
+      "neuro_sleep_duration_hours": {
+        "value": 7.17,
+        "statistic": "median sleep duration hours/night from most recent completed 30-day wearable window",
+        "window_days": 30,
+        "valid_nights": 27,
+        "window_start": "2026-03-20",
+        "window_end": "2026-04-18",
+        "recency_requirement": "window_end <= 45 days before engine_run"
+      },
+      "neuro_sleep_efficiency_percent": {
+        "value": 88,
+        "statistic": "median sleep efficiency from most recent completed 30-day wearable window",
+        "window_days": 30,
+        "valid_nights": 27,
+        "window_start": "2026-03-20",
+        "window_end": "2026-04-18",
+        "recency_requirement": "window_end <= 45 days before engine_run"
+      },
+      "vo2max_ml_kg_min": {
+        "value": 52,
+        "statistic": "30-day rolling median wearable-estimated VO2max",
+        "window_days": 30,
+        "valid_days": 29,
+        "window_start": "2026-03-20",
+        "window_end": "2026-04-18",
+        "recency_requirement": "window_end <= 90 days before engine_run",
+        "source_flag": "wearable"
+      },
+      "home_bp_systolic_mmHg": {
+        "value": null,
+        "statistic": "morning/evening home cuff readings over >=7 days",
+        "available": false,
+        "status": "not_collected",
+        "reason": "no home cuff stream available in fixture"
+      },
+      "home_bp_diastolic_mmHg": {
+        "value": null,
+        "statistic": "morning/evening home cuff readings over >=7 days",
+        "available": false,
+        "status": "not_collected",
+        "reason": "no home cuff stream available in fixture"
+      },
+      "afib_detected": {
+        "value": false,
+        "source": "wearable alert history"
+      },
+      "weight_kg": {
+        "value": 72.5,
+        "source": "intake/scale or manual entry",
+        "measured_date": "2026-04-10",
+        "model_use": "Metabolic weight trajectory and BMI context"
+      },
+      "weight_trajectory": {
+        "value": "not_available_first_run",
+        "status": "not_available_first_run",
+        "model_use": "Metabolic longitudinal weight modifier; requires serial weights over time",
+        "notes": "Jim fixture has current weight only, no prior longitudinal weight series."
+      },
+      "crf_percentile": {
+        "value": 80,
+        "unit": "approximate age/sex percentile",
+        "derived_from": "wearable VO2max estimate",
+        "confidence": "supplemental_uncertainty_buffered",
+        "model_use": "CVD / Metabolic / Neuro CRF modifier"
+      },
+      "crf_source_flag": {
+        "value": "wearable_estimate",
+        "model_use": "CRF source transparency and wearable uncertainty buffer",
+        "notes": "Not CPET or structured ramp test."
+      }
+    },
+    "raw_summary_available_for_audit": {
+      "steps_daily_average": 8400,
+      "active_energy_daily_average_kcal": 620,
+      "workouts_30d": {
+        "total": 11,
+        "cycling": 9,
+        "walking": 2
+      },
+      "resting_heart_rate_bpm": 46,
+      "hrv_rmssd_ms": 77
+    }
+  },
+  "imaging_screening": {
+    "cardiovascular_imaging": {
+      "cac_score": {
+        "status": "not_collected",
+        "value": null,
+        "unit": "Agatston",
+        "model_use": "CVD supplemental imaging reclassifier"
+      },
+      "cac_scan_date": {
+        "status": "not_collected",
+        "value": null,
+        "model_use": "CAC warranty / recency logic"
+      },
+      "ccta_plaque_burden": {
+        "status": "future_not_collected",
+        "value": null,
+        "model_use": "Future CVD plaque burden input"
+      },
+      "carotid_imt_or_plaque": {
+        "status": "future_not_collected",
+        "value": null,
+        "model_use": "Future vascular imaging input"
+      }
+    },
+    "cancer_screening": {
+      "colonoscopy": {
+        "status": "not_collected",
+        "date": null,
+        "model_use": "CRC screening gap detection"
+      },
+      "psa": {
+        "status": "not_collected",
+        "date": null,
+        "value": null,
+        "model_use": "Prostate screening gap detection"
+      },
+      "ldct": {
+        "status": "not_applicable_never_smoker",
+        "date": null,
+        "model_use": "Lung screening eligibility/gap detection"
+      },
+      "pancreatic_mri_mrcp_eus": {
+        "status": "not_collected",
+        "date": null,
+        "model_use": "Pancreatic surveillance tracking if indicated"
+      },
+      "abdominal_imaging": {
+        "status": "not_collected",
+        "date": null,
+        "model_use": "General abdominal imaging / pancreatic-biliary context if available"
+      },
+      "mammogram": {
+        "status": "not_applicable_male",
+        "date": null,
+        "model_use": "Breast screening gap detection"
+      },
+      "breast_mri": {
+        "status": "not_applicable_male",
+        "date": null,
+        "model_use": "High-risk breast surveillance if indicated"
+      },
+      "breast_density": {
+        "status": "not_applicable_male",
+        "value": null,
+        "model_use": "Tyrer-Cuzick / breast-risk input"
+      },
+      "pap_hpv": {
+        "status": "not_applicable_male",
+        "date": null,
+        "model_use": "Cervical screening gap detection"
+      }
+    },
+    "physiologic_testing": {
+      "abpm_24h": {
+        "status": "not_collected",
+        "date": null,
+        "model_use": "CVD/Neuro BP pattern and nocturnal dipping"
+      },
+      "orthostatic_bp_protocol": {
+        "status": "future_not_collected",
+        "date": null,
+        "model_use": "Future autonomic dysfunction input"
+      },
+      "cpet_or_structured_ramp_test": {
+        "status": "not_collected",
+        "date": null,
+        "model_use": "Higher-confidence CRF/VO2max confirmation"
+      },
+      "audiometric_screening": {
+        "status": "future_not_collected",
+        "date": null,
+        "model_use": "Future Neuro hearing-loss input"
+      }
+    },
+    "neuro_imaging": {
+      "amyloid_pet": {
+        "status": "not_collected_not_standard_onboarding",
+        "date": null,
+        "model_use": "Escalation/future neuro staging input"
+      },
+      "brain_mri": {
+        "status": "not_collected_not_standard_onboarding",
+        "date": null,
+        "model_use": "Escalation/future neuro structural input"
+      }
+    }
+  },
+  "model_input_notes": {
+    "cogdrisk_ml_base_inputs": "Derived model input bundle assembled from demographics, history, labs, and wearable fields in this fixture; not a separate collected artifact."
+  }
+}
