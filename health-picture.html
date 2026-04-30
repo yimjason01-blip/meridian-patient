@@ -2,250 +2,183 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Meridian · Figma Onboarding Prototype</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" content="#000000" />
+<title>Meridian · Health Picture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body {
-    margin: 0;
-    min-height: 100%;
-    background: #000;
-    color: #fff;
-    font-family: Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    overflow: hidden;
-  }
-  body { height: 100vh; height: 100dvh; }
-  #app {
-    height: 100vh;
-    height: 100dvh;
-    width: 100vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #000;
-  }
-  .stage {
-    position: relative;
-    height: 100vh;
-    height: 100dvh;
-    max-height: 100dvh;
-    width: min(100vw, calc(100dvh * var(--ratio)));
-    max-width: 100vw;
-    overflow: hidden;
-    background: #000;
-  }
-  .screen-img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: center;
-    user-select: none;
-    pointer-events: none;
-  }
-  .hotspot {
-    position: absolute;
-    border: 0;
-    background: rgba(255,255,255,0);
-    cursor: pointer;
-    padding: 0;
-  }
-  .hotspot:focus-visible { outline: 2px solid rgba(255,255,255,0.7); outline-offset: 2px; }
-  .debug .hotspot { background: rgba(80,180,255,0.18); outline: 1px solid rgba(80,180,255,0.45); }
+:root {
+  --bg:#000;
+  --panel:#17171a;
+  --panel2:#222226;
+  --panel3:#2b2b30;
+  --text:#fff;
+  --muted:#8d8d93;
+  --faint:#5c5c62;
+  --line:#2b2b30;
+  --green:#32d583;
+  --blue:#0a84ff;
+  --danger:#ff453a;
+}
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { margin:0; height:100%; background:#000; color:var(--text); font-family:Inter,-apple-system,BlinkMacSystemFont,system-ui,sans-serif; -webkit-font-smoothing:antialiased; overflow:hidden; }
+button, input, textarea { font:inherit; }
+button { cursor:pointer; }
+.app-wrap { width:100vw; height:100vh; height:100dvh; display:flex; justify-content:center; background:#000; }
+.phone { position:relative; width:100vw; max-width:430px; height:100vh; height:100dvh; background:#000; overflow:hidden; }
+@media (min-width: 520px) { .app-wrap { align-items:center; } .phone { width:390px; height:844px; max-height:calc(100vh - 24px); border-radius:42px; border:1px solid #222; box-shadow:0 18px 70px rgba(0,0,0,.7); } }
+.status { height:46px; padding:0 23px; display:flex; align-items:center; justify-content:space-between; font-size:15px; font-weight:650; letter-spacing:-.02em; flex-shrink:0; }
+.status .dots { display:flex; gap:4px; align-items:center; }
+.status .dots i { width:5px; height:5px; border-radius:50%; background:#fff; display:block; }
+.screen { position:absolute; inset:0; display:none; flex-direction:column; background:#000; }
+.screen.active { display:flex; animation:enter .18s ease-out; }
+@keyframes enter { from { opacity:.6; transform:translateY(5px); } to { opacity:1; transform:none; } }
+.nav { height:44px; padding:0 20px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.back { width:42px; height:42px; border:0; background:transparent; color:#fff; font-size:28px; line-height:1; display:flex; align-items:center; justify-content:flex-start; }
+.avatar { width:34px; height:34px; border-radius:50%; background:#2c2c32; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; color:#fff; }
+.content { flex:1; overflow:auto; -webkit-overflow-scrolling:touch; padding:18px 24px 120px; }
+.content.no-pad { padding:0 0 100px; }
+.progress { display:flex; gap:7px; padding:8px 0 46px; }
+.progress i { flex:1; height:3px; border-radius:3px; background:#2a2a2e; }
+.progress i.on { background:#fff; }
+h1 { margin:0; font-size:34px; line-height:1.07; letter-spacing:-.045em; font-weight:690; }
+h2 { margin:0; font-size:28px; line-height:1.12; letter-spacing:-.035em; font-weight:680; }
+p { margin:0; color:var(--muted); font-size:15px; line-height:1.48; }
+.lede { margin-top:14px; max-width:310px; }
+.section-tag { margin:34px 0 10px; color:#bdbdc2; font-size:12px; font-weight:650; text-transform:uppercase; letter-spacing:.08em; }
+.hub-list { margin-top:34px; display:flex; flex-direction:column; gap:10px; }
+.hub-actions { margin-top:20px; display:flex; flex-direction:column; gap:10px; padding-bottom:calc(22px + env(safe-area-inset-bottom)); }
+.hub-content { padding-bottom:24px; }
+.hub-row { min-height:64px; width:100%; border:1px solid var(--line); border-radius:18px; background:#17171a; color:#fff; display:flex; align-items:center; gap:14px; padding:12px 14px; text-align:left; }
+.hub-row:active, .tile:active, .primary:active, .secondary:active { transform:scale(.985); }
+.row-icon { width:36px; height:36px; border-radius:11px; background:#28282d; display:flex; align-items:center; justify-content:center; color:#d7d7dc; flex-shrink:0; }
+.row-main { flex:1; min-width:0; }
+.row-kicker { font-size:11px; color:#fff; font-weight:650; margin-bottom:2px; }
+.row-label { font-size:16px; font-weight:560; letter-spacing:-.015em; }
+.row-sub { margin-top:2px; color:#85858b; font-size:12px; }
+.row-chev { color:#77777f; font-size:23px; }
+.hub-row.done .row-icon { background:var(--green); color:#000; }
+.hub-row.done .row-label { color:#a8a8ad; }
+.fixed-footer { position:absolute; left:0; right:0; bottom:0; padding:18px 24px calc(22px + env(safe-area-inset-bottom)); background:linear-gradient(to top,#000 72%,rgba(0,0,0,0)); }
+.primary { width:100%; border:0; border-radius:999px; background:#fff; color:#000; min-height:54px; font-weight:700; font-size:16px; letter-spacing:-.01em; }
+.primary:disabled { background:#303036; color:#696970; }
+.secondary { width:100%; border:1px solid #303036; border-radius:999px; background:transparent; color:#fff; min-height:52px; font-weight:650; }
+.two-actions { display:flex; flex-direction:column; gap:10px; }
+.center-hero { min-height:calc(100dvh - 220px); display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:0 24px; }
+.center-hero h2 { max-width:330px; }
+.center-hero p { margin-top:18px; max-width:330px; }
+.doc-screen .content { padding:16px 24px 130px; }
+.doc-card { background:#111114; border:1px solid #2a2a2f; border-radius:18px; padding:18px; margin-top:18px; }
+.doc-card h3 { margin:0 0 10px; font-size:16px; }
+.doc-card p { font-size:13.5px; line-height:1.55; margin-bottom:12px; }
+.form-field { margin-top:16px; }
+.form-field label { display:block; color:#b8b8be; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; margin-bottom:7px; }
+.form-field input, .form-field textarea { width:100%; background:#17171a; border:1px solid #303036; color:#fff; border-radius:13px; padding:14px; outline:none; font-size:16px; }
+.form-field textarea { min-height:92px; resize:none; }
+.checkrow { display:flex; align-items:center; gap:12px; margin-top:14px; color:#fff; font-size:14px; }
+.checkrow input { width:20px; height:20px; accent-color:#fff; }
+.device-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:28px; }
+.tile { border:1px solid #29292e; background:#17171a; color:#fff; border-radius:18px; min-height:96px; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:10px; padding:12px 8px; position:relative; }
+.tile.selected { border-color:#fff; background:#fff; color:#000; box-shadow:0 0 0 4px rgba(255,255,255,.12); }
+.tile.connected::after { content:'Connected'; position:absolute; top:8px; right:8px; background:var(--green); color:#000; font-size:10px; font-weight:800; border-radius:999px; padding:3px 6px; }
+.device-icon { width:36px; height:36px; border-radius:12px; background:#2b2b30; display:flex; align-items:center; justify-content:center; color:#dcdce2; }
+.tile.selected .device-icon { background:#000; color:#fff; }
+.tile span { font-size:14px; font-weight:650; }
+.permission-card { margin-top:22px; background:#17171a; border:1px solid #303036; border-radius:22px; padding:20px; }
+.permission-top { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+.big-icon { width:52px; height:52px; border-radius:16px; background:#2b2b30; display:flex; align-items:center; justify-content:center; }
+.permission-list { display:flex; flex-direction:column; gap:10px; }
+.perm-row { display:flex; align-items:center; gap:10px; color:#e7e7ec; font-size:14px; }
+.perm-row i { width:20px; height:20px; border-radius:50%; background:var(--green); color:#000; display:flex; align-items:center; justify-content:center; font-style:normal; font-size:12px; font-weight:800; }
+.snack { background:#271615; border:1px solid rgba(255,69,58,.35); color:#ffd3d0; border-radius:14px; padding:13px 14px; font-size:13.5px; margin-bottom:14px; }
+.phys-card { margin-top:26px; background:#17171a; border:1px solid #2b2b30; border-radius:24px; overflow:hidden; }
+.phys-photo { height:240px; background:radial-gradient(circle at 50% 20%,#555 0,#2b2b30 42%,#17171a 100%); display:flex; align-items:center; justify-content:center; font-size:70px; }
+.phys-body { padding:18px; }
+.badge { display:inline-flex; border:1px solid #3a3a40; border-radius:999px; padding:6px 10px; color:#d7d7dc; font-size:12px; margin-bottom:12px; }
+.stat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:18px; }
+.stat { background:#222226; border-radius:14px; padding:10px 6px; text-align:center; }
+.stat strong { display:block; font-size:15px; }
+.stat span { display:block; color:#8d8d93; font-size:10px; margin-top:3px; }
+.result-card { margin-top:22px; border:1px solid #303036; background:#17171a; border-radius:20px; padding:18px; }
+.result-card h3 { margin:0 0 6px; font-size:17px; }
+.result-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px; }
+.mini { border:1px solid #34343a; background:#222226; color:#fff; min-height:44px; border-radius:12px; font-weight:650; }
+svg { width:20px; height:20px; display:block; }
 </style>
 </head>
 <body>
-<div id="app"></div>
+<div class="app-wrap"><div class="phone" id="phone"></div></div>
 <script>
-const A = 'assets/figma-onboarding-exact/';
-const H = 'assets/onboarding-refs/';
-
-const order = ['patient','genetic','wearables','physician','labs'];
-let done = new Set(JSON.parse(localStorage.getItem('meridian.figmaOnboarding.done') || '[]'));
+const KEY = 'meridian.healthPicture.realApp.v1';
+const sections = ['patient','genetic','wearables','physician','labs'];
+const labels = {patient:'Patient History',genetic:'Genetic Analysis Kit',wearables:'Wearables',physician:'Meet your physician',labs:'Blood Labs'};
+let state = loadState();
 let current = 'hub';
+let selectedDevice = null;
+let labRequested = false;
 
-function saveDone() {
-  localStorage.setItem('meridian.figmaOnboarding.done', JSON.stringify([...done]));
+function loadState(){ try { return JSON.parse(localStorage.getItem(KEY)||'{}'); } catch { return {}; } }
+function saveState(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+function completedCount(){ return sections.filter(s => state[s]).length; }
+function markDone(id){ state[id] = { completedAt: Date.now() }; saveState(); showHub(); }
+function resetIfRequested(){ const p = new URLSearchParams(location.search); if(p.has('reset')){ state={}; saveState(); history.replaceState(null,'',location.pathname + location.search.replace(/[?&]reset=(1|true)/,'')); } const c=p.get('completed'); if(c){ state[c==='history'?'patient':c] = { completedAt: Date.now() }; saveState(); history.replaceState(null,'',location.pathname); }}
+resetIfRequested();
+
+function icon(name){
+ const s = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+ const m = {
+  user:s('<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>'),
+  dna:s('<path d="M7 3c0 4 10 6 10 12s-10 4-10 6"/><path d="M17 3c0 2-10 4-10 6s10 8 10 12"/><path d="M8 7h8M8 11h8M8 15h8M8 19h8"/>'),
+  watch:s('<rect x="6" y="6" width="12" height="12" rx="3"/><path d="M9 6V4h6v2M9 18v2h6v-2"/>'),
+  doctor:s('<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v3a4 4 0 0 0 8 0v-1"/><circle cx="18" cy="14" r="2"/>'),
+  labs:s('<path d="M9 2h6"/><path d="M10 2v13a3 3 0 0 0 6 0V2"/><path d="M10 9h6"/>'),
+  check:s('<polyline points="5 12 10 17 19 7"/>'),
+  heart:s('<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 0 0 0-7.8z"/>'),
+  home:s('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>'),
+  pin:s('<path d="M12 22s7-7 7-13a7 7 0 0 0-14 0c0 6 7 13 7 13z"/><circle cx="12" cy="9" r="2.5"/>')
+ };
+ return m[name] || '';
 }
-function resetIfNeeded() {
-  const p = new URLSearchParams(location.search);
-  if (p.has('reset')) {
-    done = new Set();
-    saveDone();
-    history.replaceState(null, '', location.pathname + location.search.replace(/[?&]reset=1/, '').replace(/[?&]reset=true/, ''));
-  }
+function shell(inner, opts={}){
+ document.getElementById('phone').innerHTML = `<section class="screen active">
+  <div class="status"><div>9:41</div><div class="dots"><i></i><i></i><i></i></div></div>
+  ${opts.nav === false ? '' : `<div class="nav"><button class="back" id="backBtn" aria-label="Back">‹</button>${opts.avatar ? '<div class="avatar">JY</div>' : '<div></div>'}</div>`}
+  ${inner}
+ </section>`;
+ const b = document.getElementById('backBtn'); if(b) b.onclick = opts.back || showHub;
 }
-resetIfNeeded();
+function footer(html){ return `<div class="fixed-footer">${html}</div>`; }
+function progress(){ const c=completedCount(); return `<div class="progress">${sections.map((_,i)=>`<i class="${i<c?'on':''}"></i>`).join('')}</div>`; }
+function nextIncomplete(){ return sections.find(s=>!state[s]) || 'hub'; }
 
-const hubImages = ['hub0','hub1','hub2','hub3','hub4','hub5'];
-function hubKey() { return hubImages[Math.min(done.size, 5)]; }
-function complete(section) {
-  done.add(section);
-  saveDone();
-  show('hub');
-}
+function showHub(){ current='hub'; const next=nextIncomplete(); shell(`<div class="content hub-content">${progress()}<h1>Let's complete your<br/>health picture.</h1><p class="lede">This will help us verify your identity and connect it to associated membership.</p><div class="hub-list">${sections.map(s=>hubRow(s,next)).join('')}</div><div class="hub-actions"><button class="primary" id="continueBtn">Continue</button><button class="secondary" id="helpBtn">I need help</button></div></div>`, {nav:false, avatar:true}); document.getElementById('continueBtn').onclick=()=>openSection(next); }
+function hubRow(id,next){ const done=!!state[id]; const up=id===next && !done; const ic={patient:'user',genetic:'dna',wearables:'watch',physician:'doctor',labs:'labs'}[id]; return `<button class="hub-row ${done?'done':''}" data-id="${id}"><div class="row-icon">${done?icon('check'):icon(ic)}</div><div class="row-main">${up?'<div class="row-kicker">Up next</div>':''}<div class="row-label">${labels[id]}</div></div><div class="row-chev">›</div></button>`; }
+function openSection(id){ if(id==='hub') return; if(id==='patient'){ window.location.href='onboarding.html?return=hub&v=' + Date.now(); return; } if(id==='genetic') return showGeneticIntro(); if(id==='wearables') return showWearables(); if(id==='physician') return showPhysician(); if(id==='labs') return showLabsIntro(); }
+document.addEventListener('click', e=>{ const row=e.target.closest('.hub-row'); if(row) openSection(row.dataset.id); });
 
-const screens = {
-  hub: {
-    img: () => A + hubKey() + '.png', w: 780, h: 1688,
-    areas: () => [
-      area(0.10,0.43,0.80,0.075, () => show('patient_01'), 'Patient History'),
-      area(0.10,0.51,0.80,0.075, () => show('genetic_intro'), 'Genetic Analysis Kit'),
-      area(0.10,0.59,0.80,0.075, () => show('wearables_start'), 'Wearables'),
-      area(0.10,0.67,0.80,0.075, () => show('physician'), 'Meet your physician'),
-      area(0.10,0.75,0.80,0.075, () => show('labs_intro'), 'Blood Labs')
-    ]
-  },
+function showGeneticIntro(){ current='genetic_intro'; shell(`<div class="content"><div class="center-hero"><h2>Knowing genetic predispositions can be a powerful tool in your care</h2><p>If you opt in, we'll send a kit, included in your membership, to analyze 160+ genes linked to hereditary disease risk.</p></div></div>${footer('<button class="primary" id="next">Continue</button>')}`, {back:showHub}); document.getElementById('next').onclick=showGeneticPanel; }
+function showGeneticPanel(){ current='genetic_panel'; shell(`<div class="content"><div class="center-hero"><h2>Our clinical genetic panel analyzes 160+ genes and is sent to your door</h2><p>If you opt in, we'll send a kit, included in your membership, to analyze 160+ genes linked to hereditary disease risk.</p></div></div>${footer('<button class="primary" id="next">Continue</button>')}`, {back:showGeneticIntro}); document.getElementById('next').onclick=showMedicalAuth; }
+function showMedicalAuth(){ shell(`<div class="content doc-screen"><h2>Medical Data Authorization</h2><p class="lede">Relatives</p><div class="doc-card"><p>At Meridian by LASO Health, we want to ensure you understand how the personal information you share with us may be utilized.</p><p>As we get to know our members better, Meridian and its corporate affiliates may occasionally identify findings that could be relevant for relatives or future care coordination.</p><p>Your information is handled securely and used only as described in this authorization.</p></div></div>${footer('<button class="primary" id="next">Continue</button>')}`, {back:showGeneticPanel}); document.getElementById('next').onclick=showBioBankConsent; }
+function showBioBankConsent(){ shell(`<div class="content doc-screen"><h2>BioBank Consent</h2><p class="lede">Agreements</p><div class="doc-card"><p>At Meridian by LASO Health, we prioritize your understanding of how your biological samples and health data may be used.</p><p>As part of your care, Meridian may collect biological samples such as blood or saliva to support your health insights. With your permission, these samples and associated data may also be stored securely and used for future research to improve medicine.</p></div></div>${footer('<button class="primary" id="next">Continue</button>')}`, {back:showMedicalAuth}); document.getElementById('next').onclick=showGeneticSign; }
+function showGeneticSign(){ shell(`<div class="content doc-screen"><h2>BioBank Consent</h2><p class="lede">I have read and understand the above disclosures and statements. I voluntarily consent to the collection, storage, and use of my biological samples and medical information as described.</p><div class="form-field"><label>State</label><input value="TX" /></div><div class="form-field"><label>Full Name</label><input id="fullName" placeholder="Full name" /></div><div class="form-field"><label>Date</label><input value="4/23/2026" /></div><label class="checkrow"><input id="authData" type="checkbox" /> I authorize Meridian to use my data*</label><label class="checkrow"><input id="secondary" type="checkbox" /> I consent to Secondary Findings Election</label></div>${footer('<button class="primary" id="sign" disabled>Sign and Accept</button>')}`, {back:showBioBankConsent}); const sign=document.getElementById('sign'); const update=()=>{ sign.disabled=!(document.getElementById('fullName').value.trim() && document.getElementById('authData').checked && document.getElementById('secondary').checked); }; document.querySelectorAll('input').forEach(i=>i.addEventListener('input',update)); document.querySelectorAll('input[type=checkbox]').forEach(i=>i.addEventListener('change',update)); sign.onclick=()=>markDone('genetic'); }
 
-  patient_01: imgStep(H+'01-bio-sex.png', 648, 1248, 'patient_02'),
-  patient_02: imgStep(H+'02-height.png', 648, 1248, 'patient_03'),
-  patient_03: imgStep(H+'03-weight.png', 648, 1248, 'patient_04'),
-  patient_04: imgStep(H+'04-exercise.png', 648, 1248, 'patient_05'),
-  patient_05: imgStep(H+'05-diet.png', 648, 1248, 'patient_06'),
-  patient_06: imgStep(H+'06-sleep.png', 648, 1248, 'patient_07'),
-  patient_07: imgStep(H+'07-alcohol-tobacco.png', 648, 1248, 'patient_08'),
-  patient_08: imgStep(H+'08-meds-yesno.png', 648, 1248, 'patient_09'),
-  patient_09: imgStep(H+'09-meds-name.png', 648, 1248, 'patient_10'),
-  patient_10: imgStep(H+'10-meds-dosage.png', 648, 1248, 'patient_11'),
-  patient_11: imgStep(H+'11-meds-loop.png', 648, 1248, 'patient_12'),
-  patient_12: imgStep(H+'12-supps-yesno.png', 648, 1248, 'patient_13'),
-  patient_13: imgStep(H+'13-family-heart.png', 648, 1248, 'patient_14'),
-  patient_14: imgStep(H+'14-family-diabetes.png', 648, 1248, 'patient_15'),
-  patient_15: imgStep(H+'15-anything-else.png', 648, 1248, 'patient_16'),
-  patient_16: {
-    img: H+'16-review.png', w: 648, h: 1248,
-    areas: () => [
-      area(0.08,0.11,0.16,0.06, () => show('hub'), 'Back'),
-      area(0.10,0.34,0.80,0.08, () => show('patient_edit_option'), 'Edit option'),
-      area(0.10,0.42,0.80,0.08, () => show('patient_edit_wheel'), 'Edit wheel'),
-      area(0.10,0.58,0.80,0.08, () => show('patient_edit_list'), 'Edit list'),
-      area(0.10,0.72,0.80,0.08, () => show('patient_edit_text'), 'Edit text'),
-      area(0.10,0.89,0.80,0.08, () => complete('patient'), 'Done')
-    ]
-  },
-  patient_edit_option: modalStep(H+'17-edit-bottomsheet.png', 648, 1248, 'patient_16'),
-  patient_edit_wheel: modalStep(H+'18-edit-wheel.png', 648, 1248, 'patient_16'),
-  patient_edit_list: modalStep(H+'19-edit-multiline.png', 648, 1248, 'patient_16'),
-  patient_edit_text: modalStep(H+'20-edit-textfield.png', 648, 1248, 'patient_16'),
+const devices=['Apple Watch','Samsung','Garmin','Fitbit','Eight Sleep','Oura','Whoop','Amazfit'];
+function showWearables(){ selectedDevice=null; shell(`<div class="content"><h2>Add your Wearables</h2><div class="device-grid">${devices.map(d=>`<button class="tile" data-device="${d}"><div class="device-icon">${icon(d==='Apple Watch'?'watch':d==='Garmin'?'watch':d==='Fitbit'?'heart':'watch')}</div><span>${d}</span></button>`).join('')}</div></div>${footer('<button class="primary" id="connect" disabled>Connect</button><button class="secondary" style="margin-top:10px" id="skip">Skip</button>')}`, {back:showHub}); document.querySelectorAll('.tile').forEach(t=>t.onclick=()=>{ selectedDevice=t.dataset.device; document.querySelectorAll('.tile').forEach(x=>x.classList.remove('selected')); t.classList.add('selected'); document.getElementById('connect').disabled=false; document.getElementById('connect').textContent='Connect '+selectedDevice; }); document.getElementById('connect').onclick=()=> selectedDevice==='Apple Watch'?showApplePermission():showTerraPermission(); document.getElementById('skip').onclick=()=>markDone('wearables'); }
+function showApplePermission(){ shell(`<div class="content"><h2>Connect your<br/>health device</h2><p class="lede">We'll use your data to track your progress.</p><div class="permission-card"><div class="permission-top"><div class="big-icon">${icon('watch')}</div><div><strong>Apple Watch</strong><p>Connected through Apple Health</p></div></div><div class="permission-list"><div class="perm-row"><i>✓</i>Heart Rate</div><div class="perm-row"><i>✓</i>HRV</div><div class="perm-row"><i>✓</i>Sleep</div><div class="perm-row"><i>✓</i>Workouts</div><div class="perm-row"><i>✓</i>VO2 Max</div></div></div></div>${footer('<button class="primary" id="allow">Allow</button>')}`, {back:showWearables}); document.getElementById('allow').onclick=showWearablesDone; }
+function showTerraPermission(){ const d=selectedDevice||'Garmin'; shell(`<div class="content"><h2>Connect your<br/>health device</h2><p class="lede">We'll use your data to track your progress.</p><div class="permission-card"><div class="permission-top"><div class="big-icon">${icon('watch')}</div><div><strong>${d}</strong><p>Connected via Terra</p></div></div><div class="permission-list"><div class="perm-row"><i>✓</i>Activities</div><div class="perm-row"><i>✓</i>Heart Rate</div><div class="perm-row"><i>✓</i>Sleep</div><div class="perm-row"><i>✓</i>Recovery and workouts</div></div></div></div>${footer('<button class="primary" id="allow">Allow</button>')}`, {back:showWearables}); document.getElementById('allow').onclick=showWearablesDone; }
+function showWearablesDone(){ shell(`<div class="content"><h2>Add your Wearables</h2><div class="device-grid">${devices.map(d=>`<button class="tile ${d===selectedDevice||d==='Apple Watch'?'connected':''}" data-device="${d}"><div class="device-icon">${icon('watch')}</div><span>${d}</span></button>`).join('')}</div></div>${footer('<button class="primary" id="done">Done Adding Wearables</button>')}`, {back:showWearables}); document.getElementById('done').onclick=()=>markDone('wearables'); }
 
-  genetic_intro: imgStep(A+'genetic_intro.png', 780, 1688, 'genetic_panel'),
-  genetic_panel: imgStep(A+'genetic_panel.png', 780, 1688, 'genetic_mda'),
-  genetic_mda: imgStep(A+'genetic_mda.png', 780, 1688, 'genetic_biobank'),
-  genetic_biobank: imgStep(A+'genetic_biobank.png', 780, 1688, 'genetic_sign'),
-  genetic_sign: {
-    img: A+'genetic_sign.png', w: 780, h: 1688,
-    areas: () => [
-      area(0.08,0.08,0.16,0.08, () => show('genetic_biobank'), 'Back'),
-      area(0.08,0.85,0.84,0.09, () => complete('genetic'), 'Sign and Accept')
-    ]
-  },
+function showPhysician(){ shell(`<div class="content"><h2>Meet your physician</h2><div class="phys-card"><div class="phys-photo">👩‍⚕️</div><div class="phys-body"><span class="badge">Internal Medicine</span><h2>Dr. Sarah Chen</h2><p class="lede">Meridian Health</p><div class="stat-grid"><div class="stat"><strong>12 yrs</strong><span>Experience</span></div><div class="stat"><strong>CVD</strong><span>Focus</span></div><div class="stat"><strong>TX</strong><span>Licensed</span></div><div class="stat"><strong>⭐ 4.9</strong><span>Rating</span></div></div></div></div></div>${footer('<button class="primary" id="continue">Continue</button>')}`, {back:showHub}); document.getElementById('continue').onclick=()=>markDone('physician'); }
 
-  wearables_start: {
-    img: A+'wearables_start.png', w: 648, h: 1248,
-    areas: () => wearableAreas('wearables_apple_select', 'wearables_terra_login')
-  },
-  wearables_apple_select: imgStep(A+'wearables_apple_select.png', 648, 1248, 'wearables_apple_perm'),
-  wearables_apple_perm: imgStep(A+'wearables_apple_perm.png', 648, 1248, 'wearables_done_apple'),
-  wearables_done_apple: {
-    img: A+'wearables_done_apple.png', w: 648, h: 1248,
-    areas: () => [
-      area(0.08,0.08,0.16,0.08, () => show('wearables_start'), 'Back'),
-      area(0.08,0.88,0.84,0.08, () => complete('wearables'), 'Done adding wearables')
-    ]
-  },
-  wearables_terra_login: imgStep(A+'wearables_terra_login.png', 648, 1248, 'wearables_terra_perm'),
-  wearables_terra_perm: imgStep(A+'wearables_terra_perm.png', 648, 1248, 'wearables_done_multi'),
-  wearables_done_multi: {
-    img: A+'wearables_done_multi.png', w: 648, h: 1248,
-    areas: () => [
-      area(0.08,0.08,0.16,0.08, () => show('wearables_start'), 'Back'),
-      area(0.08,0.88,0.84,0.08, () => complete('wearables'), 'Done adding wearables')
-    ]
-  },
+function showLabsIntro(){ shell(`<div class="content"><div class="center-hero"><h2>A comprehensive blood panel gives us the foundation of your health picture.</h2></div></div>${footer('<div class="two-actions"><button class="primary" id="request">Request labs</button><button class="secondary" id="decline">Decline Test</button></div>')}`, {back:showHub}); document.getElementById('request').onclick=showLabsRequest; document.getElementById('decline').onclick=()=>markDone('labs'); }
+function showLabsRequest(){ shell(`<div class="content"><h2>Blood Labs</h2><p class="lede">Request an order for your blood lab</p><p style="margin-top:18px">The cost is covered. All you'll need to do is present your government ID at the lab.</p><p style="margin-top:12px">Just let our team know your desired zip code for your blood lab visit. We'll get back to you with a link containing instructions.</p><div class="form-field"><label>Zip Code</label><input id="zip" inputmode="numeric" maxlength="5" value="10925" /></div><div class="form-field"><label>Optional Message</label><textarea id="msg" placeholder="Anything we should know?"></textarea></div></div>${footer('<div class="two-actions"><button class="primary" id="request">Request labs</button><button class="secondary" id="decline">Decline Test</button></div>')}`, {back:showLabsIntro}); document.getElementById('request').onclick=showLabsResult; document.getElementById('decline').onclick=()=>markDone('labs'); }
+function showLabsResult(){ shell(`<div class="content"><h2>Blood Labs</h2><div class="result-card"><h3>You can now walk in and get your blood lab at CVS Minute Clinic.</h3><p>Just bring your government ID. Remember to fast for 10 to 12 hours beforehand, no food allowed.</p><div class="result-card" style="margin-top:16px"><strong>CVS Minute Clinic</strong><p>123 Main Street<br/>Austin, TX 78701</p></div><div class="result-actions"><button class="mini">Directions</button><button class="mini">Call</button></div></div></div>${footer('<button class="primary" id="hub">Back to hub</button>')}`, {back:showLabsRequest}); document.getElementById('hub').onclick=()=>markDone('labs'); }
 
-  physician: {
-    img: A+'physician.png', w: 648, h: 1248,
-    areas: () => [
-      area(0.08,0.08,0.16,0.08, () => show('hub'), 'Back'),
-      area(0.08,0.88,0.84,0.08, () => complete('physician'), 'Continue')
-    ]
-  },
-
-  labs_intro: imgStep(A+'labs_intro.png', 780, 1688, 'labs_request'),
-  labs_request: imgStep(A+'labs_request.png', 780, 1688, 'labs_result'),
-  labs_result: {
-    img: A+'labs_result.png', w: 780, h: 1688,
-    areas: () => [
-      area(0.08,0.08,0.16,0.08, () => show('labs_request'), 'Back'),
-      area(0.08,0.86,0.84,0.09, () => complete('labs'), 'Back to hub')
-    ]
-  }
-};
-
-function imgStep(img, w, h, next) {
-  return {
-    img, w, h,
-    areas: () => [
-      area(0.08,0.08,0.16,0.08, () => show('hub'), 'Back'),
-      area(0.06,0.34,0.88,0.52, () => show(next), 'Next'),
-      area(0.08,0.86,0.84,0.10, () => show(next), 'Continue')
-    ]
-  };
-}
-function modalStep(img, w, h, backTo) {
-  return {
-    img, w, h,
-    areas: () => [
-      area(0.08,0.08,0.16,0.08, () => show(backTo), 'Back'),
-      area(0.08,0.74,0.84,0.20, () => show(backTo), 'Save')
-    ]
-  };
-}
-function wearableAreas(appleNext, otherNext) {
-  return [
-    area(0.08,0.08,0.16,0.08, () => show('hub'), 'Back'),
-    area(0.06,0.30,0.40,0.18, () => show(appleNext), 'Apple Watch'),
-    area(0.52,0.30,0.40,0.18, () => show(otherNext), 'Samsung'),
-    area(0.06,0.49,0.40,0.18, () => show(otherNext), 'Garmin'),
-    area(0.52,0.49,0.40,0.18, () => show(otherNext), 'Fitbit'),
-    area(0.06,0.68,0.40,0.18, () => show(otherNext), 'Oura'),
-    area(0.52,0.68,0.40,0.18, () => show(otherNext), 'Whoop'),
-    area(0.08,0.88,0.84,0.08, () => complete('wearables'), 'Skip or done')
-  ];
-}
-function area(x,y,w,h,onClick,label) { return {x,y,w,h,onClick,label}; }
-
-function show(key) {
-  current = key;
-  const s = screens[key] || screens.hub;
-  const img = typeof s.img === 'function' ? s.img() : s.img;
-  const ratio = s.w / s.h;
-  const app = document.getElementById('app');
-  app.innerHTML = `
-    <div class="stage" style="--ratio:${ratio}">
-      <img class="screen-img" src="${img}" alt="${key}" />
-    </div>
-  `;
-  const stage = app.querySelector('.stage');
-  for (const a of s.areas()) {
-    const b = document.createElement('button');
-    b.className = 'hotspot';
-    b.type = 'button';
-    b.setAttribute('aria-label', a.label || 'Continue');
-    b.style.left = (a.x * 100) + '%';
-    b.style.top = (a.y * 100) + '%';
-    b.style.width = (a.w * 100) + '%';
-    b.style.height = (a.h * 100) + '%';
-    b.onclick = a.onClick;
-    stage.appendChild(b);
-  }
-}
-
-window.addEventListener('keydown', e => {
-  if (e.key === 'd') document.body.classList.toggle('debug');
-  if (e.key === 'Escape') show('hub');
-});
-show('hub');
+showHub();
 </script>
 </body>
 </html>

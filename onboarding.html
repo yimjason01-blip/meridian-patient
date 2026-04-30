@@ -922,7 +922,7 @@ function finishFlow() {
   const params = new URLSearchParams(location.search);
   if (params.get('return') === 'hub') {
     setTimeout(() => {
-      window.location.href = 'health-picture.html?completed=history';
+      window.location.href = 'health-picture.html?completed=patient';
     }, 900);
   }
 }
