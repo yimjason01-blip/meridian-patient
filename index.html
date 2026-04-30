@@ -2432,8 +2432,8 @@
         <div class="chart-legend">
           <span><i style="background: var(--dom-cardiac)"></i>Heart attack / stroke</span>
           <span><i style="background: var(--dom-cancer)"></i>Cancer diagnosis</span>
-          <span><i style="background: var(--dom-indep)"></i>Loss of independence</span>
           <span><i style="background: var(--dom-metab)"></i>Noticeable mobility loss</span>
+          <span><i style="background: var(--dom-indep)"></i>Loss of independence</span>
         </div>
         <div class="chart">
           <svg viewBox="0 0 480 250" xmlns="http://www.w3.org/2000/svg">
@@ -2463,12 +2463,12 @@
               <!-- cancer: age 74, w=52 → x=179 -->
               <rect class="band" data-dom="cancer" x="179" y="56" width="52" height="11" rx="2"
                     fill="#d14a6a" fill-opacity="0.08" stroke="#d14a6a" stroke-width="1"/>
-              <!-- indep: age 79, w=52 → x=223 -->
-              <rect class="band" data-dom="indep" x="223" y="78" width="52" height="11" rx="2"
-                    fill="#e09b2d" fill-opacity="0.08" stroke="#e09b2d" stroke-width="1"/>
-              <!-- metab: age 76, w=52 → x=197 -->
-              <rect class="band" data-dom="metab" x="197" y="100" width="52" height="11" rx="2"
+              <!-- metab (mobility loss): age 76, w=52 → x=197 -->
+              <rect class="band" data-dom="metab" x="197" y="78" width="52" height="11" rx="2"
                     fill="#6db1c9" fill-opacity="0.08" stroke="#6db1c9" stroke-width="1"/>
+              <!-- indep (loss of independence): age 79, w=52 → x=223 -->
+              <rect class="band" data-dom="indep" x="223" y="100" width="52" height="11" rx="2"
+                    fill="#e09b2d" fill-opacity="0.08" stroke="#e09b2d" stroke-width="1"/>
             </g>
             <g id="track-with">
               <rect class="band" data-dom="cardiac" data-baseline-age="68" data-max-shift="8"
@@ -2477,12 +2477,12 @@
               <rect class="band" data-dom="cancer" data-baseline-age="74" data-max-shift="5"
                     x="179" y="162" width="52" height="11" rx="2"
                     fill="#d14a6a" fill-opacity="0.55"/>
-              <rect class="band" data-dom="indep" data-baseline-age="79" data-max-shift="6"
-                    x="223" y="184" width="52" height="11" rx="2"
-                    fill="#e09b2d" fill-opacity="0.55"/>
               <rect class="band" data-dom="metab" data-baseline-age="76" data-max-shift="5"
-                    x="197" y="206" width="52" height="11" rx="2"
+                    x="197" y="184" width="52" height="11" rx="2"
                     fill="#6db1c9" fill-opacity="0.55"/>
+              <rect class="band" data-dom="indep" data-baseline-age="79" data-max-shift="6"
+                    x="223" y="206" width="52" height="11" rx="2"
+                    fill="#e09b2d" fill-opacity="0.55"/>
             </g>
           </svg>
         </div>
