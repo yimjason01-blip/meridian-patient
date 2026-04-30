@@ -1455,11 +1455,113 @@
     cursor: default;
   }
 
-  /* Saved pharmacy line on Rx card detail */
+  /* Saved pharmacy / lab line on action card detail */
   .bg-action .small-meta {
     color: var(--accent-hover);
     font-weight: 500;
   }
+
+  /* ============ Lab picker additions (extends .pharm-*) ============ */
+  /* Inline slot picker that appears under a selected lab row */
+  .lab-slots {
+    display: none;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0 12px 12px 42px; /* aligns with .name column */
+    margin-top: -4px;
+    margin-bottom: 6px;
+    background: rgba(94,106,210,0.04);
+    border: 1px solid var(--accent-hover);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    transform: translateY(-6px);
+    padding-top: 10px;
+  }
+  .pharm-row.selected + .lab-slots { display: flex; }
+  .lab-slots-label {
+    width: 100%;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .lab-slot {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font: inherit;
+    font-size: 12px;
+    padding: 7px 10px;
+    cursor: pointer;
+    transition: border-color .12s, background .12s, color .12s;
+  }
+  .lab-slot:hover { border-color: var(--border-strong); color: var(--text); }
+  .lab-slot.selected {
+    border-color: var(--accent-hover);
+    background: var(--accent-hover);
+    color: #fff;
+  }
+  .lab-slot.walkin { font-style: italic; }
+
+  /* Prep callout */
+  .lab-prep {
+    margin: 12px 0 4px;
+    padding: 12px 14px;
+    background: rgba(255,193,87,0.06);
+    border: 1px solid rgba(255,193,87,0.22);
+    border-radius: 10px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+  .lab-prep b {
+    display: block;
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 4px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* PSA result chip on card */
+  .psa-result-line {
+    display: flex; align-items: baseline; gap: 8px;
+    margin-top: 2px;
+  }
+  .psa-result-value {
+    color: var(--text);
+    font-weight: 500;
+    font-size: 14px;
+    font-feature-settings: "tnum";
+  }
+  .psa-result-unit {
+    color: var(--text-muted);
+    font-size: 11.5px;
+  }
+  .psa-result-flag {
+    margin-left: auto;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6fbf73;
+  }
+
+  /* Tiny demo-advance link on stateful cards */
+  .demo-advance {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 10.5px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity .12s;
+  }
+  .demo-advance:hover { opacity: 1; color: var(--text-secondary); }
 
   /* ============ MESSAGES (AI + pinned MD strip) ============ */
   .md-strip {
@@ -2001,12 +2103,12 @@
 
       <div class="section-label">Monitoring</div>
 
-      <div class="bg-action" onclick="toast('PSA ordered at Quest La Jolla. Tap to schedule the draw.')">
+      <div class="bg-action" id="psaCard" onclick="psaCardTap()">
         <div class="bg-num">PSA</div>
-        <div class="bg-text">Baseline PSA
-          <small>Schedule draw at Quest La Jolla</small>
+        <div class="bg-text" id="psaCardText">Baseline PSA
+          <small id="psaCardMeta">Schedule draw at a nearby lab</small>
         </div>
-        <div class="bg-chev">›</div>
+        <div class="bg-chev" id="psaCardChev">›</div>
       </div>
     </div>
   </section>
@@ -2560,6 +2662,41 @@
   </div>
 </div>
 
+<!-- Lab picker sheet (PSA baseline draw) -->
+<div class="risk-sheet-backdrop" id="labSheetBackdrop" onclick="closeLabSheet()"></div>
+<div class="risk-sheet" id="labSheet" role="dialog" aria-modal="true" aria-labelledby="labTitle">
+  <div class="rs-handle"></div>
+  <div class="rs-head">
+    <h3 id="labTitle">Schedule baseline PSA draw</h3>
+    <button class="rs-close" onclick="closeLabSheet()" aria-label="Close">×</button>
+  </div>
+  <div class="rs-body">
+    <div class="lab-prep">
+      <b>Prep · required</b>
+      No ejaculation for 48 hours before the draw. No vigorous cycling or DRE for 24 hours. Either can falsely elevate PSA. Hydration and food are fine.
+    </div>
+    <div class="pharm-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/>
+        <path d="m20 20-4.3-4.3"/>
+      </svg>
+      <input type="text" id="labSearch" placeholder="Search by name, address, or ZIP" oninput="filterLabs()" autocomplete="off"/>
+    </div>
+    <button class="pharm-locate" onclick="useCurrentLocationLab()" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M12 3v3M12 18v3M3 12h3M18 12h3"/>
+      </svg>
+      Use current location
+    </button>
+    <div class="pharm-section-label" id="labListLabel">Near 92103 · San Diego</div>
+    <div class="pharm-list" id="labList"></div>
+  </div>
+  <div class="pharm-confirm">
+    <button id="labConfirmBtn" onclick="confirmLab()" disabled>Confirm appointment</button>
+  </div>
+</div>
+
 <script>
   /* ===== Navigation ===== */
   function gotoTab(name) {
@@ -3033,9 +3170,219 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
     return 'Ships in 2 days';
   }
 
+  /* ===== Lab picker (PSA baseline draw) ===== */
+  const LABS = [
+    { id: 'quest-la-jolla', name: 'Quest Diagnostics',
+      addr: '9850 Genesee Ave, La Jolla, CA 92037',
+      hours: 'Mon–Fri 6:30am–3pm · Sat 7am–12pm',
+      dist: '2.4 mi', insurance: 'In-network · Aetna',
+      slots: ['Tomorrow 7:30 AM', 'Tomorrow 8:15 AM', 'Tomorrow 11:00 AM', 'Tue May 5, 8:30 AM', 'Tue May 5, 9:15 AM', 'Walk-in'] },
+    { id: 'labcorp-hillcrest', name: 'LabCorp',
+      addr: '4060 4th Ave, San Diego, CA 92103',
+      hours: 'Mon–Fri 7am–4pm · Sat 8am–12pm',
+      dist: '0.6 mi', insurance: 'In-network · Aetna',
+      slots: ['Tomorrow 7:00 AM', 'Tomorrow 9:45 AM', 'Mon May 4, 8:00 AM', 'Mon May 4, 10:30 AM', 'Walk-in'] },
+    { id: 'scripps-mercy-lab', name: 'Scripps Mercy Outpatient Lab',
+      addr: '4077 5th Ave, San Diego, CA 92103',
+      hours: 'Mon–Fri 7am–5pm',
+      dist: '0.8 mi', insurance: 'In-network · linked to your Scripps chart',
+      slots: ['Tomorrow 7:30 AM', 'Tomorrow 1:30 PM', 'Mon May 4, 9:00 AM', 'Walk-in'] },
+    { id: 'sharp-rees-stealy-lab', name: 'Sharp Rees-Stealy Lab',
+      addr: '2001 4th Ave, San Diego, CA 92101',
+      hours: 'Mon–Fri 7am–5pm · Sat 8am–11am',
+      dist: '1.1 mi', insurance: 'Out-of-network',
+      slots: ['Tomorrow 8:00 AM', 'Mon May 4, 7:30 AM', 'Walk-in'] },
+    { id: 'quest-mission-valley', name: 'Quest Diagnostics',
+      addr: '8008 Frost St, San Diego, CA 92123',
+      hours: 'Mon–Fri 6am–4pm · Sat 7am–12pm',
+      dist: '5.7 mi', insurance: 'In-network · Aetna',
+      slots: ['Tomorrow 6:30 AM', 'Tomorrow 11:45 AM', 'Mon May 4, 7:00 AM', 'Walk-in'] },
+  ];
+  let labSelected = null;
+  let labSlotSelected = null;
+  let labConfirmed = null; // { lab, slot } once confirmed
+
+  // PSA card lifecycle: 'unscheduled' -> 'scheduled' -> 'drawn' -> 'resulted'
+  let psaState = 'unscheduled';
+
+  function psaCardTap() {
+    if (psaState === 'unscheduled') {
+      openLabSheet();
+    } else if (psaState === 'scheduled') {
+      openLabSheet(); // allow reschedule
+    } else {
+      // drawn / resulted → no-op (could open detail later)
+      toast(psaState === 'drawn'
+        ? 'Result expected within 1–2 business days'
+        : `PSA ${labConfirmed?.result?.value} ng/mL · in normal range`);
+    }
+  }
+
+  function openLabSheet() {
+    labSelected = labConfirmed?.lab?.id || null;
+    labSlotSelected = labConfirmed?.slot || null;
+    document.getElementById('labSearch').value = '';
+    document.getElementById('labListLabel').textContent = 'Near 92103 · San Diego';
+    renderLabList(LABS);
+    updateLabConfirmBtn();
+    document.getElementById('labSheet').classList.add('open');
+    document.getElementById('labSheetBackdrop').classList.add('open');
+  }
+  function closeLabSheet() {
+    document.getElementById('labSheet').classList.remove('open');
+    document.getElementById('labSheetBackdrop').classList.remove('open');
+  }
+  function renderLabList(list) {
+    const el = document.getElementById('labList');
+    if (!list.length) {
+      el.innerHTML = '<div class="pharm-empty">No labs match. Try a different name or ZIP.</div>';
+      return;
+    }
+    el.innerHTML = list.map(l => `
+      <div class="pharm-row ${labSelected === l.id ? 'selected' : ''}" data-id="${l.id}" onclick="selectLab('${l.id}')">
+        <div class="check"></div>
+        <div class="info">
+          <div class="name">${l.name}</div>
+          <div class="meta">${l.addr}<br><b>${l.hours}</b> · ${l.insurance}</div>
+        </div>
+        <div class="dist">${l.dist}</div>
+      </div>
+      <div class="lab-slots" data-slots-for="${l.id}">
+        <div class="lab-slots-label">Pick a time</div>
+        ${l.slots.map(s => `
+          <button class="lab-slot ${s === 'Walk-in' ? 'walkin' : ''} ${labSelected === l.id && labSlotSelected === s ? 'selected' : ''}"
+                  type="button" onclick="event.stopPropagation(); selectLabSlot('${l.id}', ${JSON.stringify(s).replace(/"/g, '&quot;')})">
+            ${s}
+          </button>
+        `).join('')}
+      </div>
+    `).join('');
+  }
+  function filterLabs() {
+    const q = document.getElementById('labSearch').value.trim().toLowerCase();
+    if (!q) { renderLabList(LABS); return; }
+    const filtered = LABS.filter(l =>
+      l.name.toLowerCase().includes(q) ||
+      l.addr.toLowerCase().includes(q)
+    );
+    renderLabList(filtered);
+  }
+  function selectLab(id) {
+    if (labSelected !== id) labSlotSelected = null;
+    labSelected = id;
+    renderLabList(currentLabFilter());
+    updateLabConfirmBtn();
+  }
+  function selectLabSlot(id, slot) {
+    labSelected = id;
+    labSlotSelected = slot;
+    renderLabList(currentLabFilter());
+    updateLabConfirmBtn();
+  }
+  function currentLabFilter() {
+    const q = document.getElementById('labSearch').value.trim().toLowerCase();
+    if (!q) return LABS;
+    return LABS.filter(l => l.name.toLowerCase().includes(q) || l.addr.toLowerCase().includes(q));
+  }
+  function updateLabConfirmBtn() {
+    const btn = document.getElementById('labConfirmBtn');
+    if (!labSelected) {
+      btn.disabled = true;
+      btn.textContent = 'Confirm appointment';
+      return;
+    }
+    if (!labSlotSelected) {
+      btn.disabled = true;
+      btn.textContent = 'Pick a time to continue';
+      return;
+    }
+    const l = LABS.find(x => x.id === labSelected);
+    btn.disabled = false;
+    btn.textContent = labSlotSelected === 'Walk-in'
+      ? `Confirm walk-in · ${l.name}`
+      : `Confirm · ${labSlotSelected}`;
+  }
+  function useCurrentLocationLab() {
+    document.getElementById('labListLabel').textContent = 'Near you · 92103 San Diego';
+    toast('Using current location');
+  }
+  function confirmLab() {
+    if (!labSelected || !labSlotSelected) return;
+    const l = LABS.find(x => x.id === labSelected);
+    labConfirmed = { lab: l, slot: labSlotSelected };
+    psaState = 'scheduled';
+    renderPsaCard();
+    closeLabSheet();
+    toast(labSlotSelected === 'Walk-in'
+      ? `Walk-in noted at ${l.name}`
+      : `Scheduled · ${labSlotSelected} at ${l.name}`);
+  }
+
+  function renderPsaCard() {
+    const meta = document.getElementById('psaCardMeta');
+    const text = document.getElementById('psaCardText');
+    const num = document.querySelector('#psaCard .bg-num');
+    const chev = document.getElementById('psaCardChev');
+    if (psaState === 'unscheduled') {
+      text.innerHTML = `Baseline PSA <small id="psaCardMeta">Schedule draw at a nearby lab</small>${demoLink()}`;
+      num.textContent = 'PSA';
+      chev.style.display = '';
+    } else if (psaState === 'scheduled') {
+      const l = labConfirmed.lab;
+      const slot = labConfirmed.slot;
+      const slotLabel = slot === 'Walk-in' ? `Walk-in · ${l.hours.split('·')[0].trim()}` : slot;
+      text.innerHTML = `Baseline PSA · scheduled
+        <small class="small-meta">${slotLabel} at ${l.name}</small>
+        ${demoLink()}`;
+      num.textContent = 'PSA';
+      chev.style.display = '';
+    } else if (psaState === 'drawn') {
+      const l = labConfirmed.lab;
+      text.innerHTML = `Baseline PSA · drawn
+        <small>Drawn at ${l.name} · result expected in 1–2 days</small>
+        ${demoLink()}`;
+      num.innerHTML = '<span style="font-size:11px;letter-spacing:0.04em;">…</span>';
+      chev.style.display = 'none';
+    } else if (psaState === 'resulted') {
+      const r = labConfirmed.result;
+      text.innerHTML = `Baseline PSA · result in
+        <div class="psa-result-line">
+          <span class="psa-result-value">${r.value}</span>
+          <span class="psa-result-unit">ng/mL · ref &lt; 4.0</span>
+          <span class="psa-result-flag">In range</span>
+        </div>
+        <small>Drawn ${r.drawnDate} at ${labConfirmed.lab.name} · next draw ${r.nextDate}</small>`;
+      num.innerHTML = '<span style="color:#6fbf73;">✓</span>';
+      chev.style.display = 'none';
+    }
+  }
+  function demoLink() {
+    return `<span class="demo-advance" onclick="event.stopPropagation(); advancePsaState();">demo: advance state</span>`;
+  }
+  function advancePsaState() {
+    if (psaState === 'unscheduled') {
+      // jump to scheduled with default
+      labConfirmed = { lab: LABS[0], slot: LABS[0].slots[0] };
+      psaState = 'scheduled';
+    } else if (psaState === 'scheduled') {
+      psaState = 'drawn';
+    } else if (psaState === 'drawn') {
+      labConfirmed.result = { value: '0.9', drawnDate: 'May 5, 2026', nextDate: 'May 2027' };
+      psaState = 'resulted';
+    } else {
+      // reset for demo loop
+      psaState = 'unscheduled';
+      labConfirmed = null;
+    }
+    renderPsaCard();
+  }
+
+  // Initialize PSA card on load
+  document.addEventListener('DOMContentLoaded', renderPsaCard);
+
   // ESC closes sheet
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeRiskSheet(); closePharmacySheet(); }
+    if (e.key === 'Escape') { closeRiskSheet(); closePharmacySheet(); closeLabSheet(); }
   });
 </script>
 </body>
