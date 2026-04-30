@@ -1876,89 +1876,95 @@
 
     <!-- ---- SUBSTATE: ACT ---- -->
     <div class="substate" id="plan-act">
-      <h1 class="screen-title">One thing this week.</h1>
+      <h1 class="screen-title">Execute.</h1>
 
-      <div class="act-hero">
-        <div class="act-hero-stat"><div class="num">1</div><div class="lbl">today</div></div>
-        <div class="act-hero-stat"><div class="num">2</div><div class="lbl">scheduled</div></div>
-        <div class="act-hero-stat"><div class="num">8w</div><div class="lbl">recheck</div></div>
-      </div>
+      <div class="section-label">Risk reduction</div>
 
-      <div class="section-label">Start this week</div>
-
-      <div class="fg-action" id="fg-psa">
-        <div class="fg-eyebrow"><span>●</span> Most important</div>
-        <div class="fg-title">Get your baseline PSA — this week.</div>
-        <div class="fg-detail">Single blood draw plus a brief in-office exam (DRE). 5 minutes. Your ATM gene means you're 7 years overdue. Result back in 1–2 days.</div>
-        <div class="fg-meta">
-          <span>🩸 <b>Single visit</b></span>
-          <span class="divider">·</span>
-          <span>📅 Annual <b>going forward</b></span>
-        </div>
-        <button class="btn wide" onclick="markStartedTonight(this)">I scheduled it</button>
-      </div>
-
-      <div class="fg-action" id="fg-statin" style="margin-top:14px;">
-        <div class="fg-eyebrow"><span>●</span> Tonight</div>
-        <div class="fg-title">Take your first statin tonight.</div>
-        <div class="fg-detail">Rosuvastatin 5 mg for 4 weeks → 10 mg. Any time before bed, with or without food. One reminder/day for the first two weeks — turn off in Settings anytime.</div>
+      <div class="fg-action" id="fg-statin">
+        <div class="fg-eyebrow"><span>●</span> First move</div>
+        <div class="fg-title">Start rosuvastatin tonight.</div>
+        <div class="fg-detail">ApoB 98, LDL 128, Lp(a) 62. Lower the modifiable cholesterol burden, then recheck ApoB and LDL in 8 weeks.</div>
         <div class="fg-meta">
           <span>🕘 <b>Nightly</b></span>
           <span class="divider">·</span>
-          <span>📅 Recheck <b>8 weeks</b></span>
+          <span>🎯 ApoB <b>&lt;80</b></span>
         </div>
         <button class="btn wide" onclick="markStartedTonight(this)">I started tonight</button>
       </div>
 
-      <div class="section-label">Scheduled</div>
+      <div class="fg-action" id="fg-cac" style="margin-top:14px;">
+        <div class="fg-eyebrow"><span>●</span> Calibrate intensity</div>
+        <div class="fg-title">Schedule the CAC scan.</div>
+        <div class="fg-detail">Not a separate objective. CAC tells the team whether standard lipid lowering is enough or whether the plan should intensify.</div>
+        <div class="fg-meta">
+          <span>🫀 <b>10 min CT</b></span>
+          <span class="divider">·</span>
+          <span>📍 Changes <b>treatment intensity</b></span>
+        </div>
+        <button class="btn wide" onclick="toast('CAC scan: office will text scheduling options')">Schedule CAC</button>
+      </div>
 
-      <div class="bg-action" onclick="toast('CAC scan — office will text dates')">
-        <div class="bg-num">03</div>
-        <div class="bg-text">Coronary calcium (CAC) scan
-          <small>Outpatient · 10 minutes · office will text scheduling options within 48 hours</small>
+      <div class="section-label">Monitoring</div>
+
+      <div class="fg-action" id="fg-psa">
+        <div class="fg-eyebrow"><span>●</span> Setup</div>
+        <div class="fg-title">Get baseline PSA this week.</div>
+        <div class="fg-detail">ATM pathogenic variant plus no PSA on file. Establish the prostate surveillance cadence.</div>
+        <div class="fg-meta">
+          <span>🩸 <b>Blood draw</b></span>
+          <span class="divider">·</span>
+          <span>📅 Annual <b>cadence</b></span>
+        </div>
+        <button class="btn wide" onclick="markStartedTonight(this)">I scheduled it</button>
+      </div>
+
+      <div class="bg-action" onclick="toast('Genetic counseling: ATM context, cascade testing, surveillance plan')">
+        <div class="bg-num">ATM</div>
+        <div class="bg-text">Genetic counseling
+          <small>ATM context, cascade testing, surveillance cadence</small>
         </div>
         <div class="bg-chev">›</div>
       </div>
 
-      <div class="bg-action" onclick="toast('Pancreatic surveillance plan documented — first scan at age 50')">
-        <div class="bg-num">·</div>
-        <div class="bg-text">Pancreatic surveillance plan (ATM)
-          <small>First scan at age 50 (3 years from now) · reminder set</small>
+      <div class="bg-action" onclick="toast('Pancreatic surveillance: cadence documented')">
+        <div class="bg-num">50</div>
+        <div class="bg-text">Pancreatic surveillance cadence
+          <small>Start age, modality, interval</small>
         </div>
         <div class="bg-chev">›</div>
       </div>
 
-      <div class="section-label">What we're watching</div>
+      <div class="bg-action" onclick="toast('Colonoscopy status: confirm prior screening or schedule baseline')">
+        <div class="bg-num">CRC</div>
+        <div class="bg-text">Confirm colonoscopy status
+          <small>If none on file, schedule baseline</small>
+        </div>
+        <div class="bg-chev">›</div>
+      </div>
+
+      <div class="section-label">Next checks</div>
 
       <div class="watch-card active">
         <div class="watch-stage">W2</div>
         <div class="watch-body">
-          <div class="watch-title">Check-in</div>
-          <div class="watch-signals">Statin tolerance · any muscle soreness?</div>
+          <div class="watch-title">Statin tolerance</div>
+          <div class="watch-signals">Muscle symptoms, adherence, dose path</div>
         </div>
         <div class="bg-chev">›</div>
       </div>
       <div class="watch-card">
-        <div class="watch-stage">W4–6</div>
+        <div class="watch-stage">W8</div>
         <div class="watch-body">
-          <div class="watch-title">Cardiac workup window</div>
-          <div class="watch-signals">CAC + stress echo results · may reshape plan</div>
+          <div class="watch-title">ApoB and LDL response</div>
+          <div class="watch-signals">If ApoB stays ≥80 or LDL drop is weak, change tactic</div>
         </div>
         <div class="bg-chev">›</div>
       </div>
       <div class="watch-card">
-        <div class="watch-stage">W12</div>
+        <div class="watch-stage">CAC</div>
         <div class="watch-body">
-          <div class="watch-title">Lab recheck</div>
-          <div class="watch-signals">ApoB &lt; 80 · LDL −40% · hs-CRP trend</div>
-        </div>
-        <div class="bg-chev">›</div>
-      </div>
-      <div class="watch-card">
-        <div class="watch-stage">Nov</div>
-        <div class="watch-body">
-          <div class="watch-title">First pancreatic MRI</div>
-          <div class="watch-signals">Annual baseline · stability is the goal</div>
+          <div class="watch-title">Risk calibration</div>
+          <div class="watch-signals">Result sets lipid intensity</div>
         </div>
         <div class="bg-chev">›</div>
       </div>
