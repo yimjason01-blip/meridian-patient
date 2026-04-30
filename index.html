@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#08090a">
-<title>Meridian — Your Care Plan</title>
+<title>Aleron MD · Your Care Plan</title>
 <style>
   /*
     Meridian Patient — v2 (4-tab architecture)
@@ -93,18 +93,20 @@
     justify-content: space-between;
   }
   .brand {
-    font-weight: 500;
-    font-size: 15px;
-    letter-spacing: -0.01em;
-    display: flex; align-items: center; gap: 8px;
+    display: flex; align-items: baseline; gap: 8px;
   }
-  .brand .dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--accent-hover);
-    box-shadow: 0 0 8px var(--accent-hover);
+  .brand-logo {
+    font-weight: 400;
+    font-size: 22px;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+    color: #fff;
   }
-  .brand b { font-weight: 600; }
-  .brand .muted { color: var(--text-muted); font-weight: 400; }
+  .brand-logo .md-tag {
+    font-weight: 510;
+    letter-spacing: -0.02em;
+  }
+  .brand .muted { color: var(--text-muted); font-size: 13px; font-weight: 400; letter-spacing: -0.01em; }
 
   .avatar {
     width: 32px; height: 32px; border-radius: 50%;
@@ -1385,8 +1387,8 @@
   <!-- ================= TOPBAR ================= -->
   <div class="topbar">
     <div class="brand">
-      <span class="dot"></span>
-      <span><b>Meridian</b> <span class="muted" id="topbarSub">· your plan</span></span>
+      <span class="brand-logo">Aleron <span class="md-tag">MD</span></span>
+      <span class="muted" id="topbarSub">· your plan</span>
     </div>
     <div class="avatar" title="Jim Yason">JY</div>
   </div>
