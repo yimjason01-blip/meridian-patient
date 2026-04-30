@@ -49,12 +49,18 @@
   .lede { color:var(--text-muted); font-size:15.5px; line-height:1.5; margin:0 0 28px; }
 
   .card-list { display:flex; flex-direction:column; gap:10px; }
-  .card { background:var(--surface); border:1px solid var(--border); border-radius:14px;
+  .card { background:var(--surface); border:1.5px solid var(--border); border-radius:14px;
     padding:16px 18px; display:flex; align-items:center; gap:14px; cursor:pointer;
-    transition:transform .12s ease, background .12s ease; }
-  .card:active { transform:scale(0.985); background:var(--surface-strong); }
-  .card.selected { background:var(--surface-strong); border-color:#3a3a40; }
-  .card.selected .check { opacity:1; }
+    position:relative;
+    transition:transform .12s ease, background .12s ease, border-color .12s ease, box-shadow .12s ease; }
+  .card:active { transform:scale(0.985); }
+  .card.selected { background:#ffffff; border-color:#ffffff;
+    box-shadow:0 0 0 4px rgba(255,255,255,0.16); }
+  .card.selected .card-title { color:#000; }
+  .card.selected .card-sub   { color:#3a3a3a; }
+  .card.selected .card-icon  { background:#000; color:#fff; }
+  .card.selected .chev       { color:#000; }
+  .card.selected .check      { opacity:1; }
 
   .card-icon { width:38px; height:38px; border-radius:10px; background:var(--surface-strong);
     display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#cfcfd4; }
@@ -127,7 +133,6 @@ const FLOWS = {
         lede: 'Galleri whole-genome screening plus ACMG-SF v3.2 actionable variants. Pick how you want to start.',
         options: [
           { id:'order', title:'Send a kit to my address', sub:'Saliva. Ships in 2 business days.', icon:icon('box') },
-          { id:'have',  title:'I already have results',     sub:'Upload a 23andMe, Color, or Invitae export.', icon:icon('file') },
           { id:'skip',  title:'Skip for now',               sub:"You can do this later from your profile.",   icon:icon('clock') }
         ]
       },
@@ -139,12 +144,10 @@ const FLOWS = {
       },
       {
         kind: 'success',
-        title: ctx => ctx.choice === 'order' ? 'Kit on the way.' : ctx.choice === 'have' ? 'Results saved.' : 'Marked for later.',
+        title: ctx => ctx.choice === 'order' ? 'Kit on the way.' : 'Marked for later.',
         body:  ctx => ctx.choice === 'order'
           ? 'Tracking will appear in your inbox within 24 hours. Results land in your record about 4 weeks after we receive your sample.'
-          : ctx.choice === 'have'
-            ? 'Your file is being parsed. ACMG-SF v3.2 actionable variants will surface in your record within 24 hours.'
-            : "We'll keep this open. You can reopen it from your profile any time."
+          : "We'll keep this open. You can reopen it from your profile any time."
       }
     ]
   },
