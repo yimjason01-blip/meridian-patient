@@ -93,7 +93,7 @@
     justify-content: space-between;
   }
   .brand {
-    display: flex; align-items: baseline; gap: 8px;
+    display: flex; align-items: center;
   }
   .brand-logo {
     font-weight: 400;
@@ -106,8 +106,6 @@
     font-weight: 510;
     letter-spacing: -0.02em;
   }
-  .brand .muted { color: var(--text-muted); font-size: 13px; font-weight: 400; letter-spacing: -0.01em; }
-
   .avatar {
     width: 32px; height: 32px; border-radius: 50%;
     background: var(--bg-surface);
@@ -165,14 +163,6 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .screen-eyebrow {
-    font-size: 11px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 500;
-    margin-bottom: 6px;
-  }
   .screen-title {
     font-size: 22px;
     font-weight: 500;
@@ -180,12 +170,6 @@
     color: var(--text);
     line-height: 1.25;
     margin: 0 0 6px;
-  }
-  .screen-subtitle {
-    font-size: 14px;
-    color: var(--text-muted);
-    margin: 0 0 22px;
-    line-height: 1.5;
   }
   .section-label {
     font-size: 11px;
@@ -1388,7 +1372,6 @@
   <div class="topbar">
     <div class="brand">
       <span class="brand-logo">Aleron <span class="md-tag">MD</span></span>
-      <span class="muted" id="topbarSub">· your plan</span>
     </div>
     <div class="avatar" title="Jim Yason">JY</div>
   </div>
@@ -1483,8 +1466,6 @@
         </button>
       </div>
 
-      <div class="section-label">Your decisions</div>
-
       <!-- Decision 1 — PSA / ATM-driven prostate surveillance -->
       <div class="decision" onclick="toggleDecision(this)">
         <div class="decision-hd">
@@ -1543,9 +1524,7 @@
 
     <!-- ---- SUBSTATE: ACT ---- -->
     <div class="substate" id="plan-act">
-      <div class="screen-eyebrow">Get it done</div>
       <h1 class="screen-title">One thing this week.</h1>
-      <p class="screen-subtitle">Get the PSA done. Statin starts tonight. The CAC scan is on the calendar.</p>
 
       <div class="act-hero">
         <div class="act-hero-stat"><div class="num">1</div><div class="lbl">today</div></div>
@@ -1639,9 +1618,7 @@
   <!-- =================================================== -->
   <section class="screen" id="screen-futures">
     <div class="pad">
-      <div class="screen-eyebrow">What's at stake</div>
       <h1 class="screen-title">Two futures.</h1>
-      <p class="screen-subtitle">The difference is the plan. Not a prediction about you — what happens for people with your profile over 20 years.</p>
 
       <div class="chart-wrap">
         <div class="chart-legend">
@@ -1748,9 +1725,7 @@
 
     <!-- ---- DATA ---- -->
     <div class="substate active" id="you-data">
-      <div class="screen-eyebrow">Everything we've collected</div>
       <h1 class="screen-title">You, in numbers.</h1>
-      <p class="screen-subtitle">Wearable, labs, genetic. Tap any group to expand.</p>
 
       <!-- Wearable (open by default) -->
       <div class="data-group open">
@@ -1912,9 +1887,7 @@
 
     <!-- ---- RISK ---- -->
     <div class="substate" id="you-reasoning">
-      <div class="screen-eyebrow">Your risk, broken down</div>
       <h1 class="screen-title">Four risk models.</h1>
-      <p class="screen-subtitle">Each model fed by your data. Tap "Ask about this" on any card to dig in.</p>
 
       <div class="dom-card">
         <div class="dom-hd">
@@ -2002,9 +1975,7 @@
     <!-- ---- TEAM (direct physician thread) ---- -->
     <div class="substate active" id="messages-team">
       <div style="padding: 4px 16px 0">
-        <div class="screen-eyebrow">Direct line</div>
         <h1 class="screen-title" style="margin-bottom: 8px">Your care team.</h1>
-        <p class="screen-subtitle" style="margin-bottom: 14px">Message Dr. Thompson directly. He'll respond within one business day.</p>
       </div>
 
       <div class="md-strip" onclick="toast('Opening Dr. Thompson\\'s note')">
@@ -2036,9 +2007,7 @@
     <!-- ---- MERIDIAN (AI) ---- -->
     <div class="substate" id="messages-meridian">
       <div style="padding: 4px 16px 0">
-        <div class="screen-eyebrow">Ask Meridian</div>
         <h1 class="screen-title" style="margin-bottom: 8px">Anything on your mind.</h1>
-        <p class="screen-subtitle" style="margin-bottom: 14px">Grounded in your plan, your data, and Dr. Thompson's note. When I hit my limit, I route to your care team.</p>
       </div>
 
       <div class="chat-wrap" id="chatWrap">
@@ -2141,10 +2110,6 @@
     ci.classList.toggle('show', name === 'messages');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Subtitle in topbar changes for personality
-    const sub = document.getElementById('topbarSub');
-    const subs = { plan: '· your plan', futures: '· your futures', you: '· you', messages: '· messages' };
-    if (sub) sub.textContent = subs[name] || '· your plan';
   }
 
   function gotoSub(tab, sub) {
