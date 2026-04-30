@@ -179,6 +179,12 @@
     font-weight: 500;
     margin: 24px 0 10px;
   }
+  .section-label-aux {
+    color: var(--text-muted);
+    opacity: 0.55;
+    font-weight: 400;
+    margin-left: 4px;
+  }
 
   /* ============ Generic cards ============ */
   .card {
@@ -2091,7 +2097,7 @@
 
     <!-- ---- SUBSTATE: ACT ---- -->
     <div class="substate" id="plan-act">
-      <div class="section-label">Risk reduction</div>
+      <div class="section-label">Risk reduction <span class="section-label-aux">| Top priority</span></div>
 
       <div class="bg-action" id="rxCard" onclick="openPharmacySheet()">
         <div class="bg-num">Rx</div>
@@ -2101,7 +2107,7 @@
         <div class="bg-chev">›</div>
       </div>
 
-      <div class="section-label">Monitoring</div>
+      <div class="section-label">Monitoring <span class="section-label-aux">| Top priority</span></div>
 
       <div class="bg-action" id="psaCard" onclick="psaCardTap()">
         <div class="bg-num">PSA</div>
