@@ -736,8 +736,9 @@ function hideComposer() {
 function submitText() {
   const v = composerInput.value.trim();
   if (!v) return;
+  const cb = composerCallback;
   hideComposer();
-  if (composerCallback) composerCallback(v);
+  if (cb) cb(v);
 }
 composerInput.addEventListener('keydown', e => {
   if (e.key === 'Enter') { e.preventDefault(); submitText(); }
@@ -778,8 +779,9 @@ function confirmSheet() {
   const itemH = 40;
   const idx = Math.round(wheel.scrollTop / itemH);
   const v = wheelOptions[Math.max(0, Math.min(idx, wheelOptions.length-1))];
+  const cb = wheelCallback;
   closeSheet();
-  if (wheelCallback) wheelCallback(v);
+  if (cb) cb(v);
 }
 function closeSheet() {
   document.getElementById('sheetBackdrop').classList.remove('open');
@@ -916,6 +918,13 @@ function finishFlow() {
   document.getElementById('view-review').style.display = 'none';
   document.getElementById('view-done').style.display = 'flex';
   console.log('Onboarding complete · ctx:', ctx);
+  // If we came from the hub, hop back and mark Patient History complete
+  const params = new URLSearchParams(location.search);
+  if (params.get('return') === 'hub') {
+    setTimeout(() => {
+      window.location.href = 'health-picture.html?completed=history';
+    }, 900);
+  }
 }
 function redoFlow() {
   for (const k of Object.keys(ctx)) delete ctx[k];

@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Meridian · Health Picture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #000;
+    --surface: #1a1a1d;
+    --surface-active: #2c2c30;
+    --surface-icon: #2a2a2e;
+    --check-green: #2a6e3f;
+    --text: #fff;
+    --text-muted: #8a8a8e;
+    --text-faint: #5a5a5e;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+  }
+  body { min-height: 100vh; min-height: 100dvh; overflow-x: hidden; }
+
+  .shell {
+    position: relative;
+    width: 100vw;
+    max-width: 430px;
+    margin: 0 auto;
+    min-height: 100vh; min-height: 100dvh;
+    display: flex; flex-direction: column;
+  }
+
+  .statusbar {
+    height: 44px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px;
+    font-size: 15px; font-weight: 600; letter-spacing: -0.01em;
+  }
+  .statusbar .right { display: flex; align-items: center; gap: 5px; }
+  .statusbar .right span { width: 5px; height: 5px; border-radius: 50%; background: var(--text); }
+
+  /* Progress dashes */
+  .progress {
+    display: flex; gap: 6px;
+    padding: 8px 16px 0;
+  }
+  .progress i {
+    flex: 1;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--text-faint);
+    transition: background .25s;
+  }
+  .progress i.done { background: var(--text); }
+
+  /* Headline */
+  .headline {
+    padding: 64px 20px 32px;
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    color: var(--text);
+  }
+
+  /* Row list */
+  .rows {
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 0 16px 24px;
+  }
+  .row {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 14px;
+    cursor: pointer;
+    transition: background .15s, transform .08s;
+    border: 1px solid transparent;
+  }
+  .row:hover { background: #1f1f22; }
+  .row:active { transform: scale(0.99); }
+
+  .row.active {
+    background: var(--surface-active);
+    border-color: rgba(255,255,255,0.08);
+  }
+  .row.locked { opacity: 0.55; }
+
+  .row-icon {
+    width: 44px; height: 44px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: var(--surface-icon);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text);
+  }
+  .row.active .row-icon { background: #3a3a3e; }
+  .row.locked .row-icon { color: var(--text-muted); }
+  .row.done .row-icon {
+    background: var(--check-green);
+    color: #fff;
+  }
+  .row-icon svg { width: 22px; height: 22px; }
+
+  .row-body { flex: 1; min-width: 0; }
+  .row-eyebrow {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 2px;
+    display: none;
+  }
+  .row.active .row-eyebrow { display: block; }
+  .row-label {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .row.done .row-label,
+  .row.locked .row-label { color: var(--text-muted); font-weight: 400; }
+  .row.active .row-label { font-weight: 600; }
+
+  .row-chev {
+    color: var(--text-muted);
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  /* Home indicator */
+  .home-indicator {
+    margin-top: auto;
+    height: 21px;
+    flex-shrink: 0;
+    display: flex; justify-content: center; align-items: flex-end;
+    padding-bottom: 8px;
+  }
+  .home-indicator i {
+    width: 134px; height: 5px; border-radius: 3px; background: rgba(255,255,255,0.4);
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <div class="statusbar">
+    <span>9:41</span>
+    <span class="right"><span></span><span></span><span></span></span>
+  </div>
+
+  <div class="progress" id="progress">
+    <i></i><i></i><i></i><i></i><i></i>
+  </div>
+
+  <div class="headline">Let's complete your<br>health picture.</div>
+
+  <div class="rows" id="rows"></div>
+
+  <div class="home-indicator"><i></i></div>
+</div>
+
+<script>
+const STEPS = [
+  {
+    id: 'history',
+    label: 'Patient History',
+    href: 'onboarding.html',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="13" y2="15"/></svg>`
+  },
+  {
+    id: 'genetic',
+    label: 'Genetic Analysis Kit',
+    href: '#',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3c0 4 10 6 10 12s-10 4-10 6"/><path d="M17 3c0 2-10 4-10 6s10 8 10 12"/><path d="M8 7h8M8 11h8M8 15h8M8 19h8"/></svg>`
+  },
+  {
+    id: 'wearables',
+    label: 'Wearables',
+    href: '#',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="3"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M9 18v2a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-2"/><circle cx="18" cy="12" r="0.6" fill="currentColor"/></svg>`
+  },
+  {
+    id: 'physician',
+    label: 'Meet your physician',
+    href: '#',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M6 3h2M12 3h2"/><path d="M10 13v3a4 4 0 0 0 8 0v-1"/><circle cx="18" cy="14" r="2"/></svg>`
+  },
+  {
+    id: 'labs',
+    label: 'Blood Labs',
+    href: '#',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6"/><path d="M10 2v13a3 3 0 0 0 6 0V2"/><path d="M10 9h6"/></svg>`
+  }
+];
+
+const CHECK_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12 10 17 19 7"/></svg>`;
+
+/* Persisted state */
+const STATE_KEY = 'meridian.healthPicture.v1';
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STATE_KEY)) || {}; } catch { return {}; }
+}
+function saveState(s) {
+  localStorage.setItem(STATE_KEY, JSON.stringify(s));
+}
+
+function render() {
+  const state = loadState();
+  // Determine active = first incomplete
+  let activeIdx = STEPS.findIndex(s => !state[s.id]);
+  if (activeIdx === -1) activeIdx = STEPS.length; // all done
+
+  const rowsEl = document.getElementById('rows');
+  rowsEl.innerHTML = '';
+  STEPS.forEach((s, i) => {
+    const done = !!state[s.id];
+    const active = i === activeIdx;
+    const locked = i > activeIdx;
+    const row = document.createElement('div');
+    row.className = 'row' + (done ? ' done' : '') + (active ? ' active' : '') + (locked ? ' locked' : '');
+    row.innerHTML = `
+      <div class="row-icon">${done ? CHECK_ICON : s.icon}</div>
+      <div class="row-body">
+        <div class="row-eyebrow">Up next</div>
+        <div class="row-label">${s.label}</div>
+      </div>
+      <div class="row-chev">›</div>
+    `;
+    row.onclick = () => handleClick(s, done, locked);
+    rowsEl.appendChild(row);
+  });
+
+  // Progress dashes
+  const completed = STEPS.filter(s => state[s.id]).length;
+  document.querySelectorAll('#progress i').forEach((el, i) => {
+    el.classList.toggle('done', i < completed);
+  });
+}
+
+function handleClick(step, done, locked) {
+  if (locked) return;
+  if (step.href && step.href !== '#') {
+    // Mark active for return-trip — actual completion is set when user hits Done in the flow
+    window.location.href = step.href + '?return=hub';
+    return;
+  }
+  // Stub: mark as done so the rest of the hub demonstrates progress.
+  const state = loadState();
+  state[step.id] = { completedAt: Date.now() };
+  saveState(state);
+  render();
+}
+
+/* If we got back here with ?completed=<id>, mark and render */
+const params = new URLSearchParams(location.search);
+const completed = params.get('completed');
+if (completed) {
+  const state = loadState();
+  state[completed] = { completedAt: Date.now() };
+  saveState(state);
+  history.replaceState(null, '', location.pathname);
+}
+
+/* Dev helper: ?reset=1 wipes progress */
+if (params.get('reset') === '1') {
+  localStorage.removeItem(STATE_KEY);
+  history.replaceState(null, '', location.pathname);
+}
+
+render();
+</script>
+</body>
+</html>
