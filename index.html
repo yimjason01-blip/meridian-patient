@@ -192,7 +192,132 @@
   .card.clickable { cursor: pointer; }
   .card.clickable:hover { border-color: var(--border); }
 
-  /* ============ PLAN › MESSAGE ============ */
+  /* ============ PLAN › UNDERSTAND ============ */
+
+  .tele-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 6px 0 12px;
+  }
+  .tele-video {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .tele-video img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 28%;
+  }
+  .tele-gradient {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(8,9,10,0.08) 35%, rgba(8,9,10,0.82) 100%);
+  }
+  .tele-live {
+    position: absolute; top: 12px; left: 12px;
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 6px 9px;
+    border-radius: 999px;
+    background: rgba(8,9,10,0.72);
+    border: 1px solid rgba(255,255,255,0.14);
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .tele-live span {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--status-ok-bright);
+  }
+  .tele-caption {
+    position: absolute; left: 16px; right: 16px; bottom: 14px;
+  }
+  .tele-name {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .tele-meta,
+  .tele-time {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .tele-strip {
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .tele-topic {
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .tele-status {
+    color: var(--status-ok-bright);
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .tele-controls {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 12px;
+  }
+  .tele-controls button {
+    min-height: 44px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .tele-controls button:last-child {
+    color: #fff;
+    background: var(--status-crit);
+    border-color: transparent;
+  }
+
+  .exec-summary {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .exec-summary summary {
+    list-style: none;
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 52px;
+    padding: 0 16px;
+    cursor: pointer;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .exec-summary summary::-webkit-details-marker { display: none; }
+  .exec-summary .chev { color: var(--text-muted); transition: transform 0.18s; }
+  .exec-summary[open] .chev { transform: rotate(90deg); }
+  .exec-body {
+    border-top: 1px solid var(--border-subtle);
+    padding: 16px;
+  }
+  .exec-body p,
+  .exec-body li {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+  .exec-body p { margin: 0 0 14px; }
+  .exec-body ul { margin: 0; padding-left: 18px; display: grid; gap: 10px; }
+  .exec-body b { color: var(--text); font-weight: 500; }
 
   /* Physician hero — main event. Portrait + audio + pull quote. */
   .md-hero {
@@ -1385,141 +1510,47 @@
       <button class="seg-btn" data-sub="act" onclick="gotoSub('plan','act')">Execute</button>
     </div>
 
-    <!-- ---- SUBSTATE: MESSAGE ---- -->
+    <!-- ---- SUBSTATE: UNDERSTAND ---- -->
     <div class="substate active" id="plan-message">
 
-      <!-- Physician hero — portrait + audio player, main event -->
-      <div class="md-hero">
-        <div class="md-hero-portrait">
-          <img src="assets/dr-thompson.png" alt="Dr. Marcus Thompson" loading="eager"/>
-          <div class="md-hero-overlay">
-            <div class="md-hero-label">A message from your doctor</div>
+      <div class="tele-card">
+        <div class="tele-video">
+          <img src="assets/dr-thompson.png" alt="Dr. Marcus Thompson in telemedicine consult" loading="eager"/>
+          <div class="tele-gradient"></div>
+          <div class="tele-live"><span></span> Live consult</div>
+          <div class="tele-caption">
+            <div class="tele-name">Dr. Marcus Thompson</div>
+            <div class="tele-meta">Primary Care · Aleron MD</div>
           </div>
         </div>
-
-        <div class="md-hero-meta">
+        <div class="tele-strip">
           <div>
-            <div class="md-hero-name">Dr. Marcus Thompson</div>
-            <div class="md-hero-sub">Primary Care · 2 hours ago</div>
+            <div class="tele-topic">Reviewing your prevention plan</div>
+            <div class="tele-time">Today · 42 min scheduled</div>
           </div>
-          <div class="md-hero-duration" id="audioDuration">—</div>
+          <div class="tele-status">Connected</div>
         </div>
-
-        <!-- Audio player -->
-        <div class="audio-player" id="audioPlayer">
-          <button class="ap-play" id="apPlay" onclick="togglePlay()" aria-label="Play">
-            <svg class="ap-ic-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-            <svg class="ap-ic-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
-          </button>
-          <div class="ap-track" onclick="seekAudio(event)" id="apTrack">
-            <div class="ap-fill" id="apFill"></div>
-            <div class="ap-thumb" id="apThumb"></div>
-          </div>
-          <div class="ap-time" id="apTime">0:00</div>
+        <div class="tele-controls" aria-label="Telemedicine controls">
+          <button type="button">Mute</button>
+          <button type="button">Camera</button>
+          <button type="button">End</button>
         </div>
+      </div>
 
-        <!-- Hero text — the one sentence that carries the emotional load -->
-        <div class="md-hero-pull">
-          "Overall, you're in great shape. But your ATM gene plus your Lp(a) means we have three things to act on. <em>Let me tell you how I practice — because I think it'll help this land.</em>"
-        </div>
-
-        <!-- Expandable transcript -->
-        <button class="md-hero-transcript-toggle" onclick="toggleTranscript(this)">
-          <span class="lbl">Read transcript</span>
+      <details class="exec-summary">
+        <summary>
+          <span>Executive summary</span>
           <span class="chev">›</span>
-        </button>
-        <div class="md-hero-transcript" id="mdTranscript">
-          <p>Jim, Dr. Thompson here.</p>
-          <p>First, I want to acknowledge something. You're already on a great path. The intake, the wearable data, the fact that you're asking these questions at 47 — that's more than most people will ever do. Honestly, it's what makes this work. I love working with patients who are this dedicated to a great future.</p>
-          <p>Before I get to the results, let me tell you how I practice, because I think it'll help this land.</p>
-          <p><em>When there's a high-risk area we can do something about, I prioritize that.</em> Sometimes we shift the number with a medication or a lifestyle change. Sometimes we can't — the risk is what it is — and the move is to be proactive about monitoring. Other times, the data comes together in a way that leaves part of the picture blurry, and I want to take a couple steps to pull that into focus. And of course, if it ain't broke, we don't fix it.</p>
-          <p>With that in mind — here's what I'm seeing. Overall, you're in great shape. But a couple things are standing out.</p>
-          <p>First, your genetic panel came back with a variant called <em>ATM</em>. This raises your susceptibility to certain cancers and some cardiovascular risk. Because that's a guideline-level finding, we've already set up a genetic counseling visit for you and we'll talk about cascade testing for first-degree relatives there. That part isn't up for ranking — we just do it.</p>
-          <p>Then there are three things from your data that rose to the top.</p>
-          <p>The first is a <em>baseline PSA today</em>. As an ATM carrier you should have started prostate surveillance at 40, and we're seven years overdue. It's a single blood test plus a brief exam — and it sets up your annual cadence going forward.</p>
-          <p>Second, I want to <em>start you on a low-dose statin</em>. Your Lp(a) came back high — that's a lifetime, genetically determined cardiovascular risk factor. Lifestyle won't lower it, but a statin lowers the modifiable side of the equation. We'll recheck cholesterol and ApoB in eight weeks.</p>
-          <p>Now, I know there's a narrative about statins out there, and there are indeed a couple real challenges with some versions of them. But those affect a pretty small slice of the population, and the current generation really addresses most of what people have heard. I'm prescribing one I think is a good fit for you.</p>
-          <p>Third — and this is the <em>pull-the-picture-into-focus</em> piece — I want a <em>coronary calcium scan</em>. Your Lp(a) and ApoB profile is exactly the situation where this scan changes the next move. It tells me whether to push harder on the lipid plan or hold steady. It's an easy outpatient test and the value of the information is incredible.</p>
-          <p>Beyond those three, we're documenting a pancreatic surveillance plan to start at age 50 because of your ATM status — that's a few years out. And there are a handful of smaller items in your full plan: confirming Lp(a) in molar units, an APOE add-on test, baseline colonoscopy, and a few others.</p>
-          <p>So — overall, you're doing great. Let's get this done and make sure you're working from a solid foundation.</p>
-          <p>If you want to schedule a visit and talk any of this through, tap below. And if you just want to send a question, message me any time. I'll get back to you.</p>
-          <p><em>Take care of yourself, Jim.</em></p>
+        </summary>
+        <div class="exec-body">
+          <p>You are metabolically strong and already doing the hard baseline work. The care plan is not trying to fix everything. It is focused on the few findings that change decisions now: the ATM pathogenic variant, the high Lp(a) with ApoB above target, and the need to clarify coronary plaque burden.</p>
+          <ul>
+            <li><b>Findings:</b> ATM changes the cancer-surveillance floor. PSA is overdue, pancreatic surveillance is planned for age 50, and genetic counseling is already appropriate.</li>
+            <li><b>Cardiovascular:</b> Lp(a) is inherited and not lifestyle-responsive. The lever is lowering ApoB with rosuvastatin, then using CAC to decide whether to intensify.</li>
+            <li><b>Approach:</b> Act where the risk is actionable, investigate where the next test changes the plan, monitor where timing matters, and leave stable areas alone.</li>
+          </ul>
         </div>
-      </div>
-
-      <audio id="mdAudio" preload="metadata" src="assets/dr-thompson-message.mp3"></audio>
-
-      <!-- Doctor CTA pair — matches "tap below" in voice message -->
-      <div class="md-cta">
-        <button class="btn wide" onclick="openScheduler()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16" style="margin-right:6px">
-            <rect x="3" y="5" width="18" height="16" rx="2"/>
-            <path d="M3 9h18M8 3v4M16 3v4"/>
-          </svg>
-          Schedule a visit with Dr. Thompson
-        </button>
-        <button class="btn wide ghost" onclick="gotoTab('messages'); setTimeout(()=>gotoSub('messages','team'), 50)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16" style="margin-right:6px">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
-          Send Dr. Thompson a message
-        </button>
-      </div>
-
-      <!-- Decision 1 — PSA / ATM-driven prostate surveillance -->
-      <div class="decision" onclick="toggleDecision(this)">
-        <div class="decision-hd">
-          <div class="decision-num"><span class="chip">Most leverage</span> 01</div>
-          <div class="decision-chev">›</div>
-        </div>
-        <h3>Baseline PSA — your ATM-driven prostate surveillance</h3>
-        <div class="why">As an ATM carrier you should have started this at 40. You're seven years overdue. It's a single blood test plus a brief exam.</div>
-        <div class="decision-detail">
-          <div class="decision-detail-inner">
-            <div class="kv"><b>What it is</b>One blood draw (PSA) plus a brief in-office exam (DRE). Five minutes total. Result back in 1–2 days.</div>
-            <div class="kv"><b>Why it matters for you</b>ATM heterozygous carriers have ~2× lifetime prostate cancer risk and a higher-grade phenotype. Catching anything early is the entire game — late-stage prostate cancer survival is dramatically worse than early-stage. This sets your annual cadence.</div>
-            <div class="kv"><b>How we'll know it's working</b>The result itself is the answer. Normal PSA confirms you're on the right cadence; we recheck annually. Anything elevated triggers urology follow-up.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Decision 2 — Statin -->
-      <div class="decision" onclick="toggleDecision(this)">
-        <div class="decision-hd">
-          <div class="decision-num"><span class="chip">Second</span> 02</div>
-          <div class="decision-chev">›</div>
-        </div>
-        <h3>Start a low-dose statin (rosuvastatin 5 mg → 10 mg nightly)</h3>
-        <div class="why">Your Lp(a) is high. It's lifetime, genetically determined, and lifestyle won't move it. A statin lowers the modifiable side of the equation.</div>
-        <div class="decision-detail">
-          <div class="decision-detail-inner">
-            <div class="kv"><b>What it is</b>One pill at bedtime. Start at 5 mg for four weeks, then 10 mg. No food requirement. Watch for unusual muscle soreness — tell us if it happens.</div>
-            <div class="kv"><b>Why it matters for you</b>Lp(a) 62 mg/dL (≈149 nmol/L), ApoB 98, LDL 128. Lp(a) is genetic and won't move with diet or exercise — but a statin drops every other atherogenic particle, which matters more when Lp(a) is high, not less.</div>
-            <div class="kv"><b>How we'll know it's working</b>Repeat ApoB and full lipid panel at 6–8 weeks. Target ApoB &lt;80 mg/dL. Your LDL should drop ~40%.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Decision 3 — CAC scan -->
-      <div class="decision" onclick="toggleDecision(this)">
-        <div class="decision-hd">
-          <div class="decision-num"><span class="chip">Third</span> 03</div>
-          <div class="decision-chev">›</div>
-        </div>
-        <h3>Coronary artery calcium (CAC) scan</h3>
-        <div class="why">The single most informative cardiac diagnostic for your profile. Tells us whether to push harder on the lipid plan or hold steady.</div>
-        <div class="decision-detail">
-          <div class="decision-detail-inner">
-            <div class="kv"><b>What it is</b>Non-contrast cardiac CT. Outpatient, ten minutes, no prep, no contrast. Our office handles scheduling.</div>
-            <div class="kv"><b>Why it matters for you</b>At 47 with elevated ApoB, Lp(a), and ATM+, this scan reclassifies risk for about half of patients in your zone. CAC under 100 confirms the low-risk phenotype and we stay this course. Higher numbers tell us to add a PCSK9 inhibitor or aspirin discussion.</div>
-            <div class="kv"><b>How we'll know it's working</b>The result itself is the answer. It anchors every cardiovascular decision for the next 5 years.</div>
-          </div>
-        </div>
-      </div>
-
-      <div style="margin-top: 24px">
-        <button class="btn wide" onclick="gotoSub('plan','act')">See what to do →</button>
-      </div>
+      </details>
     </div>
 
     <!-- ---- SUBSTATE: ACT ---- -->
