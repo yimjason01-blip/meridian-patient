@@ -914,6 +914,102 @@
   }
   .bg-chev { color: var(--text-muted); font-size: 14px; }
 
+  /* ============ Priority card (substantial top-priority items) ============ */
+  .priority-card {
+    background: linear-gradient(180deg, var(--bg-panel) 0%, var(--bg-surface) 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 20px 16px;
+    margin-bottom: 8px;
+    position: relative;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.02) inset, 0 8px 24px rgba(0,0,0,0.18);
+  }
+  .priority-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 14px; bottom: 14px;
+    width: 3px;
+    background: var(--accent-hover);
+    border-radius: 0 2px 2px 0;
+  }
+  .priority-card-head {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 10px;
+  }
+  .priority-card-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(94,106,210,0.12);
+    color: var(--accent-hover);
+    border: 1px solid rgba(94,106,210,0.25);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 10.5px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .priority-card-tag::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--accent-hover);
+    box-shadow: 0 0 0 2px rgba(94,106,210,0.18);
+  }
+  .priority-card-title {
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.25;
+    margin: 2px 0 6px;
+    letter-spacing: -0.01em;
+  }
+  .priority-card-meta {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  .priority-card-meta b { color: var(--text-secondary); font-weight: 500; }
+  .priority-card-meta .accent { color: var(--accent-hover); font-weight: 500; }
+  .priority-card-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .priority-card-actions button {
+    flex: 1;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 11px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background .12s, border-color .12s, color .12s;
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px;
+  }
+  .priority-card-actions .pc-primary {
+    background: var(--accent-hover);
+    color: #fff;
+    border: 1px solid var(--accent-hover);
+  }
+  .priority-card-actions .pc-primary:hover { filter: brightness(1.08); }
+  .priority-card-actions .pc-secondary {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+  }
+  .priority-card-actions .pc-secondary:hover {
+    color: var(--text);
+    border-color: var(--border-strong);
+    background: var(--bg-surface);
+  }
+  .priority-card-actions .pc-secondary svg {
+    width: 14px; height: 14px;
+    opacity: 0.8;
+  }
+
   /* Watching (check-in signals) inside Act */
   .watch-card {
     background: var(--bg-panel);
@@ -2197,22 +2293,48 @@
 
       <div class="section-label">Risk reduction <span class="section-label-aux">| Top priority</span></div>
 
-      <div class="bg-action" id="rxCard" onclick="openPharmacySheet()">
-        <div class="bg-num">Rx</div>
-        <div class="bg-text" id="rxCardText">Rosuvastatin 5 mg
-          <small id="rxCardMeta">Select pharmacy to send to</small>
+      <div class="priority-card" id="rxCard">
+        <div class="priority-card-head">
+          <span class="priority-card-tag">Rx</span>
         </div>
-        <div class="bg-chev">›</div>
+        <div class="priority-card-title" id="rxCardTitle">Rosuvastatin 5 mg</div>
+        <div class="priority-card-meta" id="rxCardMeta">
+          New prescription. <b>Select a pharmacy</b> to send to. Targets ApoB &lt; 80 mg/dL with recheck at 8 weeks.
+        </div>
+        <div class="priority-card-actions">
+          <button class="pc-primary" onclick="openPharmacySheet()">Select pharmacy</button>
+          <button class="pc-secondary" onclick="askAboutAction('rx')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.7"/>
+              <circle cx="12" cy="17" r="0.6" fill="currentColor"/>
+            </svg>
+            Ask Meridian
+          </button>
+        </div>
       </div>
 
       <div class="section-label">Monitoring <span class="section-label-aux">| Top priority</span></div>
 
-      <div class="bg-action" id="psaCard" onclick="psaCardTap()">
-        <div class="bg-num">PSA</div>
-        <div class="bg-text" id="psaCardText">Baseline PSA
-          <small id="psaCardMeta">Schedule draw at a nearby lab</small>
+      <div class="priority-card" id="psaCard">
+        <div class="priority-card-head">
+          <span class="priority-card-tag">PSA</span>
         </div>
-        <div class="bg-chev" id="psaCardChev">›</div>
+        <div class="priority-card-title" id="psaCardTitle">Baseline PSA</div>
+        <div class="priority-card-meta" id="psaCardMeta">
+          ATM-driven prostate surveillance. <b>Schedule a draw</b> at a nearby lab. Sets the annual cadence going forward.
+        </div>
+        <div class="priority-card-actions" id="psaCardActions">
+          <button class="pc-primary" onclick="openLabSheet()">Schedule draw</button>
+          <button class="pc-secondary" onclick="askAboutAction('psa')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.7"/>
+              <circle cx="12" cy="17" r="0.6" fill="currentColor"/>
+            </svg>
+            Ask Meridian
+          </button>
+        </div>
       </div>
 
       <div class="section-label">Backlog <span class="section-label-aux">| Queued, not active</span></div>
@@ -3335,8 +3457,23 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
     const p = PHARMACIES.find(x => x.id === pharmSelected);
     pharmConfirmed = p;
     const eta = etaLabel(p.etaHours);
-    document.getElementById('rxCardMeta').textContent = `Sent to ${p.name} · ${eta}`;
-    document.getElementById('rxCardMeta').classList.add('small-meta');
+    const tag = document.querySelector('#rxCard .priority-card-tag');
+    if (tag) tag.textContent = 'Sent';
+    document.getElementById('rxCardMeta').innerHTML =
+      `<span class="accent">Sent to ${p.name}</span>. ${eta}. Take any time before bed, with or without food.`;
+    const actions = document.querySelector('#rxCard .priority-card-actions');
+    if (actions) {
+      actions.innerHTML = `
+        <button class="pc-primary" onclick="openPharmacySheet()">Change pharmacy</button>
+        <button class="pc-secondary" onclick="askAboutAction('rx')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.7"/>
+            <circle cx="12" cy="17" r="0.6" fill="currentColor"/>
+          </svg>
+          Ask Meridian
+        </button>`;
+    }
     closePharmacySheet();
     toast(`Prescription sent to ${p.name}`);
   }
@@ -3495,45 +3632,55 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
   }
 
   function renderPsaCard() {
+    const title = document.getElementById('psaCardTitle');
     const meta = document.getElementById('psaCardMeta');
-    const text = document.getElementById('psaCardText');
-    const num = document.querySelector('#psaCard .bg-num');
-    const chev = document.getElementById('psaCardChev');
+    const actions = document.getElementById('psaCardActions');
+    const tag = document.querySelector('#psaCard .priority-card-tag');
+    if (!title || !meta || !actions) return;
+    const askBtn = `
+      <button class="pc-secondary" onclick="askAboutAction('psa')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.7"/>
+          <circle cx="12" cy="17" r="0.6" fill="currentColor"/>
+        </svg>
+        Ask Meridian
+      </button>`;
     if (psaState === 'unscheduled') {
-      text.innerHTML = `Baseline PSA <small id="psaCardMeta">Schedule draw at a nearby lab</small>${demoLink()}`;
-      num.textContent = 'PSA';
-      chev.style.display = '';
+      tag.textContent = 'PSA';
+      title.textContent = 'Baseline PSA';
+      meta.innerHTML = `ATM-driven prostate surveillance. <b>Schedule a draw</b> at a nearby lab. Sets the annual cadence going forward.`;
+      actions.innerHTML = `<button class="pc-primary" onclick="openLabSheet()">Schedule draw</button>${askBtn}`;
     } else if (psaState === 'scheduled') {
       const l = labConfirmed.lab;
       const slot = labConfirmed.slot;
-      const slotLabel = slot === 'Walk-in' ? `Walk-in · ${l.hours.split('·')[0].trim()}` : slot;
-      text.innerHTML = `Baseline PSA · scheduled
-        <small class="small-meta">${slotLabel} at ${l.name}</small>
-        ${demoLink()}`;
-      num.textContent = 'PSA';
-      chev.style.display = '';
+      const slotLabel = slot === 'Walk-in' ? `Walk-in (${l.hours.split('·')[0].trim()})` : slot;
+      tag.textContent = 'Scheduled';
+      title.textContent = 'Baseline PSA';
+      meta.innerHTML = `<span class="accent">${slotLabel}</span> at <b>${l.name}</b>. Prep: no ejaculation 48h before, no cycling 24h before.`;
+      actions.innerHTML = `<button class="pc-primary" onclick="openLabSheet()">Reschedule</button>${askBtn}`;
     } else if (psaState === 'drawn') {
-      const l = labConfirmed.lab;
-      text.innerHTML = `Baseline PSA · drawn
-        <small>Drawn at ${l.name} · result expected in 1–2 days</small>
-        ${demoLink()}`;
-      num.innerHTML = '<span style="font-size:11px;letter-spacing:0.04em;">…</span>';
-      chev.style.display = 'none';
+      tag.textContent = 'Awaiting result';
+      title.textContent = 'Baseline PSA';
+      meta.innerHTML = `Drawn at <b>${labConfirmed.lab.name}</b>. Result expected within 1–2 business days.`;
+      actions.innerHTML = `<button class="pc-secondary" onclick="toast('Result expected within 1–2 business days')" style="flex:1;">Track status</button>${askBtn}`;
     } else if (psaState === 'resulted') {
       const r = labConfirmed.result;
-      text.innerHTML = `Baseline PSA · result in
-        <div class="psa-result-line">
-          <span class="psa-result-value">${r.value}</span>
-          <span class="psa-result-unit">ng/mL · ref &lt; 4.0</span>
-          <span class="psa-result-flag">In range</span>
-        </div>
-        <small>Drawn ${r.drawnDate} at ${labConfirmed.lab.name} · next draw ${r.nextDate}</small>`;
-      num.innerHTML = '<span style="color:#6fbf73;">✓</span>';
-      chev.style.display = 'none';
+      tag.textContent = 'Result in';
+      title.innerHTML = `PSA <span style="color:var(--text);font-feature-settings:'tnum';">${r.value}</span> <span style="color:var(--text-muted);font-size:13px;font-weight:400;">ng/mL · ref &lt; 4.0 · in range</span>`;
+      meta.innerHTML = `Drawn ${r.drawnDate} at <b>${labConfirmed.lab.name}</b>. Next draw <b>${r.nextDate}</b>.`;
+      actions.innerHTML = `<button class="pc-secondary" onclick="toast('Annual cadence set · next draw ${r.nextDate}')" style="flex:1;">View details</button>${askBtn}`;
     }
-  }
-  function demoLink() {
-    return `<span class="demo-advance" onclick="event.stopPropagation(); advancePsaState();">demo: advance state</span>`;
+    // Demo advance link in tag area
+    if (!document.getElementById('psaDemoAdv')) {
+      const adv = document.createElement('span');
+      adv.id = 'psaDemoAdv';
+      adv.className = 'demo-advance';
+      adv.style.marginLeft = 'auto';
+      adv.textContent = 'demo: advance';
+      adv.onclick = (e) => { e.stopPropagation(); advancePsaState(); };
+      document.querySelector('#psaCard .priority-card-head').appendChild(adv);
+    }
   }
   function advancePsaState() {
     if (psaState === 'unscheduled') {
@@ -3555,6 +3702,15 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
 
   // Initialize PSA card on load
   document.addEventListener('DOMContentLoaded', renderPsaCard);
+
+  function askAboutAction(kind) {
+    const q = kind === 'rx'
+      ? 'Walk me through why rosuvastatin 5 mg is the right starting dose for me, and what to expect in the first 8 weeks.'
+      : 'Why am I getting a baseline PSA now, and what does the result actually tell us given my ATM variant?';
+    gotoTab('messages');
+    gotoSub('messages', 'meridian');
+    setTimeout(() => askPreset(q), 120);
+  }
 
   function toggleBacklog(e) {
     const block = document.getElementById('backlogBlock');
