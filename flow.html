@@ -183,6 +183,24 @@
     align-items:center; justify-content:center; color:#fff; margin-bottom:14px; }
   .ow-brand-mark svg { width:30px; height:30px; }
   .ow-brand-name { font-size:18px; font-weight:600; letter-spacing:-0.01em; }
+
+  .ow-terra-row { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+  .ow-terra-mark { width:40px; height:40px; border-radius:10px;
+    background:#0E0E10; color:#fff;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .ow-terra-mark svg { width:22px; height:22px; }
+  .ow-terra-meta { display:flex; flex-direction:column; }
+  .ow-terra-name { font-size:15px; font-weight:600; letter-spacing:-0.01em; }
+  .ow-terra-sub  { font-size:12.5px; color:#3C3C43; opacity:0.65; margin-top:1px; }
+
+  .ow-provider { display:flex; align-items:center; gap:12px;
+    background:#F8F8FA; border:0.5px solid rgba(60,60,67,0.14);
+    border-radius:10px; padding:12px 14px; margin-bottom:18px; }
+  .ow-provider .ow-brand-mark { width:40px; height:40px; margin:0; }
+  .ow-provider .ow-brand-mark svg { width:22px; height:22px; }
+  .ow-provider-meta { display:flex; flex-direction:column; }
+  .ow-provider-name { font-size:15px; font-weight:600; letter-spacing:-0.01em; }
+  .ow-provider-sub  { font-size:12.5px; color:#3C3C43; opacity:0.6; margin-top:1px; }
   .ow-h { font-size:20px; font-weight:600; letter-spacing:-0.02em;
     margin:0 0 6px; line-height:1.25; }
   .ow-p { font-size:14.5px; color:#3C3C43; line-height:1.5; margin:0 0 18px; }
@@ -260,10 +278,10 @@ const FLOWS = {
         lede: 'We use HRV, resting HR, sleep, and VO2max to track your trajectory between visits. You can connect more later.',
         options: [
           { id:'apple',   title:'Apple Health',   sub:'Watch, iPhone, Health app',  icon:icon('apple'),  auth:'healthkit' },
-          { id:'garmin',  title:'Garmin Connect', sub:'Forerunner, Edge, Fenix',    icon:icon('watch'),  auth:'oauth', brand:'Garmin Connect', host:'connect.garmin.com',     accent:'#007CC3' },
-          { id:'whoop',   title:'WHOOP',          sub:'Strap 4.0',                  icon:icon('strap'),  auth:'oauth', brand:'WHOOP',          host:'api.prod.whoop.com',     accent:'#000000' },
-          { id:'oura',    title:'Oura',           sub:'Ring Gen 3 / Gen 4',         icon:icon('ring'),   auth:'oauth', brand:'Oura',           host:'cloud.ouraring.com',     accent:'#0F0F0F' },
-          { id:'fitbit',  title:'Fitbit',         sub:'Sense, Charge, Inspire',     icon:icon('watch'),  auth:'oauth', brand:'Fitbit',         host:'fitbit.com',             accent:'#00B0B9' }
+          { id:'garmin',  title:'Garmin Connect', sub:'Forerunner, Edge, Fenix',    icon:icon('watch'),  auth:'oauth', brand:'Garmin Connect', accent:'#007CC3' },
+          { id:'whoop',   title:'WHOOP',          sub:'Strap 4.0',                  icon:icon('strap'),  auth:'oauth', brand:'WHOOP',          accent:'#000000' },
+          { id:'oura',    title:'Oura',           sub:'Ring Gen 3 / Gen 4',         icon:icon('ring'),   auth:'oauth', brand:'Oura',           accent:'#0F0F0F' },
+          { id:'fitbit',  title:'Fitbit',         sub:'Sense, Charge, Inspire',     icon:icon('watch'),  auth:'oauth', brand:'Fitbit',         accent:'#00B0B9' }
         ]
       },
       { kind: 'healthkit', when: ctx => ctx.choice === 'apple' },
@@ -372,6 +390,7 @@ function icon(name) {
     case 'flame':  return s('<path d="M12 2s-4 4-4 9a4 4 0 0 0 8 0c0-2-1-3-2-4 0 2-1 3-2 3 0-3 0-5 0-8z" fill="currentColor" stroke="none"/>');
     case 'grid':   return s('<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>');
     case 'check':  return s('<polyline points="5 12 10 17 19 7"/>');
+    case 'terra':  return s('<path d="M5 6h14"/><path d="M12 6v14"/><circle cx="12" cy="20" r="0.6" fill="currentColor"/>');
   }
   return '';
 }
@@ -619,7 +638,7 @@ function renderOAuth(step) {
 
   mainEl.innerHTML = `
     <h1 style="opacity:0.35;">Connect ${opt.brand || ''}</h1>
-    <p class="lede" style="opacity:0.35;">Sign in and approve to continue.</p>
+    <p class="lede" style="opacity:0.35;">Sign in via Terra and approve to continue.</p>
   `;
 
   const sheet = document.createElement('div');
@@ -628,15 +647,25 @@ function renderOAuth(step) {
     <div class="ow-sheet" role="dialog" aria-modal="true">
       <div class="ow-urlbar">
         <button class="ow-cancel" id="ow-cancel">Cancel</button>
-        <div class="ow-url"><span class="lock">🔒</span><span>${opt.host || ''}</span></div>
+        <div class="ow-url"><span class="lock">🔒</span><span>widget.tryterra.co</span></div>
       </div>
       <div class="ow-body">
-        <div class="ow-brand">
+        <div class="ow-terra-row">
+          <div class="ow-terra-mark">${icon('terra')}</div>
+          <div class="ow-terra-meta">
+            <div class="ow-terra-name">Terra</div>
+            <div class="ow-terra-sub">Powering health data for Meridian</div>
+          </div>
+        </div>
+        <div class="ow-provider">
           <div class="ow-brand-mark" style="background:${opt.accent || '#000'}">${opt.icon || ''}</div>
-          <div class="ow-brand-name">${opt.brand || ''}</div>
+          <div class="ow-provider-meta">
+            <div class="ow-provider-name">${opt.brand || ''}</div>
+            <div class="ow-provider-sub">Connected via Terra</div>
+          </div>
         </div>
         <h2 class="ow-h">Authorize Meridian</h2>
-        <p class="ow-p">Meridian is requesting permission to read data from your ${opt.brand || ''} account. You can revoke access any time from your ${opt.brand || ''} settings.</p>
+        <p class="ow-p">Terra will sign you in to ${opt.brand || ''} and share the data below with Meridian. You can revoke access any time from your Meridian profile or your ${opt.brand || ''} account.</p>
         <div class="ow-scopes">
           <div class="ow-scopes-title">Meridian will be able to read</div>
           <ul>
@@ -645,7 +674,7 @@ function renderOAuth(step) {
         </div>
         <div class="ow-actions">
           <button class="ow-btn secondary" id="ow-deny">Deny</button>
-          <button class="ow-btn primary" id="ow-approve" style="background:${opt.accent || '#000'}">Authorize</button>
+          <button class="ow-btn primary" id="ow-approve" style="background:${opt.accent || '#000'}">Continue to ${opt.brand || ''}</button>
         </div>
       </div>
     </div>
@@ -658,7 +687,7 @@ function renderOAuth(step) {
     stepIdx--; render();
   };
   sheet.querySelector('#ow-approve').onclick = () => {
-    ctx.oauth = { provider: ctx.choice, scopes };
+    ctx.oauth = { provider: ctx.choice, scopes, broker: 'terra' };
     sheet.remove();
     document.querySelector('.footer').style.display = '';
     stepIdx++; render();
