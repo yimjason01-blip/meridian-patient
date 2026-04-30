@@ -186,6 +186,81 @@
     margin-left: 4px;
   }
 
+  /* ============ Active / Backlog toggle ============ */
+  .exec-toggle {
+    display: inline-flex;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 3px;
+    margin: 0 0 14px;
+    gap: 2px;
+  }
+  .exec-toggle button {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background .12s, color .12s;
+  }
+  .exec-toggle button:hover { color: var(--text-secondary); }
+  .exec-toggle button.active {
+    background: var(--bg-panel);
+    color: var(--text);
+  }
+  .exec-toggle .count {
+    color: var(--text-muted);
+    font-size: 11px;
+    margin-left: 4px;
+    font-feature-settings: "tnum";
+    opacity: 0.7;
+  }
+  .exec-toggle button.active .count { opacity: 1; }
+
+  /* Backlog quiet cards */
+  .backlog-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    background: transparent;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: border-color .12s, background .12s;
+  }
+  .backlog-item:hover {
+    border-color: var(--border);
+    background: var(--bg-surface);
+  }
+  .backlog-item .when {
+    flex-shrink: 0;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    width: 64px;
+    padding-top: 2px;
+    line-height: 1.3;
+  }
+  .backlog-item .body { flex: 1; min-width: 0; }
+  .backlog-item .title {
+    font-size: 13.5px;
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  .backlog-item .why {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.45;
+  }
+
   /* ============ Generic cards ============ */
   .card {
     background: var(--bg-panel);
@@ -2097,24 +2172,94 @@
 
     <!-- ---- SUBSTATE: ACT ---- -->
     <div class="substate" id="plan-act">
-      <div class="section-label">Risk reduction <span class="section-label-aux">| Top priority</span></div>
 
-      <div class="bg-action" id="rxCard" onclick="openPharmacySheet()">
-        <div class="bg-num">Rx</div>
-        <div class="bg-text" id="rxCardText">Rosuvastatin 5 mg
-          <small id="rxCardMeta">Select pharmacy to send to</small>
-        </div>
-        <div class="bg-chev">›</div>
+      <div class="exec-toggle" role="tablist" aria-label="Execute view">
+        <button id="execTabActive" class="active" type="button" role="tab" aria-selected="true" onclick="setExecView('active')">Active <span class="count">2</span></button>
+        <button id="execTabBacklog" type="button" role="tab" aria-selected="false" onclick="setExecView('backlog')">Backlog <span class="count">6</span></button>
       </div>
 
-      <div class="section-label">Monitoring <span class="section-label-aux">| Top priority</span></div>
+      <div id="execActive">
+        <div class="section-label">Risk reduction <span class="section-label-aux">| Top priority</span></div>
 
-      <div class="bg-action" id="psaCard" onclick="psaCardTap()">
-        <div class="bg-num">PSA</div>
-        <div class="bg-text" id="psaCardText">Baseline PSA
-          <small id="psaCardMeta">Schedule draw at a nearby lab</small>
+        <div class="bg-action" id="rxCard" onclick="openPharmacySheet()">
+          <div class="bg-num">Rx</div>
+          <div class="bg-text" id="rxCardText">Rosuvastatin 5 mg
+            <small id="rxCardMeta">Select pharmacy to send to</small>
+          </div>
+          <div class="bg-chev">›</div>
         </div>
-        <div class="bg-chev" id="psaCardChev">›</div>
+
+        <div class="section-label">Monitoring <span class="section-label-aux">| Top priority</span></div>
+
+        <div class="bg-action" id="psaCard" onclick="psaCardTap()">
+          <div class="bg-num">PSA</div>
+          <div class="bg-text" id="psaCardText">Baseline PSA
+            <small id="psaCardMeta">Schedule draw at a nearby lab</small>
+          </div>
+          <div class="bg-chev" id="psaCardChev">›</div>
+        </div>
+      </div>
+
+      <div id="execBacklog" style="display:none;">
+        <div class="section-label">Risk reduction <span class="section-label-aux">| Queued</span></div>
+
+        <div class="backlog-item">
+          <div class="when">Wk 4–6</div>
+          <div class="body">
+            <div class="title">CAC scan</div>
+            <div class="why">Reclassifies cardiovascular risk. Decides whether to intensify the lipid plan or hold steady. Outpatient, 10 minutes.</div>
+          </div>
+        </div>
+
+        <div class="backlog-item">
+          <div class="when">Wk 8</div>
+          <div class="body">
+            <div class="title">ApoB / LDL recheck</div>
+            <div class="why">Confirms statin response. Target ApoB &lt; 80 mg/dL, LDL down ~40% from baseline. Drives titration.</div>
+          </div>
+        </div>
+
+        <div class="backlog-item">
+          <div class="when">Booked</div>
+          <div class="body">
+            <div class="title">Genetic counseling</div>
+            <div class="why">ATM cascade testing for first-degree relatives. Already on the calendar.</div>
+          </div>
+        </div>
+
+        <div class="section-label">Monitoring <span class="section-label-aux">| Queued</span></div>
+
+        <div class="backlog-item">
+          <div class="when">Annual</div>
+          <div class="body">
+            <div class="title">Pancreatic MRI</div>
+            <div class="why">ATM-driven surveillance. First scan at age 50, then annual. Stability is the goal.</div>
+          </div>
+        </div>
+
+        <div class="backlog-item">
+          <div class="when">Once</div>
+          <div class="body">
+            <div class="title">Baseline colonoscopy</div>
+            <div class="why">Family history of GI cancer plus age. Establishes the surveillance interval going forward.</div>
+          </div>
+        </div>
+
+        <div class="backlog-item">
+          <div class="when">Once</div>
+          <div class="body">
+            <div class="title">Lp(a) confirm in nmol/L</div>
+            <div class="why">Current value reported in mg/dL. Molar units are the standard for risk stratification. One-time draw.</div>
+          </div>
+        </div>
+
+        <div class="backlog-item">
+          <div class="when">Add-on</div>
+          <div class="body">
+            <div class="title">APOE genotype</div>
+            <div class="why">Long-horizon neurology baseline. Combined with cardiovascular plan, sets the dementia-risk floor.</div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -3385,6 +3530,24 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
 
   // Initialize PSA card on load
   document.addEventListener('DOMContentLoaded', renderPsaCard);
+
+  function setExecView(view) {
+    const active = document.getElementById('execActive');
+    const backlog = document.getElementById('execBacklog');
+    const tabA = document.getElementById('execTabActive');
+    const tabB = document.getElementById('execTabBacklog');
+    if (view === 'backlog') {
+      active.style.display = 'none';
+      backlog.style.display = '';
+      tabA.classList.remove('active'); tabA.setAttribute('aria-selected', 'false');
+      tabB.classList.add('active'); tabB.setAttribute('aria-selected', 'true');
+    } else {
+      active.style.display = '';
+      backlog.style.display = 'none';
+      tabA.classList.add('active'); tabA.setAttribute('aria-selected', 'true');
+      tabB.classList.remove('active'); tabB.setAttribute('aria-selected', 'false');
+    }
+  }
 
   // ESC closes sheet
   document.addEventListener('keydown', e => {
