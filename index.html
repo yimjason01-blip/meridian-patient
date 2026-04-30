@@ -1479,7 +1479,8 @@
     color: var(--text-muted);
     font-size: 12px;
   }
-  .slot-btn.selected {
+  .slot-btn.selected,
+  .visit-type.selected {
     border-color: var(--accent-hover);
     background: var(--accent-tint);
   }
@@ -2203,27 +2204,13 @@
     <div class="segmented" role="tablist">
       <button class="seg-btn active" data-sub="team" onclick="gotoSub('messages','team')">Doctor</button>
       <button class="seg-btn" data-sub="meridian" onclick="gotoSub('messages','meridian')">Ali</button>
+      <button class="seg-btn" data-sub="visit" onclick="gotoSub('messages','visit')">Visit</button>
     </div>
 
     <!-- ---- DOCTOR ---- -->
     <div class="substate active" id="messages-team">
       <div style="padding: 4px 16px 0">
         <h1 class="screen-title" style="margin-bottom: 8px">Dr. Thompson.</h1>
-      </div>
-
-      <div class="schedule-card">
-        <div class="top">
-          <div>
-            <h3>Schedule a visit</h3>
-            <p>Pick a follow-up with Dr. Thompson. Ali will attach your plan summary, labs, and open questions before the visit.</p>
-          </div>
-          <div class="schedule-badge">2 openings</div>
-        </div>
-        <div class="schedule-options">
-          <div class="schedule-option"><b>Video follow-up</b><span>25 minutes</span></div>
-          <div class="schedule-option"><b>Care plan review</b><span>50 minutes</span></div>
-        </div>
-        <button class="btn wide" onclick="openScheduler()">Schedule appointment</button>
       </div>
 
       <div class="contact-card">
@@ -2248,7 +2235,7 @@
       <div class="suggest">
         <button onclick="askTeamPreset('I want to review the statin decision during the visit')">Review the statin decision</button>
         <button onclick="askTeamPreset('Can we cover the CAC scan and what the result changes?')">Cover the CAC scan</button>
-        <button onclick="openScheduler()">Schedule with Dr. Thompson</button>
+        <button onclick="gotoSub('messages','visit')">Schedule with Dr. Thompson</button>
       </div>
     </div>
 
@@ -2282,7 +2269,50 @@
         <button onclick="askPreset('Help me prepare for my appointment with Dr. Thompson.')">Prep for my appointment</button>
         <button onclick="askPreset('Why the statin and not just lifestyle changes?')">Why a statin first?</button>
         <button onclick="askPreset('What should I ask about the CAC scan?')">Questions for the CAC scan</button>
-        <button onclick="openScheduler()">Schedule with my doctor</button>
+        <button onclick="gotoSub('messages','visit')">Schedule with my doctor</button>
+      </div>
+    </div>
+
+
+    <!-- ---- VISIT ---- -->
+    <div class="substate" id="messages-visit">
+      <div style="padding: 4px 16px 0">
+        <h1 class="screen-title" style="margin-bottom: 8px">Visit.</h1>
+      </div>
+
+      <div class="schedule-card">
+        <div class="top">
+          <div>
+            <h3>Schedule with Dr. Thompson</h3>
+            <p>Ali will attach your plan summary, latest labs, CAC status, and the questions you send before the visit.</p>
+          </div>
+          <div class="schedule-badge">3 openings</div>
+        </div>
+      </div>
+
+      <div class="schedule-card">
+        <div class="ss-label">Visit type</div>
+        <div class="visit-types">
+          <button class="visit-type selected" type="button"><b>Care plan follow-up</b><span>25 min · Statin start, CAC scan, PSA plan</span></button>
+          <button class="visit-type" type="button"><b>Deep review</b><span>50 min · Full plan review plus open questions</span></button>
+        </div>
+      </div>
+
+      <div class="schedule-card">
+        <div class="ss-label">Next openings</div>
+        <div class="slot-grid">
+          <button class="slot-btn selected" type="button" onclick="selectApptSlot(this)"><b>Tomorrow, 8:30 AM</b><span>Video · Dr. Thompson</span></button>
+          <button class="slot-btn" type="button" onclick="selectApptSlot(this)"><b>Thu, 12:10 PM</b><span>Video · Dr. Thompson</span></button>
+          <button class="slot-btn" type="button" onclick="selectApptSlot(this)"><b>Fri, 4:20 PM</b><span>Video · Dr. Thompson</span></button>
+        </div>
+      </div>
+
+      <div class="schedule-card">
+        <div class="ss-label">Ali will attach</div>
+        <div class="ss-note">Plan summary, latest labs, CAC scheduling status, and any questions you send before the appointment.</div>
+        <div class="ss-actions" style="margin-top:12px">
+          <button class="btn wide" onclick="confirmAppointment(this)">Confirm appointment</button>
+        </div>
       </div>
     </div>
   </section>
@@ -2331,44 +2361,6 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<!-- Schedule appointment sheet -->
-<div class="schedule-sheet-backdrop" id="scheduleSheetBackdrop" onclick="closeScheduler()"></div>
-<div class="schedule-sheet" id="scheduleSheet" role="dialog" aria-modal="true" aria-labelledby="ssTitle">
-  <div class="ss-handle"></div>
-  <div class="ss-head">
-    <div>
-      <h3 id="ssTitle">Schedule with Dr. Thompson</h3>
-      <p>Video visit · Aleron Care Team</p>
-    </div>
-    <button class="ss-close" onclick="closeScheduler()" aria-label="Close">×</button>
-  </div>
-  <div class="ss-body">
-    <div class="ss-section">
-      <div class="ss-label">Visit type</div>
-      <div class="visit-types">
-        <button class="visit-type" type="button"><b>Care plan follow-up</b><span>25 min · Statin start, CAC scan, PSA plan</span></button>
-        <button class="visit-type" type="button"><b>Deep review</b><span>50 min · Full plan review plus open questions</span></button>
-      </div>
-    </div>
-    <div class="ss-section">
-      <div class="ss-label">Next openings</div>
-      <div class="slot-grid">
-        <button class="slot-btn selected" type="button" onclick="selectApptSlot(this)"><b>Tomorrow, 8:30 AM</b><span>Video · Dr. Thompson</span></button>
-        <button class="slot-btn" type="button" onclick="selectApptSlot(this)"><b>Thu, 12:10 PM</b><span>Video · Dr. Thompson</span></button>
-        <button class="slot-btn" type="button" onclick="selectApptSlot(this)"><b>Fri, 4:20 PM</b><span>Video · Dr. Thompson</span></button>
-      </div>
-    </div>
-    <div class="ss-section">
-      <div class="ss-label">Ali will attach</div>
-      <div class="ss-note">Plan summary, latest labs, CAC scheduling status, and any questions you send before the appointment.</div>
-    </div>
-    <div class="ss-actions">
-      <button class="btn wide" onclick="confirmAppointment(this)">Confirm appointment</button>
-      <button class="btn wide ghost" onclick="closeScheduler()">Not now</button>
-    </div>
-  </div>
-</div>
-
 <!-- Risk bottom sheet (opens from You → Risk cards) -->
 <div class="risk-sheet-backdrop" id="riskSheetBackdrop" onclick="closeRiskSheet()"></div>
 <div class="risk-sheet" id="riskSheet" role="dialog" aria-modal="true" aria-labelledby="rsTitle">
@@ -2401,8 +2393,7 @@
       n.classList.toggle('active', n.dataset.tab === name);
     });
     // Chat input only on Connect tab
-    const ci = document.getElementById('chatInput');
-    ci.classList.toggle('show', name === 'messages');
+    updateConnectInputVisibility();
     if (name === 'messages') updateConnectPlaceholder();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -2415,14 +2406,24 @@
     scope.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b.dataset.sub === sub));
     const target = document.getElementById(tab + '-' + sub);
     if (target) target.classList.add('active');
+    updateConnectInputVisibility();
     updateConnectPlaceholder();
+  }
+
+  function updateConnectInputVisibility() {
+    const ci = document.getElementById('chatInput');
+    if (!ci) return;
+    const messagesActive = document.getElementById('screen-messages')?.classList.contains('active');
+    const visitActive = document.getElementById('messages-visit')?.classList.contains('active');
+    ci.classList.toggle('show', !!messagesActive && !visitActive);
   }
 
   function updateConnectPlaceholder() {
     const field = document.getElementById('chatField');
     if (!field) return;
     const teamActive = document.getElementById('messages-team')?.classList.contains('active');
-    field.placeholder = teamActive ? 'Message Dr. Thompson...' : 'Message Ali...';
+    const visitActive = document.getElementById('messages-visit')?.classList.contains('active');
+    field.placeholder = visitActive ? 'Visit details...' : (teamActive ? 'Message Dr. Thompson...' : 'Message Ali...');
   }
 
   /* ===== Decision + data accordions ===== */
@@ -2638,7 +2639,7 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
     setTimeout(() => {
       const a = document.createElement('div');
       a.className = 'msg ai';
-      a.innerHTML = `<div class="av">MT</div><div class="bubble">Got it. I will review this before the visit. If you want to talk it through live, use the schedule button above and my team will add this to the agenda.<div class="src"><b>From:</b> Dr. Marcus Thompson · Primary Care</div></div>`;
+      a.innerHTML = `<div class="av">MT</div><div class="bubble">Got it. I will review this before the visit. If you want to talk it through live, open the Visit tab and my team will add this to the agenda.<div class="src"><b>From:</b> Dr. Marcus Thompson · Primary Care</div></div>`;
       wrap.appendChild(a);
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }, 700);
@@ -2736,12 +2737,8 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
     setTimeout(() => askPreset(text), 120);
   }
   function openScheduler() {
-    document.getElementById('scheduleSheet')?.classList.add('open');
-    document.getElementById('scheduleSheetBackdrop')?.classList.add('open');
-  }
-  function closeScheduler() {
-    document.getElementById('scheduleSheet')?.classList.remove('open');
-    document.getElementById('scheduleSheetBackdrop')?.classList.remove('open');
+    gotoTab('messages');
+    gotoSub('messages', 'visit');
   }
   function selectApptSlot(btn) {
     document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
@@ -2749,16 +2746,15 @@ Actions were then ranked by <em>sensitivity-weighted leverage</em>. Your ATM-dri
   }
   function confirmAppointment(btn) {
     const slot = document.querySelector('.slot-btn.selected b')?.textContent || 'the selected time';
-    btn.textContent = 'Appointment confirmed';
+    btn.textContent = `Confirmed: ${slot}`;
     btn.disabled = true;
     btn.style.opacity = '0.85';
     toast(`Scheduled with Dr. Thompson: ${slot}`);
-    setTimeout(closeScheduler, 700);
   }
 
   // ESC closes sheet
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeRiskSheet(); closeScheduler(); }
+    if (e.key === 'Escape') closeRiskSheet();
   });
 </script>
 </body>
